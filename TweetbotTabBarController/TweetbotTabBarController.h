@@ -10,3 +10,7 @@
 
 FOUNDATION_EXPORT double TweetbotTabBarControllerVersionNumber;
 FOUNDATION_EXPORT const unsigned char TweetbotTabBarControllerVersionString[];
+
+#import <TweetbotTabBarController/TBTabBarController.h>
+#import <TweetbotTabBarController/TBTabBar.h>
+#import <TweetbotTabBarController/TBTabBarItem.h>
