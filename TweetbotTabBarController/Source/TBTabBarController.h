@@ -11,7 +11,7 @@
 #import "TBTabBar.h"
 #import "TBTabBarItem.h"
 
-@class TBTabBarController, UITabBarController;
+@class TBTabBarController;
 
 typedef NS_ENUM(NSUInteger, TBTabBarControllerTabBarPosition) {
     TBTabBarControllerTabBarPositionUnspecified = 0,
