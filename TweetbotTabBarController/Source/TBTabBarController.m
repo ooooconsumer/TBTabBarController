@@ -696,7 +696,7 @@ static void *tb_tabBarItemEnabledContext = &tb_tabBarItemEnabledContext;
 
 - (void)setViewControllers:(NSArray <__kindof UIViewController *> *)viewControllers {
     
-    NSAssert(viewControllers.count <= 5, @"Bad ...");
+    NSAssert(viewControllers.count <= 5, @"The number of view controllers must not exceed 5.");
     
     if ([viewControllers isEqual:_viewControllers]) {
         return;
