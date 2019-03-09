@@ -216,7 +216,7 @@ static void *tb_tabBarItemEnabledContext = &tb_tabBarItemEnabledContext;
     
     // The horizontal size class doesn't change every time.
     // When the user rotates an iPad the view has the same horizontal size class, but its size will be changed.
-    // The same happens when the user switches between 2/3 and 1/2 split screen modes.
+    // The same happens when the user switches between 2/3 and 1/2 split view modes.
     // Subclasses can rely on this change and show the tab bar on the other side.
     
     // UIKit calls this method even if the view size has not been changed

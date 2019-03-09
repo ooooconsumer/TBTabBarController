@@ -101,7 +101,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 /**
  * @discussion Called when the view is going to transition to the new size.
- * This method can be useful for iPad devices that have SplitScreen and SplitOver modes.
+ * This method can be useful for iPad devices that have split view and slide over modes.
  * You can call super to see what's the preferred position for the given size as well.
  * By default, this method relies on the horizontal size class (as the method above).
  * @param size New view size.
