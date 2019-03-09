@@ -26,9 +26,6 @@
 /** A height or width constraint of the separator view */
 @property (strong, nonatomic) NSLayoutConstraint *separatorViewDimensionConstraint;
 
-/** Returns YES whenever layout orientation is vertical */
-@property (assign, nonatomic, getter = isVertical) BOOL vertical;
-
 @end
 
 @implementation TBTabBar

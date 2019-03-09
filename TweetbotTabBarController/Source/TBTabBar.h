@@ -49,6 +49,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (assign, nonatomic, readonly) TBTabBarLayoutOrientation layoutOrientation;
 
+/** @brief Returns YES whenever layout orientation is vertical */
+@property (assign, nonatomic, readonly, getter = isVertical) BOOL vertical;
+
 - (instancetype)initWithLayoutOrientation:(TBTabBarLayoutOrientation)layoutOrientation;
 
 @end
