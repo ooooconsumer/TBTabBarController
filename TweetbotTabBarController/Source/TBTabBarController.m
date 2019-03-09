@@ -372,7 +372,7 @@ static void *tb_tabBarItemEnabledContext = &tb_tabBarItemEnabledContext;
     _containerViewBottomConstraint = [self.containerView.bottomAnchor constraintEqualToAnchor:self.view.bottomAnchor constant:self.horizontalTabBarHeight];
     _containerViewWidthConstraint = [self.containerView.widthAnchor constraintEqualToConstant:self.verticalTabBarWidth];
     
-    // Fake navingation bar
+    // Fake navigation bar
     NSLayoutConstraint *fakeNavBarWidthConstraint = [self.fakeNavigationBar.widthAnchor constraintEqualToAnchor:self.containerView.widthAnchor];
     _fakeNavBarHeightConstraint = [self.fakeNavigationBar.heightAnchor constraintEqualToConstant:40.0];
     
