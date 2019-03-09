@@ -451,7 +451,7 @@ static void *tb_tabBarItemEnabledContext = &tb_tabBarItemEnabledContext;
     [self tb_getCurrentlyVisibleTabBar:&visibleTabBar andHiddenTabBar:&hiddenTabBar];
     
     // Showing the currently hidden tab bar
-    [self tb_makeTabBarVisibile:visibleTabBar];
+    [self tb_makeTabBarVisible:visibleTabBar];
     
     __weak typeof(self) weakSelf = self;
     
@@ -470,12 +470,12 @@ static void *tb_tabBarItemEnabledContext = &tb_tabBarItemEnabledContext;
     
     [self tb_getCurrentlyVisibleTabBar:&visibleTabBar andHiddenTabBar:&hiddenTabBar];
     
-    [self tb_makeTabBarVisibile:visibleTabBar];
+    [self tb_makeTabBarVisible:visibleTabBar];
     [self tb_makeTabBarHidden:hiddenTabBar];
 }
 
 
-- (void)tb_makeTabBarVisibile:(TBTabBar *)tabBar {
+- (void)tb_makeTabBarVisible:(TBTabBar *)tabBar {
     
     _visibleTabBar = tabBar;
     
