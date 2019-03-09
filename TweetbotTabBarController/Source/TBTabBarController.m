@@ -51,7 +51,11 @@ static TBTabBarControllerMethodOverrides tb_methodOverridesFlags;
 @implementation TBTabBarController {
     
     BOOL tb_needsLayout;
+    
+    // Position flags
+    TBTabBarControllerTabBarPosition tb_currentPosition;
     TBTabBarControllerTabBarPosition tb_preferredPosition;
+    
     // Erm, these variables are used to remove empty spaces when the device is rotated
     CGFloat tb_previousVerticalTabBarBottomInset;
     CGFloat tb_preferredVerticalTabBarBottomInset;
@@ -215,10 +219,12 @@ static void *tb_tabBarItemEnabledContext = &tb_tabBarItemEnabledContext;
     // The same happens when the user switches between 2/3 and 1/2 split screen modes.
     // Subclasses can rely on this change and show the tab bar on the other side.
     
-    if (tb_methodOverridesFlags & TBTabBarControllerMethodOverridePreferredTabBarPositionForViewSize) {
+    // UIKit calls this method even if the view size has not been changed
+    if (CGSizeEqualToSize(self.view.frame.size, size) == false) {
         
-        // UIKit calls this method even if the view size has not been changed
-        if (CGSizeEqualToSize(self.view.frame.size, size) == false) {
+        tb_needsLayout = true; // Update view constraints to play cool with safe area insets
+        
+        if (tb_methodOverridesFlags & TBTabBarControllerMethodOverridePreferredTabBarPositionForViewSize) {
             
             // By default the preferredTabBarPositionForViewSize: method returns tb_preferredPosition property, so we have to capture it before a subclass will call super
             // An unspecified position means that trait collection has not been changed in a while
@@ -255,8 +261,13 @@ static void *tb_tabBarItemEnabledContext = &tb_tabBarItemEnabledContext;
             tb_preferredPosition = [self preferredTabBarPositionForHorizontalSizeClass:horizontalSizeClass];
         }
         [self tb_specifyPreferredPositionWithHorizontalSizeClassIfNeeded:horizontalSizeClass];
-        // Get a visible tab bar for a preferred position
-        [self tb_updateTabBarsVisiblility];
+        // Capture a current position
+        tb_currentPosition = tb_preferredPosition;
+        // Update tab bars visibility
+        TBTabBar *visibleTabBar, *hiddenTabBar;
+        [self tb_getCurrentlyVisibleTabBar:&visibleTabBar andHiddenTabBar:&hiddenTabBar];
+        [self tb_makeTabBarVisible:visibleTabBar];
+        [self tb_makeTabBarHidden:hiddenTabBar];
     }
     
     [super traitCollectionDidChange:previousTraitCollection];
@@ -439,39 +450,24 @@ static void *tb_tabBarItemEnabledContext = &tb_tabBarItemEnabledContext;
 
 - (void)tb_updateTabBarsVisibilityWithTransitionCoordinator:(id <UIViewControllerTransitionCoordinator>)coordinator {
     
-    if ((self.visibleTabBar.layoutOrientation == TBTabBarLayoutOrientationHorizontal) && (tb_preferredPosition == TBTabBarControllerTabBarPositionBottom)) {
-        // Do nothing when a new preferred positions equals to the current one
-        return;
+    if (tb_currentPosition == tb_preferredPosition) {
+        return; // Do nothing when a new preferred positions equals to the current one
     }
     
-    tb_needsLayout = true;
-    
     TBTabBar *visibleTabBar, *hiddenTabBar;
-    
     [self tb_getCurrentlyVisibleTabBar:&visibleTabBar andHiddenTabBar:&hiddenTabBar];
     
-    // Showing the currently hidden tab bar
-    [self tb_makeTabBarVisible:visibleTabBar];
+    // Show the currently hidden tab bar
+    [self tb_makeTabBarVisible:hiddenTabBar];
+    
+    tb_currentPosition = tb_preferredPosition;
     
     __weak typeof(self) weakSelf = self;
     
     [coordinator animateAlongsideTransition:nil completion:^(id <UIViewControllerTransitionCoordinatorContext> context) {
-        // Getting everything back the way it was
-        [weakSelf tb_updateVerticalTabBarBottomContentInset];
-        // Hiding the previously visible tab bar when the transition is complete
-        [weakSelf tb_makeTabBarHidden:hiddenTabBar];
+        [weakSelf tb_updateVerticalTabBarBottomContentInset]; // Get everything back the way it was
+        [weakSelf tb_makeTabBarHidden:visibleTabBar]; // Hide the previously visible tab bar when the transition is complete
     }];
-}
-
-
-- (void)tb_updateTabBarsVisiblility {
-    
-    TBTabBar *visibleTabBar, *hiddenTabBar;
-    
-    [self tb_getCurrentlyVisibleTabBar:&visibleTabBar andHiddenTabBar:&hiddenTabBar];
-    
-    [self tb_makeTabBarVisible:visibleTabBar];
-    [self tb_makeTabBarHidden:hiddenTabBar];
 }
 
 
@@ -479,7 +475,7 @@ static void *tb_tabBarItemEnabledContext = &tb_tabBarItemEnabledContext;
     
     _visibleTabBar = tabBar;
     
-    if (_visibleTabBar.layoutOrientation == TBTabBarLayoutOrientationVertical) {
+    if (_visibleTabBar.isVertical) {
         self.containerView.hidden = false;
         self.selectedViewController.additionalSafeAreaInsets = UIEdgeInsetsZero;
     } else {
@@ -493,7 +489,7 @@ static void *tb_tabBarItemEnabledContext = &tb_tabBarItemEnabledContext;
     
     _hiddenTabBar = tabBar;
     
-    if (_hiddenTabBar.layoutOrientation == TBTabBarLayoutOrientationVertical) {
+    if (_hiddenTabBar.isVertical) {
         self.containerView.hidden = true;
     } else {
         _hiddenTabBar.hidden = true;
@@ -523,10 +519,10 @@ static void *tb_tabBarItemEnabledContext = &tb_tabBarItemEnabledContext;
     // Layout everything
     tb_needsLayout = true;
     
-    if (self.visibleTabBar == nil) {
+    if (tb_currentPosition == TBTabBarControllerTabBarPositionUnspecified) {
         [self tb_specifyPreferredPositionWithHorizontalSizeClassIfNeeded:self.traitCollection.horizontalSizeClass];
     } else if (tb_preferredPosition == TBTabBarControllerTabBarPositionUnspecified) {
-        tb_preferredPosition = (self.visibleTabBar.layoutOrientation == TBTabBarLayoutOrientationHorizontal) ? TBTabBarControllerTabBarPositionBottom : TBTabBarControllerTabBarPositionLeft;
+        tb_preferredPosition = tb_currentPosition;
     }
     
     [self setNeedsStatusBarAppearanceUpdate];
@@ -644,15 +640,17 @@ static void *tb_tabBarItemEnabledContext = &tb_tabBarItemEnabledContext;
 
 - (void)tb_getCurrentlyVisibleTabBar:(TBTabBar **)visibleTabBar andHiddenTabBar:(TBTabBar **)hiddenTabBar {
     
-    // Yeah, it doesn't actually return CURRENTLY visible or hidden tab bars.
-    // Instead, it returns bars for the current preferred position.
-    
-    if (tb_preferredPosition == TBTabBarControllerTabBarPositionBottom) {
-        *visibleTabBar = self.bottomTabBar;
-        *hiddenTabBar = self.leftTabBar;
-    } else {
-        *hiddenTabBar = self.bottomTabBar;
-        *visibleTabBar = self.leftTabBar;
+    switch (tb_currentPosition) {
+        case TBTabBarControllerTabBarPositionBottom:
+            *visibleTabBar = self.bottomTabBar;
+            *hiddenTabBar = self.leftTabBar;
+            break;
+        case TBTabBarControllerTabBarPositionLeft:
+            *visibleTabBar = self.leftTabBar;
+            *hiddenTabBar = self.bottomTabBar;
+            break;
+        default:
+            break;
     }
 }
 
@@ -661,7 +659,7 @@ static void *tb_tabBarItemEnabledContext = &tb_tabBarItemEnabledContext;
 
 - (TBTabBar *)bottomTabBar {
     
-    if (!_bottomTabBar) {
+    if (_bottomTabBar == nil) {
         _bottomTabBar = [[TBTabBar alloc] initWithLayoutOrientation:TBTabBarLayoutOrientationHorizontal];
         _bottomTabBar.delegate = self;
         _bottomTabBar.translatesAutoresizingMaskIntoConstraints = false;
@@ -673,7 +671,7 @@ static void *tb_tabBarItemEnabledContext = &tb_tabBarItemEnabledContext;
 
 - (TBTabBar *)leftTabBar {
     
-    if (!_leftTabBar) {
+    if (_leftTabBar == nil) {
         _leftTabBar = [[TBTabBar alloc] initWithLayoutOrientation:TBTabBarLayoutOrientationVertical];
         _leftTabBar.delegate = self;
     }
