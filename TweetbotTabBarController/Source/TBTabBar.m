@@ -179,6 +179,12 @@
 
 #pragma mark Getters
 
+- (NSString *)description {
+    
+    return [NSString stringWithFormat:@"%@, layoutOrientation: %@, selectedIndex: %lu, contentInsets: %@", [super description], (self.layoutOrientation == TBTabBarLayoutOrientationVertical ? @"vertical" : @"horizontal"), self.selectedIndex, NSStringFromUIEdgeInsets(self.contentInsets)];
+}
+
+
 - (UIColor *)separatorColor {
     
     return self.separatorView.backgroundColor;
@@ -288,34 +294,25 @@
     
     _contentInsets = insets;
     
-    // Yeah, that doesn't look like a good solution
     [_stackViewConstraints enumerateObjectsUsingBlock:^(NSLayoutConstraint * _Nonnull constraint, NSUInteger index, BOOL *_Nonnull stop) {
-        
-        CGFloat inset = 0.0;
         
         switch (index) {
             case 0:
-                inset = insets.top;
+                constraint.constant = insets.top;
                 break;
             case 1:
-                inset = insets.left;
+                constraint.constant = insets.left;
                 break;
             case 2:
-                inset = insets.bottom;
+                constraint.constant = insets.bottom;
                 break;
             case 3:
-                inset = insets.right;
+                constraint.constant = insets.right;
                 break;
             default:
                 break;
-        }
-        
-        if (constraint.constant != inset) {
-            constraint.constant = inset;
         }
     }];
 }
 
 @end
-
-
