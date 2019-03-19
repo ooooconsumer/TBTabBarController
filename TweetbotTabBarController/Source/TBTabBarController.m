@@ -195,7 +195,7 @@ static void *tb_tabBarItemEnabledContext = &tb_tabBarItemEnabledContext;
             [self tb_specifyPreferredPositionWithHorizontalSizeClassIfNecessary:newHorizontalSizeClass]; // Subclasses may return an unspecified position
             [self tb_updateTabBarsVisibilityWithTransitionCoordinator:coordinator];
         } else {
-            // In case where a subclass overrides the -preferredTabBarPositionForViewSize: method, we should capture a new preferred position for a new horizontal size class since a subclass may return either an unspecified position or call super.
+            // In case where a subclass overrides the -preferredTabBarPositionForViewSize: method, we should capture new preferred position for a new horizontal size class since a subclass may return either an unspecified position or call super.
             tb_preferredPosition = [self tb_preferredTabBarPositionForHorizontalSizeClass:newHorizontalSizeClass];
         }
     }
@@ -246,16 +246,16 @@ static void *tb_tabBarItemEnabledContext = &tb_tabBarItemEnabledContext;
     
     if (previousTraitCollection == nil) {
         UIUserInterfaceSizeClass const horizontalSizeClass = self.traitCollection.horizontalSizeClass;
-        // ...
+        // Capture preferred position for subclasses
         tb_preferredPosition = [self tb_preferredTabBarPositionForHorizontalSizeClass:horizontalSizeClass];
-        // Capture a preferred position
+        // Capture preferred position
         if (tb_methodOverridesFlags & TBTabBarControllerMethodOverridePreferredTabBarPositionForViewSize) {
             tb_preferredPosition = [self preferredTabBarPositionForViewSize:self.view.frame.size];
         } else {
             tb_preferredPosition = [self preferredTabBarPositionForHorizontalSizeClass:horizontalSizeClass];
         }
         [self tb_specifyPreferredPositionWithHorizontalSizeClassIfNecessary:horizontalSizeClass];
-        // Capture the current position
+        // Capture current position
         tb_currentPosition = tb_preferredPosition;
         // Update tab bars visibility
         TBTabBar *tabBarToShow, *tabBarToHide;
