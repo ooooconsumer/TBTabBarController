@@ -193,7 +193,6 @@ static void *tb_tabBarItemEnabledContext = &tb_tabBarItemEnabledContext;
         if ((tb_methodOverridesFlags & TBTabBarControllerMethodOverridePreferredTabBarPositionForViewSize) == false) {
             tb_preferredPosition = [self preferredTabBarPositionForHorizontalSizeClass:newHorizontalSizeClass];
             [self tb_specifyPreferredPositionWithHorizontalSizeClassIfNecessary:newHorizontalSizeClass]; // Subclasses may return an unspecified position
-            [self tb_updateTabBarsVisibilityWithTransitionCoordinator:coordinator];
         } else {
             // In case where a subclass overrides the -preferredTabBarPositionForViewSize: method, we should capture new preferred position for a new horizontal size class since a subclass may return either an unspecified position or call super.
             tb_preferredPosition = [self tb_preferredTabBarPositionForHorizontalSizeClass:newHorizontalSizeClass];
@@ -211,30 +210,24 @@ static void *tb_tabBarItemEnabledContext = &tb_tabBarItemEnabledContext;
     // The same happens when the user switches between 2/3 and 1/2 split view modes.
     // Subclasses can rely on this change and show the tab bar on the other side.
     
-    // UIKit calls this method even if the view size has not been changed
-    if (CGSizeEqualToSize(self.view.frame.size, size) == false) {
+    if (tb_methodOverridesFlags & TBTabBarControllerMethodOverridePreferredTabBarPositionForViewSize) {
         
-        [self.view setNeedsUpdateConstraints];
+        // By default the preferredTabBarPositionForViewSize: method returns tb_preferredPosition property, so we have to capture it before a subclass will call super
+        // An unspecified position means that trait collection has not been changed in a while
+        [self tb_specifyPreferredPositionWithHorizontalSizeClassIfNecessary:self.traitCollection.horizontalSizeClass];
         
-        if (tb_methodOverridesFlags & TBTabBarControllerMethodOverridePreferredTabBarPositionForViewSize) {
-            
-            // By default the preferredTabBarPositionForViewSize: method returns tb_preferredPosition property, so we have to capture it before a subclass will call super
-            // An unspecified position means that trait collection has not been changed in a while
-            [self tb_specifyPreferredPositionWithHorizontalSizeClassIfNecessary:self.traitCollection.horizontalSizeClass];
-            
-            TBTabBarControllerTabBarPosition preferredPosition = [self preferredTabBarPositionForViewSize:size];
-            
-            if (preferredPosition == TBTabBarControllerTabBarPositionUnspecified) {
-                // Subclasses may return an unspecified position
-                preferredPosition = tb_preferredPosition;
-            } else if (preferredPosition != tb_preferredPosition) {
-                // Capturing a new preferred position for the layout cycle
-                tb_preferredPosition = preferredPosition;
-            }
-            
-            [self tb_updateTabBarsVisibilityWithTransitionCoordinator:coordinator];
+        TBTabBarControllerTabBarPosition preferredPosition = [self preferredTabBarPositionForViewSize:size];
+        
+        if (preferredPosition == TBTabBarControllerTabBarPositionUnspecified) {
+            // Subclasses may return an unspecified position
+            preferredPosition = tb_preferredPosition;
+        } else if (preferredPosition != tb_preferredPosition) {
+            // Capturing a new preferred position for the layout cycle
+            tb_preferredPosition = preferredPosition;
         }
     }
+    
+    [self tb_updateTabBarsVisibilityWithTransitionCoordinator:coordinator];
     
     [super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
 }
@@ -453,9 +446,11 @@ static void *tb_tabBarItemEnabledContext = &tb_tabBarItemEnabledContext;
 
 - (void)tb_updateTabBarsVisibilityWithTransitionCoordinator:(id <UIViewControllerTransitionCoordinator>)coordinator {
     
-    if (tb_currentPosition == tb_preferredPosition) {
+    if (tb_preferredPosition == TBTabBarControllerTabBarPositionUnspecified || tb_preferredPosition == tb_currentPosition) {
         return;
     }
+    
+    [self.view setNeedsUpdateConstraints];
     
     TBTabBar *visibleTabBar, *hiddenTabBar;
     [self tb_getCurrentlyVisibleTabBar:&visibleTabBar andHiddenTabBar:&hiddenTabBar];
@@ -469,6 +464,7 @@ static void *tb_tabBarItemEnabledContext = &tb_tabBarItemEnabledContext;
     __weak typeof(self) weakSelf = self;
     
     [coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
+        [weakSelf.view updateConstraintsIfNeeded];
         [weakSelf tb_updateVerticalTabBarBottomContentInsetWithNewValue:-(weakSelf.bottomTabBarHeightConstraint.constant) andItsBottomConstraintWithNewConstant:0.0];
     } completion:^(id <UIViewControllerTransitionCoordinatorContext> context) {
         [weakSelf tb_makeTabBarHidden:visibleTabBar]; // Hide the previously visible tab bar
