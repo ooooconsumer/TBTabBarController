@@ -50,15 +50,9 @@ static TBTabBarControllerMethodOverrides tb_methodOverridesFlags;
 
 @implementation TBTabBarController {
     
-    BOOL tb_needsLayout;
-    
     // Position flags
     TBTabBarControllerTabBarPosition tb_currentPosition;
     TBTabBarControllerTabBarPosition tb_preferredPosition;
-    
-    // Erm, these variables are used to remove empty spaces when the device is rotated
-    CGFloat tb_previousVerticalTabBarBottomInset;
-    CGFloat tb_preferredVerticalTabBarBottomInset;
 }
 
 static void *tb_tabBarItemImageContext = &tb_tabBarItemImageContext;
@@ -126,22 +120,7 @@ static void *tb_tabBarItemEnabledContext = &tb_tabBarItemEnabledContext;
 }
 
 
-- (void)viewDidLayoutSubviews {
-    
-    if (tb_needsLayout == true) {
-        [self tb_updateViewConstraints:tb_preferredPosition];
-        [self tb_updateFakeNavigationBarHeightConstraint];
-        // When the device is rotated, a black empty space appears
-        [self tb_updateVerticalTabBarBottomContentInset];
-        // An unspecified position means that the trait collection has not been changed, so we have to rely on the current one
-        tb_preferredPosition = TBTabBarControllerTabBarPositionUnspecified;
-        // Preparing for the next layout cycle
-        tb_needsLayout = false;
-    }
-}
-
-
-#pragma mark Status bar 
+#pragma mark Status bar
 
 - (UIStatusBarStyle)preferredStatusBarStyle {
     
@@ -175,6 +154,19 @@ static void *tb_tabBarItemEnabledContext = &tb_tabBarItemEnabledContext;
 }
 
 
+#pragma mark UIConstraintBasedLayoutCoreMethods
+
+- (void)updateViewConstraints {
+    
+    [super updateViewConstraints];
+    
+    if (tb_preferredPosition != TBTabBarControllerTabBarPositionUnspecified) {
+        [self tb_updateViewConstraints];
+        [self tb_updateFakeNavigationBarHeightConstraint];
+        tb_preferredPosition = TBTabBarControllerTabBarPositionUnspecified; // An unspecified position means that the trait collection has not been changed, so we have to rely on the current one
+    }
+}
+
 
 #pragma mark Subclasses
 
@@ -200,7 +192,7 @@ static void *tb_tabBarItemEnabledContext = &tb_tabBarItemEnabledContext;
         
         if ((tb_methodOverridesFlags & TBTabBarControllerMethodOverridePreferredTabBarPositionForViewSize) == false) {
             tb_preferredPosition = [self preferredTabBarPositionForHorizontalSizeClass:newHorizontalSizeClass];
-            [self tb_specifyPreferredPositionWithHorizontalSizeClassIfNeeded:newHorizontalSizeClass]; // Subclasses may return an unspecified position
+            [self tb_specifyPreferredPositionWithHorizontalSizeClassIfNecessary:newHorizontalSizeClass]; // Subclasses may return an unspecified position
             [self tb_updateTabBarsVisibilityWithTransitionCoordinator:coordinator];
         } else {
             // In case where a subclass overrides the -preferredTabBarPositionForViewSize: method, we should capture a new preferred position for a new horizontal size class since a subclass may return either an unspecified position or call super.
@@ -222,13 +214,13 @@ static void *tb_tabBarItemEnabledContext = &tb_tabBarItemEnabledContext;
     // UIKit calls this method even if the view size has not been changed
     if (CGSizeEqualToSize(self.view.frame.size, size) == false) {
         
-        tb_needsLayout = true; // Update view constraints to play cool with safe area insets
+        [self.view setNeedsUpdateConstraints];
         
         if (tb_methodOverridesFlags & TBTabBarControllerMethodOverridePreferredTabBarPositionForViewSize) {
             
             // By default the preferredTabBarPositionForViewSize: method returns tb_preferredPosition property, so we have to capture it before a subclass will call super
             // An unspecified position means that trait collection has not been changed in a while
-            [self tb_specifyPreferredPositionWithHorizontalSizeClassIfNeeded:self.traitCollection.horizontalSizeClass]; 
+            [self tb_specifyPreferredPositionWithHorizontalSizeClassIfNecessary:self.traitCollection.horizontalSizeClass];
             
             TBTabBarControllerTabBarPosition preferredPosition = [self preferredTabBarPositionForViewSize:size];
             
@@ -254,20 +246,27 @@ static void *tb_tabBarItemEnabledContext = &tb_tabBarItemEnabledContext;
     
     if (previousTraitCollection == nil) {
         UIUserInterfaceSizeClass const horizontalSizeClass = self.traitCollection.horizontalSizeClass;
+        // ...
+        tb_preferredPosition = [self tb_preferredTabBarPositionForHorizontalSizeClass:horizontalSizeClass];
         // Capture a preferred position
         if (tb_methodOverridesFlags & TBTabBarControllerMethodOverridePreferredTabBarPositionForViewSize) {
             tb_preferredPosition = [self preferredTabBarPositionForViewSize:self.view.frame.size];
         } else {
             tb_preferredPosition = [self preferredTabBarPositionForHorizontalSizeClass:horizontalSizeClass];
         }
-        [self tb_specifyPreferredPositionWithHorizontalSizeClassIfNeeded:horizontalSizeClass];
-        // Capture a current position
+        [self tb_specifyPreferredPositionWithHorizontalSizeClassIfNecessary:horizontalSizeClass];
+        // Capture the current position
         tb_currentPosition = tb_preferredPosition;
         // Update tab bars visibility
-        TBTabBar *visibleTabBar, *hiddenTabBar;
-        [self tb_getCurrentlyVisibleTabBar:&visibleTabBar andHiddenTabBar:&hiddenTabBar];
-        [self tb_makeTabBarVisible:visibleTabBar];
-        [self tb_makeTabBarHidden:hiddenTabBar];
+        TBTabBar *tabBarToShow, *tabBarToHide;
+        [self tb_getCurrentlyVisibleTabBar:&tabBarToShow andHiddenTabBar:&tabBarToHide];
+        [self tb_makeTabBarVisible:tabBarToShow];
+        [self tb_makeTabBarHidden:tabBarToHide];
+        // Update constraints
+        [self.view setNeedsUpdateConstraints];
+        [self.view updateConstraintsIfNeeded];
+        // Make the vertical tab bar look good
+        [self tb_updateVerticalTabBarBottomContentInsetWithNewValue:self.leftTabBar.contentInsets.bottom andItsBottomConstraintWithNewConstant:-(_bottomTabBarHeightConstraint.constant)];
     }
     
     [super traitCollectionDidChange:previousTraitCollection];
@@ -368,8 +367,6 @@ static void *tb_tabBarItemEnabledContext = &tb_tabBarItemEnabledContext;
     
     // Constraints
     [self tb_setupConstraints];
-    
-    tb_needsLayout = true;
 }
 
 
@@ -377,47 +374,61 @@ static void *tb_tabBarItemEnabledContext = &tb_tabBarItemEnabledContext;
 
 - (void)tb_setupConstraints {
     
+    UIView *view = self.view;
+    
+    UIStackView *containerView = self.containerView;
+    
+    TBTabBar *bottomTabBar = self.bottomTabBar;
+    
     // Container view
-    _containerViewLeftConstraint = [self.containerView.leftAnchor constraintEqualToAnchor:self.view.leftAnchor];
-    NSLayoutConstraint *containerViewTopConstraint = [self.containerView.topAnchor constraintEqualToAnchor:self.view.topAnchor];
-    _containerViewBottomConstraint = [self.containerView.bottomAnchor constraintEqualToAnchor:self.view.bottomAnchor constant:self.horizontalTabBarHeight];
-    _containerViewWidthConstraint = [self.containerView.widthAnchor constraintEqualToConstant:self.verticalTabBarWidth];
+    _containerViewLeftConstraint = [containerView.leftAnchor constraintEqualToAnchor:view.leftAnchor];
+    NSLayoutConstraint *containerViewTopConstraint = [containerView.topAnchor constraintEqualToAnchor:view.topAnchor];
+    _containerViewBottomConstraint = [containerView.bottomAnchor constraintEqualToAnchor:bottomTabBar.bottomAnchor];
+    _containerViewWidthConstraint = [containerView.widthAnchor constraintEqualToConstant:self.verticalTabBarWidth];
+    
+    TBFakeNavigationBar *fakeNavBar = self.fakeNavigationBar;
     
     // Fake navigation bar
-    NSLayoutConstraint *fakeNavBarWidthConstraint = [self.fakeNavigationBar.widthAnchor constraintEqualToAnchor:self.containerView.widthAnchor];
-    _fakeNavBarHeightConstraint = [self.fakeNavigationBar.heightAnchor constraintEqualToConstant:40.0];
+    NSLayoutConstraint *fakeNavBarWidthConstraint = [fakeNavBar.widthAnchor constraintEqualToAnchor:containerView.widthAnchor];
+    _fakeNavBarHeightConstraint = [fakeNavBar.heightAnchor constraintEqualToConstant:40.0];
+    
+    TBTabBar *leftTabBar = self.leftTabBar;
     
     // Left tab bar
-    NSLayoutConstraint *leftTabBarWidthConstraint = [self.leftTabBar.widthAnchor constraintEqualToAnchor:self.containerView.widthAnchor];
+    NSLayoutConstraint *leftTabBarWidthConstraint = [leftTabBar.widthAnchor constraintEqualToAnchor:self.containerView.widthAnchor];
     
     // Bottom tab bar
-    NSLayoutConstraint *bottomTabBarLeftConstraint = [self.bottomTabBar.leftAnchor constraintEqualToAnchor:self.containerView.rightAnchor];
-    NSLayoutConstraint *bottomTabBarRightConstraint = [self.bottomTabBar.rightAnchor constraintEqualToAnchor:self.view.rightAnchor];
-    _bottomTabBarBottomConstraint = [self.bottomTabBar.bottomAnchor constraintEqualToAnchor:self.view.bottomAnchor];
-    _bottomTabBarHeightConstraint = [self.bottomTabBar.heightAnchor constraintEqualToConstant:self.horizontalTabBarHeight];
+    NSLayoutConstraint *bottomTabBarLeftConstraint = [bottomTabBar.leftAnchor constraintEqualToAnchor:containerView.rightAnchor];
+    NSLayoutConstraint *bottomTabBarRightConstraint = [bottomTabBar.rightAnchor constraintEqualToAnchor:view.rightAnchor];
+    _bottomTabBarBottomConstraint = [bottomTabBar.bottomAnchor constraintEqualToAnchor:view.bottomAnchor];
+    _bottomTabBarHeightConstraint = [bottomTabBar.heightAnchor constraintEqualToConstant:self.horizontalTabBarHeight];
     
     // Activation
     [NSLayoutConstraint activateConstraints:@[_containerViewLeftConstraint, containerViewTopConstraint, _containerViewBottomConstraint, _containerViewWidthConstraint, fakeNavBarWidthConstraint, _fakeNavBarHeightConstraint, leftTabBarWidthConstraint, bottomTabBarLeftConstraint, bottomTabBarRightConstraint, _bottomTabBarBottomConstraint, _bottomTabBarHeightConstraint]];
 }
 
 
-- (void)tb_updateViewConstraints:(TBTabBarControllerTabBarPosition)layoutOrientation {
+- (void)tb_updateViewConstraints {
     
     UIEdgeInsets safeAreaInsets = self.view.safeAreaInsets;
+    UIEdgeInsets bottomTabBarContentInsets = self.bottomTabBar.contentInsets;
+    UIEdgeInsets leftTabBarContentInsets = self.leftTabBar.contentInsets;
     
-    _bottomTabBarHeightConstraint.constant = self.horizontalTabBarHeight + safeAreaInsets.bottom + self.bottomTabBar.contentInsets.top + self.bottomTabBar.contentInsets.bottom;
-    _containerViewWidthConstraint.constant = self.verticalTabBarWidth + safeAreaInsets.left + self.leftTabBar.contentInsets.left + self.leftTabBar.contentInsets.right;
+    CGFloat const minBottomTabBarHeight = self.horizontalTabBarHeight + safeAreaInsets.bottom;
+    CGFloat const minLeftTabBarWidth = self.verticalTabBarWidth + safeAreaInsets.left;
+    CGFloat const bottomTabBarHeight = MAX(minBottomTabBarHeight + bottomTabBarContentInsets.top + bottomTabBarContentInsets.bottom, minBottomTabBarHeight);
+    CGFloat const leftTabBarWidth = MAX(minLeftTabBarWidth + leftTabBarContentInsets.left + leftTabBarContentInsets.right, minLeftTabBarWidth);
     
-    if (layoutOrientation == TBTabBarLayoutOrientationVertical) {
-        _bottomTabBarBottomConstraint.constant = _bottomTabBarHeightConstraint.constant;
+    _bottomTabBarHeightConstraint.constant = bottomTabBarHeight;
+    _containerViewWidthConstraint.constant = leftTabBarWidth;
+    
+    if (tb_preferredPosition == TBTabBarControllerTabBarPositionLeft) {
+        _bottomTabBarBottomConstraint.constant = bottomTabBarHeight;
         _containerViewLeftConstraint.constant = 0.0;
     } else {
         _bottomTabBarBottomConstraint.constant = 0.0;
-        _containerViewLeftConstraint.constant = -_containerViewWidthConstraint.constant;
+        _containerViewLeftConstraint.constant = -leftTabBarWidth;
     }
-    
-    tb_previousVerticalTabBarBottomInset = self.leftTabBar.contentInsets.bottom;
-    tb_preferredVerticalTabBarBottomInset = _bottomTabBarBottomConstraint.constant;
 }
 
 
@@ -427,46 +438,41 @@ static void *tb_tabBarItemEnabledContext = &tb_tabBarItemEnabledContext;
 }
 
 
-- (void)tb_updateVerticalTabBarBottomContentInset {
+- (void)tb_updateVerticalTabBarBottomContentInsetWithNewValue:(CGFloat)value andItsBottomConstraintWithNewConstant:(CGFloat)constant {
     
     TBTabBar *tabBar = self.leftTabBar;
-    UIEdgeInsets tabBarContentInsets = tabBar.contentInsets;
-    CGFloat containerViewBottomInset = 0.0;
     
-    if (tabBarContentInsets.bottom != tb_previousVerticalTabBarBottomInset) {
-        containerViewBottomInset = 0.0;
-        tabBarContentInsets.bottom = tb_previousVerticalTabBarBottomInset;
-    } else {
-        containerViewBottomInset = tb_preferredVerticalTabBarBottomInset;
-        tabBarContentInsets.bottom = -tb_preferredVerticalTabBarBottomInset;
-    }
+    UIEdgeInsets contentInsets = tabBar.contentInsets;
+    contentInsets.bottom = value;
     
-    // Covering an empty space by stretching the container view...
-    _containerViewBottomConstraint.constant = containerViewBottomInset;
-    // ... and make a tab bar look like it's ok
-    tabBar.contentInsets = tabBarContentInsets;
+    tabBar.contentInsets = contentInsets;
+    
+    _containerViewBottomConstraint.constant = constant;
 }
 
 
 - (void)tb_updateTabBarsVisibilityWithTransitionCoordinator:(id <UIViewControllerTransitionCoordinator>)coordinator {
     
     if (tb_currentPosition == tb_preferredPosition) {
-        return; // Do nothing when a new preferred positions equals to the current one
+        return;
     }
     
     TBTabBar *visibleTabBar, *hiddenTabBar;
     [self tb_getCurrentlyVisibleTabBar:&visibleTabBar andHiddenTabBar:&hiddenTabBar];
     
-    // Show the currently hidden tab bar
-    [self tb_makeTabBarVisible:hiddenTabBar];
+    [self tb_makeTabBarVisible:hiddenTabBar]; // Show the currently hidden tab bar
     
     tb_currentPosition = tb_preferredPosition;
     
+    CGFloat const previousVerticalTabBarBottomInset = self.leftTabBar.contentInsets.bottom;
+    
     __weak typeof(self) weakSelf = self;
     
-    [coordinator animateAlongsideTransition:nil completion:^(id <UIViewControllerTransitionCoordinatorContext> context) {
-        [weakSelf tb_updateVerticalTabBarBottomContentInset]; // Get everything back the way it was
-        [weakSelf tb_makeTabBarHidden:visibleTabBar]; // Hide the previously visible tab bar when the transition is complete
+    [coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
+        [weakSelf tb_updateVerticalTabBarBottomContentInsetWithNewValue:-(weakSelf.bottomTabBarHeightConstraint.constant) andItsBottomConstraintWithNewConstant:0.0];
+    } completion:^(id <UIViewControllerTransitionCoordinatorContext> context) {
+        [weakSelf tb_makeTabBarHidden:visibleTabBar]; // Hide the previously visible tab bar
+        [weakSelf tb_updateVerticalTabBarBottomContentInsetWithNewValue:previousVerticalTabBarBottomInset andItsBottomConstraintWithNewConstant:-weakSelf.bottomTabBarHeightConstraint.constant];
     }];
 }
 
@@ -517,13 +523,11 @@ static void *tb_tabBarItemEnabledContext = &tb_tabBarItemEnabledContext;
     self.leftTabBar.selectedIndex = index;
     
     // Layout everything
-    tb_needsLayout = true;
-    
-    if (tb_currentPosition == TBTabBarControllerTabBarPositionUnspecified) {
-        [self tb_specifyPreferredPositionWithHorizontalSizeClassIfNeeded:self.traitCollection.horizontalSizeClass];
-    } else if (tb_preferredPosition == TBTabBarControllerTabBarPositionUnspecified) {
+    if (tb_preferredPosition == TBTabBarControllerTabBarPositionUnspecified) {
         tb_preferredPosition = tb_currentPosition;
     }
+    
+    [self.view setNeedsUpdateConstraints];
     
     [self setNeedsStatusBarAppearanceUpdate];
 }
@@ -566,22 +570,6 @@ static void *tb_tabBarItemEnabledContext = &tb_tabBarItemEnabledContext;
 }
 
 
-- (void)tb_captureChildNavigationControllerIfExsists {
-    
-    // This method was borrowed from TOTabBarController
-    // https://github.com/TimOliver/TOTabBarController
-    
-    UIViewController *viewController = self.selectedViewController;
-    
-    do {
-        if ([viewController isKindOfClass:[UINavigationController class]]) {
-            _childNavigationController = (UINavigationController *)viewController;
-            break;
-        }
-    } while ((viewController = viewController.childViewControllers.firstObject));
-}
-
-
 #pragma mark Observing
 
 - (void)tb_startObservingTabBarItems {
@@ -614,7 +602,7 @@ static void *tb_tabBarItemEnabledContext = &tb_tabBarItemEnabledContext;
 }
 
 
-- (void)tb_specifyPreferredPositionWithHorizontalSizeClassIfNeeded:(UIUserInterfaceSizeClass)sizeClass {
+- (void)tb_specifyPreferredPositionWithHorizontalSizeClassIfNecessary:(UIUserInterfaceSizeClass)sizeClass {
     
     if (tb_preferredPosition == TBTabBarControllerTabBarPositionUnspecified) {
         tb_preferredPosition = [self tb_preferredTabBarPositionForHorizontalSizeClass:sizeClass];
@@ -635,6 +623,45 @@ static void *tb_tabBarItemEnabledContext = &tb_tabBarItemEnabledContext;
 - (__kindof UIViewController *)tb_getCurrentlyVisibleViewController {
     
     return _childNavigationController ? _childNavigationController.visibleViewController : self.selectedViewController;
+}
+
+
+- (void)tb_captureChildNavigationControllerIfExsists {
+    
+    // This method was borrowed from TOTabBarController (https://github.com/TimOliver/TOTabBarController)
+    
+    UIViewController *viewController = self.selectedViewController;
+    
+    do {
+        if ([viewController isKindOfClass:[UINavigationController class]]) {
+            _childNavigationController = (UINavigationController *)viewController;
+            break;
+        }
+    } while ((viewController = viewController.childViewControllers.firstObject));
+}
+
+
+- (void)tb_processChildrenOfViewControllersWithValue:(id)value {
+    
+    for (UIViewController *viewController in _viewControllers) {
+        [self tb_processChildrenOfViewController:viewController withValue:value];
+    }
+}
+
+
+- (void)tb_processChildrenOfViewController:(__kindof UIViewController *)viewController withValue:(id)value {
+    
+    for (__kindof UIViewController *childViewController in viewController.childViewControllers) {
+        [self tb_processChildrenOfViewController:childViewController withValue:value];
+    }
+    
+    [viewController setValue:value forKey:@"tb_tabBarController"];
+}
+
+
+- (void)tb_captureTabBarItems {
+    
+    self.items = [_viewControllers valueForKeyPath:@"@unionOfObjects.tb_tabBarItem"];
 }
 
 
@@ -702,11 +729,18 @@ static void *tb_tabBarItemEnabledContext = &tb_tabBarItemEnabledContext;
     
     if (_viewControllers.count > 0) {
         [self tb_stopObservingTabBarItems]; // Should we do this here?
+        [self tb_processChildrenOfViewControllersWithValue:nil];
+    }
+    
+    if (viewControllers == nil) {
+        _viewControllers = viewControllers;
+        return;
     }
     
     _viewControllers = [viewControllers copy];
     
-    self.items = [_viewControllers valueForKeyPath:@"@unionOfObjects.tb_tabBarItem"];
+    [self tb_processChildrenOfViewControllersWithValue:self];
+    [self tb_captureTabBarItems];
     
     [self tb_transitionToViewControllerAtIndex:self.startingIndex];
 }
@@ -737,6 +771,22 @@ static void *tb_tabBarItemEnabledContext = &tb_tabBarItemEnabledContext;
     _selectedIndex = selectedIndex;
     
     [self tb_transitionToViewControllerAtIndex:selectedIndex];
+}
+
+
+- (void)setVerticalTabBarWidth:(CGFloat)verticalTabBarWidth {
+    
+    _verticalTabBarWidth = verticalTabBarWidth;
+    
+    _containerViewWidthConstraint.constant = verticalTabBarWidth;
+}
+
+
+- (void)setHorizontalTabBarHeight:(CGFloat)horizontalTabBarHeight {
+    
+    _horizontalTabBarHeight = horizontalTabBarHeight;
+    
+    _bottomTabBarHeightConstraint.constant = horizontalTabBarHeight;
 }
 
 
@@ -796,7 +846,7 @@ static char *tb_tabBarControllerPropertyKey;
 
 - (void)setTb_tabBarController:(TBTabBarController * _Nullable)tb_tabBarController {
     
-    objc_setAssociatedObject(self, &tb_tabBarControllerPropertyKey, tb_tabBarController, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    objc_setAssociatedObject(self, &tb_tabBarControllerPropertyKey, tb_tabBarController, OBJC_ASSOCIATION_ASSIGN);
 }
 
 @end
