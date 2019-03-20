@@ -58,7 +58,7 @@
 
 - (void)tb_commonInit {
     
-    self.userInteractionEnabled = true;
+    self.userInteractionEnabled = false;
     
     [self tb_setup];
 }
