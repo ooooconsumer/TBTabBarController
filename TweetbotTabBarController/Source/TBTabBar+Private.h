@@ -8,13 +8,13 @@
 
 #import "TBTabBar.h"
 
-@class TBTabBarButton;
+@class _TBTabBarButton;
 
 NS_ASSUME_NONNULL_BEGIN
 
 @interface TBTabBar (Private)
 
-@property (strong, nonatomic, readonly, nullable) NSArray <TBTabBarButton *> *buttons; // Don't use this property to style buttons
+@property (strong, nonatomic, readonly, nullable) NSArray <_TBTabBarButton *> *buttons;
 
 @end
 

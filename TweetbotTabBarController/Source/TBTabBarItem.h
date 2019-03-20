@@ -19,6 +19,9 @@ NS_ASSUME_NONNULL_BEGIN
 /** @brief Describes whether item should be enabled or disabled. Default is YES */
 @property (assign, nonatomic, getter = isEnabled) BOOL enabled;
 
+/** @brief By setting this value to YES, a tab bar will show a small dot next to the tab icon that indicates something has happened. Default is NO */
+@property (assign, nonatomic) BOOL showDot;
+
 - (instancetype)initWithImage:(nullable UIImage *)image;
 
 - (instancetype)initWithImage:(nullable UIImage *)image selectedImage:(nullable UIImage *)selectedImage;

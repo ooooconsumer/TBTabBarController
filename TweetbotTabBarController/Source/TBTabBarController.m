@@ -8,9 +8,11 @@
 
 #import "TBTabBarController.h"
 
-#import "TBTabBar+Private.h"
-#import "TBTabBarButton.h"
 #import "TBFakeNavigationBar.h"
+
+#import "TBTabBar+Private.h"
+#import "_TBTabBarButton.h"
+#import "_TBDotView.h"
 
 #import <objc/runtime.h>
 
@@ -58,6 +60,7 @@ static TBTabBarControllerMethodOverrides tb_methodOverridesFlags;
 static void *tb_tabBarItemImageContext = &tb_tabBarItemImageContext;
 static void *tb_tabBarItemSelectedImageContext = &tb_tabBarItemSelectedImageContext;
 static void *tb_tabBarItemEnabledContext = &tb_tabBarItemEnabledContext;
+static void *tb_tabBarItemShowDotContext = &tb_tabBarItemShowDotContext;
 
 #pragma mark - Public
 
@@ -276,8 +279,8 @@ static void *tb_tabBarItemEnabledContext = &tb_tabBarItemEnabledContext;
         return;
     }
     
-    TBTabBarButton *bottomTabBarButtonAtIndex = self.bottomTabBar.buttons[itemIndex];
-    TBTabBarButton *leftTabBarButtonAtIndex = self.leftTabBar.buttons[itemIndex];
+    _TBTabBarButton *bottomTabBarButtonAtIndex = self.bottomTabBar.buttons[itemIndex];
+    _TBTabBarButton *leftTabBarButtonAtIndex = self.leftTabBar.buttons[itemIndex];
     
     if (context == tb_tabBarItemImageContext) {
         UIImage *newImage = (UIImage *)change[NSKeyValueChangeNewKey];
@@ -291,6 +294,10 @@ static void *tb_tabBarItemEnabledContext = &tb_tabBarItemEnabledContext;
         BOOL const enabled = [(NSNumber *)change[NSKeyValueChangeNewKey] boolValue];
         bottomTabBarButtonAtIndex.enabled = enabled;
         leftTabBarButtonAtIndex.enabled = enabled;
+    } else if (context == tb_tabBarItemShowDotContext) {
+        BOOL const showDot = ![(NSNumber *)change[NSKeyValueChangeNewKey] boolValue];
+        bottomTabBarButtonAtIndex.dotView.hidden = showDot;
+        leftTabBarButtonAtIndex.dotView.hidden = showDot;
     }
 }
 
@@ -574,6 +581,7 @@ static void *tb_tabBarItemEnabledContext = &tb_tabBarItemEnabledContext;
         [item addObserver:self forKeyPath:@"image" options:NSKeyValueObservingOptionNew context:tb_tabBarItemImageContext];
         [item addObserver:self forKeyPath:@"selectedImage" options:NSKeyValueObservingOptionNew context:tb_tabBarItemSelectedImageContext];
         [item addObserver:self forKeyPath:@"enabled" options:NSKeyValueObservingOptionNew context:tb_tabBarItemEnabledContext];
+        [item addObserver:self forKeyPath:@"showDot" options:NSKeyValueObservingOptionNew context:tb_tabBarItemShowDotContext];
     }
 }
 
@@ -583,6 +591,7 @@ static void *tb_tabBarItemEnabledContext = &tb_tabBarItemEnabledContext;
         [item removeObserver:self forKeyPath:@"image" context:tb_tabBarItemImageContext];
         [item removeObserver:self forKeyPath:@"selectedImage" context:tb_tabBarItemSelectedImageContext];
         [item removeObserver:self forKeyPath:@"enabled" context:tb_tabBarItemEnabledContext];
+        [item removeObserver:self forKeyPath:@"showDot" context:tb_tabBarItemShowDotContext];
     }
 }
 

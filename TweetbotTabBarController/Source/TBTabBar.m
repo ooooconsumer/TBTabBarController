@@ -7,13 +7,14 @@
 //
 
 #import "TBTabBar.h"
-#import "TBTabBar+Private.h"
 
-#import "TBTabBarButton.h"
+#import "TBTabBar+Private.h"
+#import "_TBTabBarButton.h"
+#import "_TBDotView.h"
 
 @interface TBTabBar()
 
-@property (strong, nonatomic) NSArray <TBTabBarButton *> *buttons;
+@property (strong, nonatomic) NSArray <_TBTabBarButton *> *buttons;
 
 @property (strong, nonatomic) UIView *separatorView;
 
@@ -31,6 +32,7 @@
 @implementation TBTabBar
 
 @synthesize defaultTintColor = _defaultTintColor;
+@synthesize dotTintColor = _dotTintColor;
 
 #pragma mark - Public
 
@@ -163,7 +165,7 @@
 
 #pragma mark Callbacks
 
-- (void)tb_didSelectItem:(TBTabBarButton *)button {
+- (void)tb_didSelectItem:(_TBTabBarButton *)button {
     
     if (self.delegate == nil) {
         return;
@@ -201,6 +203,16 @@
 }
 
 
+- (UIColor *)dotTintColor {
+    
+    if (_dotTintColor == nil) {
+        _dotTintColor = self.tintColor;
+    }
+    
+    return _dotTintColor;
+}
+
+
 #pragma mark Setters
 
 - (void)setItems:(NSArray <TBTabBarItem *> *)items {
@@ -210,7 +222,7 @@
     }
     
     if (self.buttons.count > 0) {
-        for (TBTabBarButton *button in self.buttons) {
+        for (_TBTabBarButton *button in self.buttons) {
             [button removeFromSuperview];
         }
         self.buttons = nil;
@@ -218,23 +230,25 @@
     
     _items = items;
     
-    NSMutableArray <TBTabBarButton *> *buttons = [NSMutableArray arrayWithCapacity:items.count];
+    NSMutableArray <_TBTabBarButton *> *buttons = [NSMutableArray arrayWithCapacity:items.count];
     
     UIStackView *stackView = self.stackView;
     
     for (TBTabBarItem *item in _items) {
         
-        TBTabBarButton *button = [[TBTabBarButton alloc] initWithTabBarItem:item];
+        _TBTabBarButton *button = [[_TBTabBarButton alloc] initWithTabBarItem:item];
         button.tintColor = self.defaultTintColor;
+        button.dotView.tintColor = self.dotTintColor;
+        button.laysOutHorizontally = !self.isVertical;
         
         [button addTarget:self action:@selector(tb_didSelectItem:) forControlEvents:UIControlEventTouchUpInside];
         
         [stackView addArrangedSubview:button];
         
         if (self.isVertical == false) {
-            [NSLayoutConstraint constraintWithItem:button attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:stackView attribute:NSLayoutAttributeHeight multiplier:1.0 constant:0.0].active = true;
+            [button.heightAnchor constraintEqualToAnchor:stackView.heightAnchor].active = true;
         } else {
-            [NSLayoutConstraint constraintWithItem:button attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:stackView attribute:NSLayoutAttributeWidth multiplier:1.0 constant:0.0].active = true;
+            [button.widthAnchor constraintEqualToAnchor:stackView.widthAnchor].active = true;
         }
         
         [buttons addObject:button];
@@ -260,8 +274,22 @@
         _defaultTintColor = [UIColor colorWithWhite:0.6 alpha:1.0];
     }
     
-    for (TBTabBarButton *button in self.buttons) {
+    for (_TBTabBarButton *button in self.buttons) {
         button.tintColor = _defaultTintColor;
+    }
+}
+
+
+- (void)setDotTintColor:(UIColor *)dotTintColor {
+    
+    if (dotTintColor != nil) {
+        _dotTintColor = dotTintColor;
+    } else {
+        _dotTintColor = self.tintColor;
+    }
+    
+    for (_TBTabBarButton *button in self.buttons) {
+        button.dotView.tintColor = _dotTintColor;
     }
 }
 
@@ -276,13 +304,13 @@
 
 - (void)setSelectedIndex:(NSUInteger)selectedIndex {
     
+    _TBTabBarButton *previouslySelectedButton = self.buttons[_selectedIndex];
+    previouslySelectedButton.tintColor = self.defaultTintColor;
+    
     _selectedIndex = selectedIndex;
     
-    for (TBTabBarButton *button in self.buttons) {
-        button.tintColor = self.defaultTintColor;
-    }
-    
-    self.buttons[_selectedIndex].tintColor = self.selectedTintColor;
+    _TBTabBarButton *selectedButton = self.buttons[_selectedIndex];
+    selectedButton.tintColor = self.selectedTintColor;
 }
 
 

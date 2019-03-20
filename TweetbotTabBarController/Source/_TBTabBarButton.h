@@ -1,5 +1,5 @@
 //
-//  TBTabBarButton.h
+//  _TBTabBarButton.h
 //  TBTabBarController
 //
 //  Created by Timur Ganiev on 03/02/2019.
@@ -8,13 +8,17 @@
 
 #import <UIKit/UIKit.h>
 
-@class TBTabBarItem;
+@class TBTabBarItem, _TBDotView;
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface TBTabBarButton : UIControl
+@interface _TBTabBarButton : UIControl
 
 @property (strong, nonatomic, readonly) UIImageView *imageView;
+
+@property (strong, nonatomic, readonly) _TBDotView *dotView;
+
+@property (assign, nonatomic) BOOL laysOutHorizontally;
 
 @property (weak, nonatomic, readonly) TBTabBarItem *tabBarItem;
 

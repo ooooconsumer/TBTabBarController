@@ -6,19 +6,23 @@
 //  Copyright © 2019 Timur Ganiev. All rights reserved.
 //
 
-#import "TBTabBarButton.h"
+#import "_TBTabBarButton.h"
 
 #import "TBTabBarItem.h"
 
-@interface TBTabBarButton ()
+#import "_TBDotView.h"
+
+@interface _TBTabBarButton ()
 
 @property (strong, nonatomic, readwrite) UIImageView *imageView;
 
 @property (weak, nonatomic, readwrite) TBTabBarItem *tabBarItem;
 
+@property (strong, nonatomic, readwrite) _TBDotView *dotView;
+
 @end
 
-@implementation TBTabBarButton {
+@implementation _TBTabBarButton {
     
     UIImage *_normalImage;
     UIImage *_highlightedImage;
@@ -104,11 +108,24 @@
     
     [self.imageView sizeToFit];
     
+    // Image view
     CGRect imageViewFrame = self.imageView.frame;
     imageViewFrame.origin.x = (CGRectGetWidth(self.bounds) - CGRectGetWidth(imageViewFrame)) / 2.0;
     imageViewFrame.origin.y = (CGRectGetHeight(self.bounds) - CGRectGetHeight(imageViewFrame)) / 2.0;
     
     self.imageView.frame = imageViewFrame;
+    
+    // Dot view
+    CGSize dotViewSize = (CGSize){4.0, 4.0};
+    CGPoint dotViewPosition = CGPointZero;
+    
+    if (self.laysOutHorizontally) {
+        dotViewPosition = (CGPoint){CGRectGetMaxX(self.bounds) - 4.0, CGRectGetMidY(self.bounds) - (dotViewSize.height / 2.0)};
+    } else {
+        dotViewPosition = (CGPoint){CGRectGetMidX(self.bounds) - (dotViewSize.width / 2.0), CGRectGetMaxY(self.bounds) - 4.0};
+    }
+    
+    self.dotView.frame = (CGRect){dotViewPosition, dotViewSize};
 }
 
 
@@ -119,15 +136,21 @@
     _normalImage = self.tabBarItem.image;
     _selectedImage = self.tabBarItem.selectedImage;
     
+    self.dotView.hidden = !self.tabBarItem.showDot;
+    
     [self tb_setup];
 }
 
 
 - (void)tb_setup {
     
+    // Image view
     [self addSubview:self.imageView];
     
     [self tb_updateImage];
+    
+    // Dot view
+    [self addSubview:self.dotView];
 }
 
 
@@ -158,12 +181,24 @@
 
 - (UIImageView *)imageView {
     
-    if (!_imageView) {
+    if (_imageView == nil) {
         _imageView = [[UIImageView alloc] initWithFrame:CGRectZero];
         _imageView.contentMode = UIViewContentModeCenter;
     }
     
     return _imageView;
+}
+
+
+- (_TBDotView *)dotView {
+    
+    if (_dotView == nil) {
+        _dotView = [[_TBDotView alloc] initWithFrame:CGRectZero];
+        _dotView.hidden = true;
+        _dotView.translatesAutoresizingMaskIntoConstraints = false;
+    }
+    
+    return _dotView;
 }
 
 

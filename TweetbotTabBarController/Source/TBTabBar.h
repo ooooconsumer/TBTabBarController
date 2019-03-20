@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@class TBTabBar, TBTabBarItem, TBTabBarButton;
+@class TBTabBar, TBTabBarItem, _TBTabBarButton;
 
 typedef NS_ENUM(NSInteger, TBTabBarLayoutOrientation) {
     TBTabBarLayoutOrientationHorizontal,
@@ -38,6 +38,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 /** @brief When a tab is selected, its tint color. Default is nil. */
 @property (strong, nonatomic, nullable) UIColor *selectedTintColor;
+
+/** @brief Dots tint color. Default equals to the tab bar's tint color. */
+@property (strong, nonatomic, null_resettable) UIColor *dotTintColor;
 
 /** @brief The currently selected tab index. */
 @property (assign, nonatomic) NSUInteger selectedIndex;
