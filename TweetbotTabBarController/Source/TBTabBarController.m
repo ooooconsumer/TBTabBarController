@@ -267,7 +267,7 @@ static void *tb_tabBarItemShowDotContext = &tb_tabBarItemShowDotContext;
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary <NSKeyValueChangeKey, id> *)change context:(void *)context {
     
-    NSUInteger const itemIndex = [self.visibleTabBar.items indexOfObject:object];
+    NSUInteger const itemIndex = [self.items indexOfObject:object];
     
     if (itemIndex == NSNotFound) {
         return;
@@ -292,6 +292,8 @@ static void *tb_tabBarItemShowDotContext = &tb_tabBarItemShowDotContext;
         BOOL const showDot = ![(NSNumber *)change[NSKeyValueChangeNewKey] boolValue];
         bottomTabBarButtonAtIndex.dotView.hidden = showDot;
         leftTabBarButtonAtIndex.dotView.hidden = showDot;
+    } else {
+        [super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
     }
 }
 
