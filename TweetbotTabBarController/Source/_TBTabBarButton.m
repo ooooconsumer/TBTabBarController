@@ -110,19 +110,19 @@
     
     // Image view
     CGRect imageViewFrame = self.imageView.frame;
-    imageViewFrame.origin.x = (CGRectGetWidth(self.bounds) - CGRectGetWidth(imageViewFrame)) / 2.0;
-    imageViewFrame.origin.y = (CGRectGetHeight(self.bounds) - CGRectGetHeight(imageViewFrame)) / 2.0;
+    imageViewFrame.origin.x = rint((CGRectGetWidth(self.bounds) - CGRectGetWidth(imageViewFrame)) / 2.0);
+    imageViewFrame.origin.y = rint((CGRectGetHeight(self.bounds) - CGRectGetHeight(imageViewFrame)) / 2.0);
     
     self.imageView.frame = imageViewFrame;
     
     // Dot view
-    CGSize dotViewSize = (CGSize){4.0, 4.0};
+    CGSize dotViewSize = (CGSize){5.0, 5.0};
     CGPoint dotViewPosition = CGPointZero;
     
     if (self.laysOutHorizontally) {
-        dotViewPosition = (CGPoint){CGRectGetMaxX(self.bounds) - 4.0, CGRectGetMidY(self.bounds) - (dotViewSize.height / 2.0)};
+        dotViewPosition = (CGPoint){rint(CGRectGetMaxX(self.bounds) - (dotViewSize.width * 2.0)), rint(CGRectGetMidY(self.bounds) - (dotViewSize.height / 2.0))};
     } else {
-        dotViewPosition = (CGPoint){CGRectGetMidX(self.bounds) - (dotViewSize.width / 2.0), CGRectGetMaxY(self.bounds) - 4.0};
+        dotViewPosition = (CGPoint){rint(CGRectGetMidX(self.bounds) - (dotViewSize.width / 2.0)), rint(CGRectGetMaxY(self.bounds) - (dotViewSize.height + 3.0))};
     }
     
     self.dotView.frame = (CGRect){dotViewPosition, dotViewSize};

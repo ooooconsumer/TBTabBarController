@@ -239,7 +239,7 @@
         _TBTabBarButton *button = [[_TBTabBarButton alloc] initWithTabBarItem:item];
         button.tintColor = self.defaultTintColor;
         button.dotView.tintColor = self.dotTintColor;
-        button.laysOutHorizontally = !self.isVertical;
+        button.laysOutHorizontally = self.isVertical;
         
         [button addTarget:self action:@selector(tb_didSelectItem:) forControlEvents:UIControlEventTouchUpInside];
         
