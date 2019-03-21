@@ -1,7 +1,7 @@
 Pod::Spec.new do |spec|
 
   spec.name         = "TweetbotTabBarController"
-  spec.version      = "0.1.1"
+  spec.version      = "0.2.0"
   spec.summary      = "A Tweetbot like vertical tab bar."
   spec.description  = "A replacement for UITabBarController with a vertical tab bar."
   spec.homepage     = "https://github.com/oofimaconsumer/TweetbotTabBarController"
