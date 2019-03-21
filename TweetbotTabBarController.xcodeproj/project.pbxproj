@@ -12,15 +12,15 @@
 		8179A048222F8296006307F7 /* TweetbotTabBarController.h in Headers */ = {isa = PBXBuildFile; fileRef = 8179A046222F8296006307F7 /* TweetbotTabBarController.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		8179A05E222F8417006307F7 /* TBTabBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 8179A051222F8417006307F7 /* TBTabBar.m */; };
 		8179A05F222F8417006307F7 /* TBFakeNavigationBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 8179A052222F8417006307F7 /* TBFakeNavigationBar.m */; };
-		8179A060222F8417006307F7 /* TBFakeNavigationBar.h in Headers */ = {isa = PBXBuildFile; fileRef = 8179A053222F8417006307F7 /* TBFakeNavigationBar.h */; };
+		8179A060222F8417006307F7 /* TBFakeNavigationBar.h in Headers */ = {isa = PBXBuildFile; fileRef = 8179A053222F8417006307F7 /* TBFakeNavigationBar.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		8179A061222F8417006307F7 /* TBTabBarController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8179A054222F8417006307F7 /* TBTabBarController.m */; };
 		8179A062222F8417006307F7 /* TBTabBarItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 8179A055222F8417006307F7 /* TBTabBarItem.m */; };
-		8179A063222F8417006307F7 /* TBTabBarController.h in Headers */ = {isa = PBXBuildFile; fileRef = 8179A056222F8417006307F7 /* TBTabBarController.h */; };
+		8179A063222F8417006307F7 /* TBTabBarController.h in Headers */ = {isa = PBXBuildFile; fileRef = 8179A056222F8417006307F7 /* TBTabBarController.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		8179A064222F8417006307F7 /* _TBTabBarButton.h in Headers */ = {isa = PBXBuildFile; fileRef = 8179A057222F8417006307F7 /* _TBTabBarButton.h */; settings = {ATTRIBUTES = (Private, ); }; };
-		8179A066222F8417006307F7 /* TBTabBarItem.h in Headers */ = {isa = PBXBuildFile; fileRef = 8179A059222F8417006307F7 /* TBTabBarItem.h */; };
+		8179A066222F8417006307F7 /* TBTabBarItem.h in Headers */ = {isa = PBXBuildFile; fileRef = 8179A059222F8417006307F7 /* TBTabBarItem.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		8179A067222F8417006307F7 /* _TBTabBarButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 8179A05A222F8417006307F7 /* _TBTabBarButton.m */; };
-		8179A069222F8417006307F7 /* TBTabBar.h in Headers */ = {isa = PBXBuildFile; fileRef = 8179A05C222F8417006307F7 /* TBTabBar.h */; };
-		8179A06A222F8417006307F7 /* TBTabBar+Private.h in Headers */ = {isa = PBXBuildFile; fileRef = 8179A05D222F8417006307F7 /* TBTabBar+Private.h */; };
+		8179A069222F8417006307F7 /* TBTabBar.h in Headers */ = {isa = PBXBuildFile; fileRef = 8179A05C222F8417006307F7 /* TBTabBar.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		8179A06A222F8417006307F7 /* TBTabBar+Private.h in Headers */ = {isa = PBXBuildFile; fileRef = 8179A05D222F8417006307F7 /* TBTabBar+Private.h */; settings = {ATTRIBUTES = (Private, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -106,14 +106,14 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				8179A06A222F8417006307F7 /* TBTabBar+Private.h in Headers */,
 				816A3AA6224269FE00E0ED4C /* _TBDotView.h in Headers */,
-				8179A064222F8417006307F7 /* _TBTabBarButton.h in Headers */,
 				8179A066222F8417006307F7 /* TBTabBarItem.h in Headers */,
-				8179A048222F8296006307F7 /* TweetbotTabBarController.h in Headers */,
 				8179A069222F8417006307F7 /* TBTabBar.h in Headers */,
 				8179A063222F8417006307F7 /* TBTabBarController.h in Headers */,
 				8179A060222F8417006307F7 /* TBFakeNavigationBar.h in Headers */,
+				8179A064222F8417006307F7 /* _TBTabBarButton.h in Headers */,
+				8179A06A222F8417006307F7 /* TBTabBar+Private.h in Headers */,
+				8179A048222F8296006307F7 /* TweetbotTabBarController.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
