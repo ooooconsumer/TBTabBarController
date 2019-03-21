@@ -208,9 +208,7 @@ static void *tb_tabBarItemShowDotContext = &tb_tabBarItemShowDotContext;
 
 - (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id <UIViewControllerTransitionCoordinator>)coordinator {
     
-    // The horizontal size class doesn't change every time.
-    // When the user rotates an iPad the view has the same horizontal size class, but its size will be changed.
-    // The same happens when the user switches between 2/3 and 1/2 split view modes.
+    // Sometimes only the size of the view changes.
     // Subclasses can rely on this change and show the tab bar on the other side.
     
     if (tb_methodOverridesFlags & TBTabBarControllerMethodOverridePreferredTabBarPositionForViewSize) {
@@ -453,11 +451,15 @@ static void *tb_tabBarItemShowDotContext = &tb_tabBarItemShowDotContext;
 
 - (void)tb_updateTabBarsVisibilityWithTransitionCoordinator:(id <UIViewControllerTransitionCoordinator>)coordinator {
     
+    __weak typeof(self) weakSelf = self;
+    
     if (tb_preferredPosition == TBTabBarControllerTabBarPositionUnspecified || tb_preferredPosition == tb_currentPosition) {
+        [coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
+            [weakSelf.view setNeedsUpdateConstraints];
+            [weakSelf.view updateConstraintsIfNeeded];
+        } completion:nil];
         return;
     }
-    
-    [self.view setNeedsUpdateConstraints];
     
     TBTabBar *visibleTabBar, *hiddenTabBar;
     [self tb_getCurrentlyVisibleTabBar:&visibleTabBar andHiddenTabBar:&hiddenTabBar];
@@ -468,9 +470,8 @@ static void *tb_tabBarItemShowDotContext = &tb_tabBarItemShowDotContext;
     
     CGFloat const previousVerticalTabBarBottomInset = self.leftTabBar.contentInsets.bottom;
     
-    __weak typeof(self) weakSelf = self;
-    
     [coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
+        [weakSelf.view setNeedsUpdateConstraints];
         [weakSelf.view updateConstraintsIfNeeded];
         [weakSelf tb_updateVerticalTabBarBottomContentInsetWithNewValue:-(weakSelf.bottomTabBarHeightConstraint.constant) andItsBottomConstraintWithNewConstant:0.0];
     } completion:^(id <UIViewControllerTransitionCoordinatorContext> context) {
