@@ -219,11 +219,7 @@ static void *tb_tabBarItemShowDotContext = &tb_tabBarItemShowDotContext;
         
         TBTabBarControllerTabBarPosition preferredPosition = [self preferredTabBarPositionForViewSize:size];
         
-        if (preferredPosition == TBTabBarControllerTabBarPositionUnspecified) {
-            // Subclasses may return an unspecified position
-            preferredPosition = tb_preferredPosition;
-        } else if (preferredPosition != tb_preferredPosition) {
-            // Capturing a new preferred position for the layout cycle
+        if (preferredPosition != tb_preferredPosition && preferredPosition != TBTabBarControllerTabBarPositionUnspecified) {
             tb_preferredPosition = preferredPosition;
         }
     }
