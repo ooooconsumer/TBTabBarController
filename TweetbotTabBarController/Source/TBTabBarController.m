@@ -52,9 +52,13 @@ static TBTabBarControllerMethodOverrides tb_methodOverridesFlags;
 
 @implementation TBTabBarController {
     
-    // Position flags
     TBTabBarControllerTabBarPosition tb_currentPosition;
     TBTabBarControllerTabBarPosition tb_preferredPosition;
+    
+    struct {
+        unsigned int shouldSelectViewController:1;
+        unsigned int didSelectViewController:1;
+    } tb_delegateFlags;
 }
 
 static void *tb_tabBarItemImageContext = &tb_tabBarItemImageContext;
@@ -310,7 +314,7 @@ static void *tb_tabBarItemShowDotContext = &tb_tabBarItemShowDotContext;
     
     id <TBTabBarControllerDelegate> delegate = self.delegate;
     
-    if ([delegate respondsToSelector:@selector(tabBarController:shouldSelectViewController:)]) {
+    if (tb_delegateFlags.shouldSelectViewController) {
         shouldSelectViewController = [delegate tabBarController:self shouldSelectViewController:childViewController];
     }
     
@@ -320,7 +324,7 @@ static void *tb_tabBarItemShowDotContext = &tb_tabBarItemShowDotContext;
     
     self.selectedIndex = itemIndex;
     
-    if ([delegate respondsToSelector:@selector(tabBarController:didSelectViewController:)]) {
+    if (tb_delegateFlags.didSelectViewController) {
         [delegate tabBarController:self didSelectViewController:childViewController];
     }
 }
@@ -806,6 +810,15 @@ static void *tb_tabBarItemShowDotContext = &tb_tabBarItemShowDotContext;
     self.leftTabBar.items = items;
     
     [self tb_startObservingTabBarItems];
+}
+
+
+- (void)setDelegate:(id<TBTabBarControllerDelegate>)delegate {
+    
+    _delegate = delegate;
+    
+    tb_delegateFlags.shouldSelectViewController = [_delegate respondsToSelector:@selector(tabBarController:shouldSelectViewController:)];
+    tb_delegateFlags.didSelectViewController = [_delegate respondsToSelector:@selector(tabBarController:didSelectViewController:)];
 }
 
 @end
