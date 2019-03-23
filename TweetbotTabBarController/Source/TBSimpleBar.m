@@ -61,16 +61,15 @@
     CGFloat const pixelSize = (1.0 / self.traitCollection.displayScale);
     CGFloat const offset = (pixelSize / 2.0);
     
-    CGPoint startPoint = CGPointZero;
-    CGPoint endPoint = CGPointZero;
+    CGPoint startPoint, endPoint;
     
     switch (self.separatorPosition) {
         case TBSimpleBarSeparatorPositionTop:
-            startPoint.y = offset;
+            startPoint = (CGPoint){CGRectGetMinX(rect), offset};
             endPoint = (CGPoint){CGRectGetMaxX(rect), startPoint.y};
             break;
         case TBSimpleBarSeparatorPositionLeft:
-            startPoint.x = offset;
+            startPoint = (CGPoint){offset, CGRectGetMinY(rect)};
             endPoint = (CGPoint){startPoint.x, CGRectGetMaxY(rect)};
             break;
         case TBSimpleBarSeparatorPositionBottom:
