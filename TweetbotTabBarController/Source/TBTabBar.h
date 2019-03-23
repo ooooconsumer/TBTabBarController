@@ -22,9 +22,9 @@
 //  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 //  SOFTWARE.
 
-#import <UIKit/UIKit.h>
+#import "TBSimpleBar.h"
 
-@class TBTabBar, TBTabBarItem, _TBTabBarButton;
+@class TBTabBar, TBTabBarItem;
 
 typedef NS_ENUM(NSInteger, TBTabBarLayoutOrientation) {
     TBTabBarLayoutOrientationHorizontal,
@@ -41,13 +41,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
-@interface TBTabBar : UIView
+@interface TBTabBar : TBSimpleBar
 
 /** @brief Items to display. */
 @property (weak, nonatomic, nullable) NSArray <TBTabBarItem *> *items;
-
-/** @brief The color of the separator. Default is black with 0.3 alpha. */
-@property (copy, nonatomic, nullable) UIColor *separatorColor;
 
 /** @brief When a tab is not selected, its tint color. Default is 0.6 white. */
 @property (strong, nonatomic, null_resettable) UIColor *defaultTintColor;

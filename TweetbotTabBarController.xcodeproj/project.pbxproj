@@ -21,6 +21,8 @@
 		8179A067222F8417006307F7 /* _TBTabBarButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 8179A05A222F8417006307F7 /* _TBTabBarButton.m */; };
 		8179A069222F8417006307F7 /* TBTabBar.h in Headers */ = {isa = PBXBuildFile; fileRef = 8179A05C222F8417006307F7 /* TBTabBar.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		8179A06A222F8417006307F7 /* TBTabBar+Private.h in Headers */ = {isa = PBXBuildFile; fileRef = 8179A05D222F8417006307F7 /* TBTabBar+Private.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		81C69AAB22464892002B4691 /* TBSimpleBar.h in Headers */ = {isa = PBXBuildFile; fileRef = 81C69AA922464892002B4691 /* TBSimpleBar.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		81C69AAC22464892002B4691 /* TBSimpleBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 81C69AAA22464892002B4691 /* TBSimpleBar.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -40,6 +42,8 @@
 		8179A05A222F8417006307F7 /* _TBTabBarButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _TBTabBarButton.m; sourceTree = "<group>"; };
 		8179A05C222F8417006307F7 /* TBTabBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TBTabBar.h; sourceTree = "<group>"; };
 		8179A05D222F8417006307F7 /* TBTabBar+Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "TBTabBar+Private.h"; sourceTree = "<group>"; };
+		81C69AA922464892002B4691 /* TBSimpleBar.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TBSimpleBar.h; sourceTree = "<group>"; };
+		81C69AAA22464892002B4691 /* TBSimpleBar.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TBSimpleBar.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -95,6 +99,8 @@
 				816A3AA5224269FE00E0ED4C /* _TBDotView.m */,
 				8179A053222F8417006307F7 /* TBFakeNavigationBar.h */,
 				8179A052222F8417006307F7 /* TBFakeNavigationBar.m */,
+				81C69AA922464892002B4691 /* TBSimpleBar.h */,
+				81C69AAA22464892002B4691 /* TBSimpleBar.m */,
 			);
 			path = Source;
 			sourceTree = "<group>";
@@ -111,6 +117,7 @@
 				8179A069222F8417006307F7 /* TBTabBar.h in Headers */,
 				8179A063222F8417006307F7 /* TBTabBarController.h in Headers */,
 				8179A060222F8417006307F7 /* TBFakeNavigationBar.h in Headers */,
+				81C69AAB22464892002B4691 /* TBSimpleBar.h in Headers */,
 				8179A064222F8417006307F7 /* _TBTabBarButton.h in Headers */,
 				8179A06A222F8417006307F7 /* TBTabBar+Private.h in Headers */,
 				8179A048222F8296006307F7 /* TweetbotTabBarController.h in Headers */,
@@ -190,6 +197,7 @@
 				8179A062222F8417006307F7 /* TBTabBarItem.m in Sources */,
 				8179A061222F8417006307F7 /* TBTabBarController.m in Sources */,
 				8179A067222F8417006307F7 /* _TBTabBarButton.m in Sources */,
+				81C69AAC22464892002B4691 /* TBSimpleBar.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

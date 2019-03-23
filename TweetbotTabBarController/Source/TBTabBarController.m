@@ -409,7 +409,7 @@ static void *tb_tabBarItemShowDotContext = &tb_tabBarItemShowDotContext;
     
     // Fake navigation bar
     NSLayoutConstraint *fakeNavBarWidthConstraint = [fakeNavBar.widthAnchor constraintEqualToAnchor:containerView.widthAnchor];
-    _fakeNavBarHeightConstraint = [fakeNavBar.heightAnchor constraintEqualToConstant:self.fakeNavigationBarHeight];
+    _fakeNavBarHeightConstraint = [fakeNavBar.heightAnchor constraintEqualToConstant:0.0];
     
     TBTabBar *leftTabBar = self.leftTabBar;
     

@@ -32,16 +32,11 @@
 
 @property (strong, nonatomic) NSArray <_TBTabBarButton *> *buttons;
 
-@property (strong, nonatomic) UIView *separatorView;
-
 /** Stack view with tab bar buttons */
 @property (strong, nonatomic) UIStackView *stackView;
 
 /** An array of constraints */
 @property (strong, nonatomic) NSArray <NSLayoutConstraint *> *stackViewConstraints;
-
-/** A height or width constraint of the separator view */
-@property (strong, nonatomic) NSLayoutConstraint *separatorViewDimensionConstraint;
 
 @end
 
@@ -88,28 +83,15 @@
 }
 
 
-#pragma mark UITraitEnvironment
-
-- (void)traitCollectionDidChange:(UITraitCollection *)previousTraitCollection {
-    
-    if (_separatorViewDimensionConstraint.constant != self.traitCollection.displayScale) {
-        _separatorViewDimensionConstraint.constant = (1.0 / self.traitCollection.displayScale);
-    }
-    
-    [super traitCollectionDidChange:previousTraitCollection];
-}
-
-
 #pragma mark - Private
 
 - (void)tb_commonInitWithLayoutOrientation:(TBTabBarLayoutOrientation)layoutOrientation {
     
-    // Public
     _layoutOrientation = layoutOrientation;
     _contentInsets = UIEdgeInsetsZero;
-    
-    // Private
     _vertical = (_layoutOrientation == TBTabBarLayoutOrientationVertical);
+    
+    self.separatorPosition = self.isVertical ? TBSimpleBarSeparatorPositionRight : TBSimpleBarSeparatorPositionTop;
     
     [self tb_setup];
 }
@@ -117,14 +99,8 @@
 
 - (void)tb_setup {
     
+    // View
     self.backgroundColor = [UIColor whiteColor];
-    
-    // Separator view
-    _separatorView = [[UIView alloc] initWithFrame:CGRectZero];
-    _separatorView.translatesAutoresizingMaskIntoConstraints = false;
-    _separatorView.backgroundColor = [UIColor colorWithWhite:0.0 alpha:0.3];
-    
-    [self addSubview:_separatorView];
     
     // Stack view
     _stackView = [[UIStackView alloc] initWithFrame:CGRectZero];
@@ -147,33 +123,13 @@
     
     UILayoutGuide *layoutGuide = self.safeAreaLayoutGuide;
     
-    // Separator view
-    UIView *separatorView = self.separatorView;
+    NSLayoutYAxisAnchor *bottomAnchor = self.isVertical ? self.bottomAnchor : layoutGuide.bottomAnchor; // Horizontal tab bar has to play cool with safe area
     
-    NSMutableArray *constraints = [NSMutableArray arrayWithObjects:[separatorView.rightAnchor constraintEqualToAnchor:self.rightAnchor], [separatorView.topAnchor constraintEqualToAnchor:self.topAnchor], nil]; // Init an array with shared constraints
-    
-    NSLayoutYAxisAnchor *bottomAnchor = nil; // When a tab bar is horizontal (on the bottom of the view controller), it has to play cool with the safe area layout guide
-    
-    CGFloat const separatorViewSize = (self.traitCollection.displayScale > 0.0) ? (1.0 / self.traitCollection.displayScale) : (1.0 / [UIScreen mainScreen].scale); // Check just in case
-    
-    if (self.isVertical == false) {
-        bottomAnchor = layoutGuide.bottomAnchor;
-        _separatorViewDimensionConstraint = [separatorView.heightAnchor constraintEqualToConstant:separatorViewSize];
-        [constraints addObjectsFromArray:@[[separatorView.leftAnchor constraintEqualToAnchor:self.leftAnchor], _separatorViewDimensionConstraint]];
-    } else {
-        bottomAnchor = self.bottomAnchor;
-        _separatorViewDimensionConstraint = [separatorView.widthAnchor constraintEqualToConstant:separatorViewSize];
-        [constraints addObjectsFromArray:@[[separatorView.bottomAnchor constraintEqualToAnchor:bottomAnchor], _separatorViewDimensionConstraint]];
-    }
-    
-    [NSLayoutConstraint activateConstraints:constraints];
-    
-    // Stack view
     UIStackView *stackView = self.stackView;
     
     UIEdgeInsets contentInsets = self.contentInsets;
     
-    _stackViewConstraints = @[[stackView.topAnchor constraintEqualToAnchor:self.topAnchor constant:contentInsets.top], [stackView.leftAnchor constraintEqualToAnchor:layoutGuide.leftAnchor constant:contentInsets.left], [stackView.bottomAnchor constraintEqualToAnchor:bottomAnchor constant:contentInsets.bottom], [stackView.rightAnchor constraintEqualToAnchor:layoutGuide.rightAnchor constant:contentInsets.right]]; // Capture an array of the stack view constraints to change their contsants later
+    _stackViewConstraints = @[[stackView.topAnchor constraintEqualToAnchor:self.topAnchor constant:contentInsets.top], [stackView.leftAnchor constraintEqualToAnchor:layoutGuide.leftAnchor constant:contentInsets.left], [stackView.bottomAnchor constraintEqualToAnchor:bottomAnchor constant:contentInsets.bottom], [stackView.rightAnchor constraintEqualToAnchor:layoutGuide.rightAnchor constant:contentInsets.right]]; // Capture stack view's constraints to update them later
     
     [NSLayoutConstraint activateConstraints:_stackViewConstraints];
 }
@@ -200,12 +156,6 @@
 - (NSString *)description {
     
     return [NSString stringWithFormat:@"%@, layoutOrientation: %@, selectedIndex: %lu, contentInsets: %@", [super description], (self.layoutOrientation == TBTabBarLayoutOrientationVertical ? @"vertical" : @"horizontal"), self.selectedIndex, NSStringFromUIEdgeInsets(self.contentInsets)];
-}
-
-
-- (UIColor *)separatorColor {
-    
-    return self.separatorView.backgroundColor;
 }
 
 
@@ -279,12 +229,6 @@
     self.buttons = [buttons copy];
     
     self.buttons[self.selectedIndex].tintColor = self.selectedTintColor;
-}
-
-
-- (void)setSeparatorColor:(UIColor *)separatorColor {
-    
-    self.separatorView.backgroundColor = separatorColor;
 }
 
 

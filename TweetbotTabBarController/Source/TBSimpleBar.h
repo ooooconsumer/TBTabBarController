@@ -1,6 +1,6 @@
 //
-//  TBFakeNavigationBar.h
-//  TBTabBarController
+//  TBSimpleBar.h
+//  TweetbotTabBarController
 //
 //  Copyright (c) 2019 Timur Ganiev
 //
@@ -22,12 +22,24 @@
 //  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 //  SOFTWARE.
 
-#import "TBSimpleBar.h"
+#import <UIKit/UIKit.h>
+
+typedef NS_ENUM(NSUInteger, TBSimpleBarSeparatorPosition) {
+    TBSimpleBarSeparatorPositionTop = 0,
+    TBSimpleBarSeparatorPositionLeft = 1,
+    TBSimpleBarSeparatorPositionBottom = 2,
+    TBSimpleBarSeparatorPositionRight = 3
+};
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface TBFakeNavigationBar : TBSimpleBar
+@interface TBSimpleBar : UIView
+
+@property (strong, nonatomic, null_resettable) UIColor *separatorColor;
+
+@property (assign, nonatomic) TBSimpleBarSeparatorPosition separatorPosition;
 
 @end
+
 
 NS_ASSUME_NONNULL_END
