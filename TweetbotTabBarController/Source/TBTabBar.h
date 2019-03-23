@@ -64,6 +64,9 @@ NS_ASSUME_NONNULL_BEGIN
 /** @brief Additional area around content. Affects the size of the tab bar. Default is UIEdgeInsetsZero. */
 @property (assign, nonatomic) UIEdgeInsets contentInsets;
 
+/** @brief The space between tabs. Default is 4pt. */
+@property (nonatomic) CGFloat spaceBetweenTabs;
+
 @property (weak, nonatomic, nullable) id <TBTabBarDelegate> delegate;
 
 @property (assign, nonatomic, readonly) TBTabBarLayoutOrientation layoutOrientation;

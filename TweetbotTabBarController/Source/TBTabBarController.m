@@ -24,8 +24,6 @@
 
 #import "TBTabBarController.h"
 
-#import "TBFakeNavigationBar.h"
-
 #import "TBTabBar+Private.h"
 #import "_TBTabBarButton.h"
 #import "_TBDotView.h"
@@ -38,6 +36,8 @@ typedef NS_OPTIONS(NSUInteger, TBTabBarControllerMethodOverrides) {
     TBTabBarControllerMethodOverridePreferredTabBarPositionForViewSize = 1 << 1
 };
 
+const CGFloat TBFakeNavigationBarAutomaticDimension = 10000.0;
+
 @interface TBTabBarController ()
 
 @property (strong, nonatomic, readwrite) TBTabBar *leftTabBar;
@@ -45,9 +45,9 @@ typedef NS_OPTIONS(NSUInteger, TBTabBarControllerMethodOverrides) {
 @property (weak, nonatomic, readwrite) TBTabBar *visibleTabBar;
 @property (weak, nonatomic, readwrite) TBTabBar *hiddenTabBar;
 
-@property (strong, nonatomic) UIStackView *containerView; // contains the fake nav bar and the left tab bar
+@property (strong, nonatomic, readwrite) TBFakeNavigationBar *fakeNavigationBar;
 
-@property (strong, nonatomic) TBFakeNavigationBar *fakeNavigationBar;
+@property (strong, nonatomic) UIStackView *containerView;
 
 @property (strong, nonatomic) NSArray <TBTabBarItem *> *items; // since we are not operating with only one tab bar, we have to keep all the items here
 
@@ -116,10 +116,10 @@ static void *tb_tabBarItemShowDotContext = &tb_tabBarItemShowDotContext;
     
     if (self != [TBTabBarController class]) {
         
-        if ([self tb_doesSubclassOverrideMethod:@selector(preferredTabBarPositionForHorizontalSizeClass:)]) {
+        if ([self tb_subclassOverridesMethod:@selector(preferredTabBarPositionForHorizontalSizeClass:)]) {
             tb_methodOverridesFlags |= TBTabBarControllerMethodOverridePreferredTabBarPositionForHorizontalSizeClass;
         }
-        if ([self tb_doesSubclassOverrideMethod:@selector(preferredTabBarPositionForViewSize:)]) {
+        if ([self tb_subclassOverridesMethod:@selector(preferredTabBarPositionForViewSize:)]) {
             tb_methodOverridesFlags |= TBTabBarControllerMethodOverridePreferredTabBarPositionForViewSize;
         }
         NSAssert(tb_methodOverridesFlags <= TBTabBarControllerMethodOverridePreferredTabBarPositionForViewSize, @"The %@ subclass overrides both methods of the Subclasses category.", NSStringFromClass(self));
@@ -147,19 +147,19 @@ static void *tb_tabBarItemShowDotContext = &tb_tabBarItemShowDotContext;
 
 - (UIStatusBarStyle)preferredStatusBarStyle {
     
-    return [self tb_getCurrentlyVisibleViewController].preferredStatusBarStyle;
+    return [self tb_currentlyVisibleViewController].preferredStatusBarStyle;
 }
 
 
 - (BOOL)prefersStatusBarHidden {
     
-    return [self tb_getCurrentlyVisibleViewController].prefersStatusBarHidden;
+    return [self tb_currentlyVisibleViewController].prefersStatusBarHidden;
 }
 
 
 - (UIStatusBarAnimation)preferredStatusBarUpdateAnimation {
     
-    return [self tb_getCurrentlyVisibleViewController].preferredStatusBarUpdateAnimation;
+    return [self tb_currentlyVisibleViewController].preferredStatusBarUpdateAnimation;
 }
 
 
@@ -167,13 +167,13 @@ static void *tb_tabBarItemShowDotContext = &tb_tabBarItemShowDotContext;
 
 - (BOOL)shouldAutorotate {
     
-    return [self tb_getCurrentlyVisibleViewController].shouldAutorotate;
+    return [self tb_currentlyVisibleViewController].shouldAutorotate;
 }
 
 
 - (UIInterfaceOrientationMask)supportedInterfaceOrientations {
     
-    return [self tb_getCurrentlyVisibleViewController].supportedInterfaceOrientations;
+    return [self tb_currentlyVisibleViewController].supportedInterfaceOrientations;
 }
 
 
@@ -185,7 +185,7 @@ static void *tb_tabBarItemShowDotContext = &tb_tabBarItemShowDotContext;
     
     if (tb_preferredPosition != TBTabBarControllerTabBarPositionUnspecified) {
         [self tb_updateViewConstraints];
-        [self tb_updateFakeNavigationBarHeightConstraint];
+        [self tb_updateFakeNavBarHeightConstraintConstant];
         tb_preferredPosition = TBTabBarControllerTabBarPositionUnspecified; // An unspecified position means that the trait collection has not been changed, so we have to rely on the current one
     }
 }
@@ -195,7 +195,7 @@ static void *tb_tabBarItemShowDotContext = &tb_tabBarItemShowDotContext;
 
 - (TBTabBarControllerTabBarPosition)preferredTabBarPositionForHorizontalSizeClass:(UIUserInterfaceSizeClass)sizeClass {
     
-    return [self tb_preferredTabBarPositionForHorizontalSizeClass:sizeClass];
+    return [self tb_preferredTabBarPositionForSizeClass:sizeClass];
 }
 
 
@@ -218,7 +218,7 @@ static void *tb_tabBarItemShowDotContext = &tb_tabBarItemShowDotContext;
             [self tb_specifyPreferredPositionWithHorizontalSizeClassIfNecessary:newHorizontalSizeClass]; // Subclasses may return an unspecified position
         } else {
             // In case where a subclass overrides the -preferredTabBarPositionForViewSize: method, we should capture new preferred position for a new horizontal size class since a subclass may return either an unspecified position or call super.
-            tb_preferredPosition = [self tb_preferredTabBarPositionForHorizontalSizeClass:newHorizontalSizeClass];
+            tb_preferredPosition = [self tb_preferredTabBarPositionForSizeClass:newHorizontalSizeClass];
         }
     }
     
@@ -257,7 +257,7 @@ static void *tb_tabBarItemShowDotContext = &tb_tabBarItemShowDotContext;
     if (previousTraitCollection == nil) {
         UIUserInterfaceSizeClass const horizontalSizeClass = self.traitCollection.horizontalSizeClass;
         // Capture preferred position for subclasses
-        tb_preferredPosition = [self tb_preferredTabBarPositionForHorizontalSizeClass:horizontalSizeClass];
+        tb_preferredPosition = [self tb_preferredTabBarPositionForSizeClass:horizontalSizeClass];
         // Capture preferred position
         if (tb_methodOverridesFlags & TBTabBarControllerMethodOverridePreferredTabBarPositionForViewSize) {
             tb_preferredPosition = [self preferredTabBarPositionForViewSize:self.view.frame.size];
@@ -276,7 +276,8 @@ static void *tb_tabBarItemShowDotContext = &tb_tabBarItemShowDotContext;
         [self.view setNeedsUpdateConstraints];
         [self.view updateConstraintsIfNeeded];
         // Make the vertical tab bar look good
-        [self tb_updateVerticalTabBarBottomContentInsetWithNewValue:self.leftTabBar.contentInsets.bottom andItsBottomConstraintWithNewConstant:-(_bottomTabBarHeightConstraint.constant)];
+        [self tb_setVerticalTabBarBottomContentInset:self.leftTabBar.contentInsets.bottom];
+        [self tb_setContainerViewBottomConstraintConstant:-(_bottomTabBarHeightConstraint.constant)];
     }
     
     [super traitCollectionDidChange:previousTraitCollection];
@@ -355,8 +356,10 @@ static void *tb_tabBarItemShowDotContext = &tb_tabBarItemShowDotContext;
     
     // Public
     self.startingIndex = 0;
-    self.horizontalTabBarHeight = 49.0;
-    self.verticalTabBarWidth = 60.0;
+    
+    _horizontalTabBarHeight = 49.0;
+    _verticalTabBarWidth = 60.0;
+    _fakeNavigationBarHeight = TBFakeNavigationBarAutomaticDimension;
 }
 
 
@@ -406,7 +409,7 @@ static void *tb_tabBarItemShowDotContext = &tb_tabBarItemShowDotContext;
     
     // Fake navigation bar
     NSLayoutConstraint *fakeNavBarWidthConstraint = [fakeNavBar.widthAnchor constraintEqualToAnchor:containerView.widthAnchor];
-    _fakeNavBarHeightConstraint = [fakeNavBar.heightAnchor constraintEqualToConstant:40.0];
+    _fakeNavBarHeightConstraint = [fakeNavBar.heightAnchor constraintEqualToConstant:self.fakeNavigationBarHeight];
     
     TBTabBar *leftTabBar = self.leftTabBar;
     
@@ -448,13 +451,17 @@ static void *tb_tabBarItemShowDotContext = &tb_tabBarItemShowDotContext;
 }
 
 
-- (void)tb_updateFakeNavigationBarHeightConstraint {
+- (void)tb_updateFakeNavBarHeightConstraintConstant {
     
-    _fakeNavBarHeightConstraint.constant = CGRectGetMaxY(_childNavigationController.navigationBar.frame) + (1.0 / self.traitCollection.displayScale);
+    CGFloat const separatorHeight = (1.0 / self.traitCollection.displayScale);
+    CGFloat const preferredHeight = self.fakeNavigationBarHeight;
+    CGFloat const height = preferredHeight != TBFakeNavigationBarAutomaticDimension ? preferredHeight: CGRectGetMaxY(_childNavigationController.navigationBar.frame);
+    
+    _fakeNavBarHeightConstraint.constant = height + separatorHeight;
 }
 
 
-- (void)tb_updateVerticalTabBarBottomContentInsetWithNewValue:(CGFloat)value andItsBottomConstraintWithNewConstant:(CGFloat)constant {
+- (void)tb_setVerticalTabBarBottomContentInset:(CGFloat)value {
     
     TBTabBar *tabBar = self.leftTabBar;
     
@@ -462,6 +469,10 @@ static void *tb_tabBarItemShowDotContext = &tb_tabBarItemShowDotContext;
     contentInsets.bottom = value;
     
     tabBar.contentInsets = contentInsets;
+}
+
+
+- (void)tb_setContainerViewBottomConstraintConstant:(CGFloat)constant {
     
     _containerViewBottomConstraint.constant = constant;
 }
@@ -491,10 +502,12 @@ static void *tb_tabBarItemShowDotContext = &tb_tabBarItemShowDotContext;
     [coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
         [weakSelf.view setNeedsUpdateConstraints];
         [weakSelf.view updateConstraintsIfNeeded];
-        [weakSelf tb_updateVerticalTabBarBottomContentInsetWithNewValue:-(weakSelf.bottomTabBarHeightConstraint.constant) andItsBottomConstraintWithNewConstant:0.0];
+        [weakSelf tb_setVerticalTabBarBottomContentInset:-(weakSelf.bottomTabBarHeightConstraint.constant)];
+        [weakSelf tb_setContainerViewBottomConstraintConstant:0.0];
     } completion:^(id <UIViewControllerTransitionCoordinatorContext> context) {
         [weakSelf tb_makeTabBarHidden:visibleTabBar]; // Hide the previously visible tab bar
-        [weakSelf tb_updateVerticalTabBarBottomContentInsetWithNewValue:previousVerticalTabBarBottomInset andItsBottomConstraintWithNewConstant:-weakSelf.bottomTabBarHeightConstraint.constant];
+        [weakSelf tb_setVerticalTabBarBottomContentInset:previousVerticalTabBarBottomInset];
+        [weakSelf tb_setContainerViewBottomConstraintConstant:-(weakSelf.bottomTabBarHeightConstraint.constant)];
     }];
 }
 
@@ -529,28 +542,24 @@ static void *tb_tabBarItemShowDotContext = &tb_tabBarItemShowDotContext;
 
 - (void)tb_transitionToViewControllerAtIndex:(NSUInteger)index {
     
-    NSArray <__kindof UIViewController *> *const children = self.viewControllers;
+    NSArray <__kindof UIViewController *> *const viewControllers = self.viewControllers;
     
-    if (index > children.count) {
-        index = children.count - 1;
+    if (index > viewControllers.count) {
+        index = viewControllers.count - 1;
     }
     
-    // Show a new view controller
     [self tb_removeChildViewControllerIfExists];
-    [self tb_presentChildViewController:children[index]];
+    [self tb_presentChildViewController:viewControllers[index]];
     [self tb_captureChildNavigationControllerIfExsists];
     
-    // Update tab bars
     self.bottomTabBar.selectedIndex = index;
     self.leftTabBar.selectedIndex = index;
     
-    // Layout everything
     if (tb_preferredPosition == TBTabBarControllerTabBarPositionUnspecified) {
         tb_preferredPosition = tb_currentPosition;
     }
     
     [self.view setNeedsUpdateConstraints];
-    
     [self setNeedsStatusBarAppearanceUpdate];
 }
 
@@ -617,7 +626,7 @@ static void *tb_tabBarItemShowDotContext = &tb_tabBarItemShowDotContext;
 
 #pragma mark Utils
 
-+ (BOOL)tb_doesSubclassOverrideMethod:(SEL)selector {
++ (BOOL)tb_subclassOverridesMethod:(SEL)selector {
     
     Method superclassMethod = class_getInstanceMethod([TBTabBarController class], selector);
     Method subclassMethod = class_getInstanceMethod(self, selector);
@@ -629,12 +638,12 @@ static void *tb_tabBarItemShowDotContext = &tb_tabBarItemShowDotContext;
 - (void)tb_specifyPreferredPositionWithHorizontalSizeClassIfNecessary:(UIUserInterfaceSizeClass)sizeClass {
     
     if (tb_preferredPosition == TBTabBarControllerTabBarPositionUnspecified) {
-        tb_preferredPosition = [self tb_preferredTabBarPositionForHorizontalSizeClass:sizeClass];
+        tb_preferredPosition = [self tb_preferredTabBarPositionForSizeClass:sizeClass];
     }
 }
 
 
-- (TBTabBarControllerTabBarPosition)tb_preferredTabBarPositionForHorizontalSizeClass:(UIUserInterfaceSizeClass)sizeClass  {
+- (TBTabBarControllerTabBarPosition)tb_preferredTabBarPositionForSizeClass:(UIUserInterfaceSizeClass)sizeClass  {
     
     if (sizeClass == UIUserInterfaceSizeClassRegular) {
         return TBTabBarControllerTabBarPositionLeft;
@@ -644,7 +653,7 @@ static void *tb_tabBarItemShowDotContext = &tb_tabBarItemShowDotContext;
 }
 
 
-- (__kindof UIViewController *)tb_getCurrentlyVisibleViewController {
+- (__kindof UIViewController *)tb_currentlyVisibleViewController {
     
     return _childNavigationController ? _childNavigationController.visibleViewController : self.selectedViewController;
 }
@@ -652,7 +661,7 @@ static void *tb_tabBarItemShowDotContext = &tb_tabBarItemShowDotContext;
 
 - (void)tb_captureChildNavigationControllerIfExsists {
     
-    // This method was borrowed from TOTabBarController (https://github.com/TimOliver/TOTabBarController)
+    // This solution was borrowed from TOTabBarController (https://github.com/TimOliver/TOTabBarController)
     
     UIViewController *viewController = self.selectedViewController;
     
@@ -745,27 +754,21 @@ static void *tb_tabBarItemShowDotContext = &tb_tabBarItemShowDotContext;
 
 - (void)setViewControllers:(NSArray <__kindof UIViewController *> *)viewControllers {
     
-    NSAssert(viewControllers.count <= 5, @"The number of view controllers must not exceed 5.");
-    
     if ([viewControllers isEqual:_viewControllers]) {
         return;
     }
     
-    if (_viewControllers.count > 0) {
-        [self tb_stopObservingTabBarItems]; // Should we do this here?
-        [self tb_processChildrenOfViewControllersWithValue:nil];
-    }
+    NSAssert(viewControllers.count <= 5, @"The number of view controllers must not exceed 5.");
     
-    if (viewControllers == nil) {
-        _viewControllers = viewControllers;
-        return;
+    if (_viewControllers.count > 0) {
+        [self tb_stopObservingTabBarItems];
+        [self tb_processChildrenOfViewControllersWithValue:nil];
     }
     
     _viewControllers = [viewControllers copy];
     
     [self tb_processChildrenOfViewControllersWithValue:self];
     [self tb_captureTabBarItems];
-    
     [self tb_transitionToViewControllerAtIndex:self.startingIndex];
 }
 
@@ -784,17 +787,13 @@ static void *tb_tabBarItemShowDotContext = &tb_tabBarItemShowDotContext;
 
 - (void)setSelectedIndex:(NSUInteger)selectedIndex {
     
-    if (selectedIndex >= self.viewControllers.count) {
-        selectedIndex = 0;
-    }
-    
-    if (selectedIndex == _selectedIndex) {
+    if (selectedIndex == _selectedIndex || selectedIndex >= self.viewControllers.count) {
         return;
     }
     
     _selectedIndex = selectedIndex;
     
-    [self tb_transitionToViewControllerAtIndex:selectedIndex];
+    [self tb_transitionToViewControllerAtIndex:_selectedIndex];
 }
 
 
@@ -802,7 +801,7 @@ static void *tb_tabBarItemShowDotContext = &tb_tabBarItemShowDotContext;
     
     _verticalTabBarWidth = verticalTabBarWidth;
     
-    _containerViewWidthConstraint.constant = verticalTabBarWidth;
+    _containerViewWidthConstraint.constant = _verticalTabBarWidth;
 }
 
 
@@ -810,7 +809,15 @@ static void *tb_tabBarItemShowDotContext = &tb_tabBarItemShowDotContext;
     
     _horizontalTabBarHeight = horizontalTabBarHeight;
     
-    _bottomTabBarHeightConstraint.constant = horizontalTabBarHeight;
+    _bottomTabBarHeightConstraint.constant = _horizontalTabBarHeight;
+}
+
+
+- (void)setFakeNavigationBarHeight:(CGFloat)fakeNavigationBarHeight {
+    
+    _fakeNavigationBarHeight = fakeNavigationBarHeight;
+    
+    _fakeNavBarHeightConstraint.constant = _fakeNavigationBarHeight;
 }
 
 
@@ -822,8 +829,8 @@ static void *tb_tabBarItemShowDotContext = &tb_tabBarItemShowDotContext;
     
     _items = items;
     
-    self.bottomTabBar.items = items;
-    self.leftTabBar.items = items;
+    self.bottomTabBar.items = _items;
+    self.leftTabBar.items = _items;
     
     [self tb_startObservingTabBarItems];
 }

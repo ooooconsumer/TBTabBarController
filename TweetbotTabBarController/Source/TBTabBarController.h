@@ -26,6 +26,7 @@
 
 #import "TBTabBar.h"
 #import "TBTabBarItem.h"
+#import "TBFakeNavigationBar.h"
 
 @class TBTabBarController;
 
@@ -36,6 +37,8 @@ typedef NS_ENUM(NSUInteger, TBTabBarControllerTabBarPosition) {
 };
 
 NS_ASSUME_NONNULL_BEGIN
+
+extern const CGFloat TBFakeNavigationBarAutomaticDimension;
 
 @protocol TBTabBarControllerDelegate <NSObject>
 
@@ -89,11 +92,20 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @property (weak, nonatomic, readonly, nullable) TBTabBar *hiddenTabBar;
 
-/** @brief The height of the bottom tab bar. Default is 49. */
+/** @brief The height of the bottom tab bar. Default is 49pt. */
 @property (assign, nonatomic) CGFloat horizontalTabBarHeight;
 
-/** @brief The width of the vertical tab bar. Default is 60. */
+/** @brief The width of the left tab bar. Default is 60pt. */
 @property (assign, nonatomic) CGFloat verticalTabBarWidth;
+
+/**
+ * @discussion View that mimics UINavigationBar.
+ * Appears only when the left tab bar is presented.
+ */
+@property (strong, nonatomic, readonly) TBFakeNavigationBar *fakeNavigationBar;
+
+/** @brief The height of the fake navigation bar. Default is TBFakeNavigationBarAutomaticDimension. */
+@property (assign, nonatomic) CGFloat fakeNavigationBarHeight;
 
 @property (weak, nonatomic, nullable) id <TBTabBarControllerDelegate> delegate;
 

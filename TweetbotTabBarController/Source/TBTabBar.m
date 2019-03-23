@@ -229,6 +229,12 @@
 }
 
 
+- (CGFloat)spaceBetweenTabs {
+    
+    return _stackView.spacing;
+}
+
+
 #pragma mark Setters
 
 - (void)setItems:(NSArray <TBTabBarItem *> *)items {
@@ -357,6 +363,12 @@
                 break;
         }
     }];
+}
+
+
+- (void)setSpaceBetweenTabs:(CGFloat)spaceBetweenTabs {
+    
+    _stackView.spacing = spaceBetweenTabs;
 }
 
 @end
