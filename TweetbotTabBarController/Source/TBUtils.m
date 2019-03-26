@@ -1,5 +1,5 @@
 //
-//  TweetbotTabBarController.h
+//  TBUtils.m
 //  TweetbotTabBarController
 //
 //  Copyright (c) 2019 Timur Ganiev
@@ -22,13 +22,25 @@
 //  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 //  SOFTWARE.
 
-#import <UIKit/UIKit.h>
+#import "TBUtils.h"
 
-FOUNDATION_EXPORT double TweetbotTabBarControllerVersionNumber;
-FOUNDATION_EXPORT const unsigned char TweetbotTabBarControllerVersionString[];
+#import <objc/runtime.h>
 
-#import <TweetbotTabBarController/TBTabBarController.h>
-#import <TweetbotTabBarController/TBTabBar.h>
-#import <TweetbotTabBarController/TBTabBarItem.h>
-#import <TweetbotTabBarController/TBFakeNavigationBar.h>
-#import <TweetbotTabBarController/TBUtils.h>
+UIImage * TBResizeImageToPreferredSize(UIImage *image, CGSize preferredSize) {
+    
+    UIGraphicsImageRenderer *renderer = [[UIGraphicsImageRenderer alloc] initWithSize:preferredSize];
+    UIImage *resizedImage = [renderer imageWithActions:^(UIGraphicsImageRendererContext * _Nonnull rendererContext) {
+        [image drawInRect:(CGRect){CGPointZero, preferredSize}];
+    }];
+    
+    return resizedImage;
+}
+
+CGFloat TBFloorValueWithScale(CGFloat value, CGFloat scale) {
+    // This solution was borrowed from Texture https://github.com/TextureGroup/Texture
+    return floor((value + FLT_EPSILON) * scale) / scale;
+}
+
+BOOL TBSubclassOverridesMethod (Class superclass, Class subclass, SEL selector) {
+    return class_getInstanceMethod(superclass, selector) != class_getInstanceMethod(subclass, selector);
+}

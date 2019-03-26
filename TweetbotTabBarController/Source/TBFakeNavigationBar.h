@@ -28,6 +28,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface TBFakeNavigationBar : TBSimpleBar
 
+@property (strong, nonatomic, nullable) __kindof UIButton *button;
+
+/** @brief Shrinks the button image if necessary. Default is YES. */
+@property (assign, nonatomic) BOOL shouldShrink;
+
 @end
 
 NS_ASSUME_NONNULL_END

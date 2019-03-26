@@ -1,5 +1,5 @@
 //
-//  TweetbotTabBarController.h
+//  TBUtils.h
 //  TweetbotTabBarController
 //
 //  Copyright (c) 2019 Timur Ganiev
@@ -24,11 +24,12 @@
 
 #import <UIKit/UIKit.h>
 
-FOUNDATION_EXPORT double TweetbotTabBarControllerVersionNumber;
-FOUNDATION_EXPORT const unsigned char TweetbotTabBarControllerVersionString[];
+NS_ASSUME_NONNULL_BEGIN
 
-#import <TweetbotTabBarController/TBTabBarController.h>
-#import <TweetbotTabBarController/TBTabBar.h>
-#import <TweetbotTabBarController/TBTabBarItem.h>
-#import <TweetbotTabBarController/TBFakeNavigationBar.h>
-#import <TweetbotTabBarController/TBUtils.h>
+extern UIImage * TBResizeImageToPreferredSize(UIImage *image, CGSize preferredSize);
+
+extern CGFloat TBFloorValueWithScale(CGFloat f, CGFloat scale);
+
+extern BOOL TBSubclassOverridesMethod(Class superclass, Class subclass, SEL selector);
+
+NS_ASSUME_NONNULL_END

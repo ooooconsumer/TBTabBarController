@@ -40,14 +40,6 @@
 }
 
 
-- (instancetype)initWithImage:(UIImage *)image {
-    
-    self = [self initWithImage:image selectedImage:nil];
-    
-    return self;
-}
-
-
 - (instancetype)initWithImage:(UIImage *)image selectedImage:(UIImage *)selectedImage {
     
     self = [super init];

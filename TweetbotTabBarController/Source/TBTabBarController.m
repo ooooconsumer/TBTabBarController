@@ -28,6 +28,8 @@
 #import "_TBTabBarButton.h"
 #import "_TBDotView.h"
 
+#import "TBUtils.h"
+
 #import <objc/runtime.h>
 
 typedef NS_OPTIONS(NSUInteger, TBTabBarControllerMethodOverrides) {
@@ -116,12 +118,13 @@ static void *tb_tabBarItemShowDotContext = &tb_tabBarItemShowDotContext;
     
     if (self != [TBTabBarController class]) {
         
-        if ([self tb_subclassOverridesMethod:@selector(preferredTabBarPositionForHorizontalSizeClass:)]) {
+        if (TBSubclassOverridesMethod([TBTabBarController class], self, @selector(preferredTabBarPositionForHorizontalSizeClass:))) {
             tb_methodOverridesFlags |= TBTabBarControllerMethodOverridePreferredTabBarPositionForHorizontalSizeClass;
         }
-        if ([self tb_subclassOverridesMethod:@selector(preferredTabBarPositionForViewSize:)]) {
+        if (TBSubclassOverridesMethod([TBTabBarController class], self, @selector(preferredTabBarPositionForViewSize:))) {
             tb_methodOverridesFlags |= TBTabBarControllerMethodOverridePreferredTabBarPositionForViewSize;
         }
+        
         NSAssert(tb_methodOverridesFlags <= TBTabBarControllerMethodOverridePreferredTabBarPositionForViewSize, @"The %@ subclass overrides both methods of the Subclasses category.", NSStringFromClass(self));
     }
 }
@@ -143,19 +146,21 @@ static void *tb_tabBarItemShowDotContext = &tb_tabBarItemShowDotContext;
 }
 
 
+#pragma mark UIContainerViewControllerProtectedMethods
+
+- (UIViewController *)childViewControllerForStatusBarStyle {
+    
+    return [self tb_currentlyVisibleViewController];
+}
+
+
+- (UIViewController *)childViewControllerForStatusBarHidden {
+    
+    return [self tb_currentlyVisibleViewController];
+}
+
+
 #pragma mark Status bar
-
-- (UIStatusBarStyle)preferredStatusBarStyle {
-    
-    return [self tb_currentlyVisibleViewController].preferredStatusBarStyle;
-}
-
-
-- (BOOL)prefersStatusBarHidden {
-    
-    return [self tb_currentlyVisibleViewController].prefersStatusBarHidden;
-}
-
 
 - (UIStatusBarAnimation)preferredStatusBarUpdateAnimation {
     
@@ -165,15 +170,17 @@ static void *tb_tabBarItemShowDotContext = &tb_tabBarItemShowDotContext;
 
 #pragma mark UIViewControllerRotation
 
-- (BOOL)shouldAutorotate {
-    
-    return [self tb_currentlyVisibleViewController].shouldAutorotate;
-}
-
-
 - (UIInterfaceOrientationMask)supportedInterfaceOrientations {
     
     return [self tb_currentlyVisibleViewController].supportedInterfaceOrientations;
+}
+
+
+#pragma mark UIHomeIndicatorAutoHidden
+
+- (UIViewController *)childViewControllerForHomeIndicatorAutoHidden {
+    
+    return [self tb_currentlyVisibleViewController];
 }
 
 
@@ -625,15 +632,6 @@ static void *tb_tabBarItemShowDotContext = &tb_tabBarItemShowDotContext;
 
 
 #pragma mark Utils
-
-+ (BOOL)tb_subclassOverridesMethod:(SEL)selector {
-    
-    Method superclassMethod = class_getInstanceMethod([TBTabBarController class], selector);
-    Method subclassMethod = class_getInstanceMethod(self, selector);
-    
-    return superclassMethod != subclassMethod;
-}
-
 
 - (void)tb_specifyPreferredPositionWithHorizontalSizeClassIfNecessary:(UIUserInterfaceSizeClass)sizeClass {
     
