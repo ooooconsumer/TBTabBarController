@@ -47,19 +47,19 @@ NS_ASSUME_NONNULL_BEGIN
 @property (weak, nonatomic, nullable) NSArray <TBTabBarItem *> *items;
 
 /** @brief When a tab is not selected, its tint color. Default is 0.6 white. */
-@property (strong, nonatomic, null_resettable) UIColor *defaultTintColor;
+@property (strong, nonatomic, null_resettable) UIColor *defaultTintColor UI_APPEARANCE_SELECTOR;
 
 /** @brief When a tab is selected, its tint color. Default is nil. */
-@property (strong, nonatomic, nullable) UIColor *selectedTintColor;
+@property (strong, nonatomic, nullable) UIColor *selectedTintColor UI_APPEARANCE_SELECTOR;
 
 /** @brief Dots tint color. Default equals to the tab bar's tint color. */
-@property (strong, nonatomic, null_resettable) UIColor *dotTintColor;
+@property (strong, nonatomic, null_resettable) UIColor *dotTintColor UI_APPEARANCE_SELECTOR;
 
 /** @brief The currently selected tab index. */
 @property (assign, nonatomic) NSUInteger selectedIndex;
 
 /** @brief Additional area around content. Affects the size of the tab bar. Default is UIEdgeInsetsZero. */
-@property (assign, nonatomic) UIEdgeInsets contentInsets;
+@property (assign, nonatomic) UIEdgeInsets contentInsets UI_APPEARANCE_SELECTOR;
 
 /** @brief The space between tabs. Default is 4pt. */
 @property (nonatomic) CGFloat spaceBetweenTabs;

@@ -28,11 +28,13 @@
 
 #import "_TBDotView.h"
 
+#import "TBUtils.h"
+
+static const CGFloat _TBTabBarButtonDotSize = 5.0;
+
 @interface _TBTabBarButton ()
 
 @property (strong, nonatomic, readwrite) UIImageView *imageView;
-
-@property (weak, nonatomic, readwrite) TBTabBarItem *tabBarItem;
 
 @property (strong, nonatomic, readwrite) _TBDotView *dotView;
 
@@ -45,6 +47,8 @@
     UIImage *_disabledImage;
     UIImage *_selectedImage;
     UIImage *_highlightedAndSelectedImage;
+    
+    BOOL tb_needsLayoutImageView;
 }
 
 #pragma mark - Public
@@ -52,39 +56,10 @@
 - (instancetype)initWithTabBarItem:(TBTabBarItem *)tabBarItem {
     
     if (self = [super initWithFrame:CGRectZero]) {
-        self.tabBarItem = tabBarItem;
-        [self tb_commonInit];
+        [self tb_commonInitWithTabBarItem:tabBarItem];
     }
     
     return self;
-}
-
-
-- (UIImage *)imageForState:(UIControlState)state {
-    
-    UIImage *image = nil;
-    
-    switch (state) {
-        case UIControlStateNormal:
-            image = _normalImage;
-            break;
-        case UIControlStateHighlighted:
-            image = _highlightedImage;
-            break;
-        case UIControlStateDisabled:
-            image = _disabledImage;
-            break;
-        case UIControlStateSelected:
-            image = _selectedImage;
-            break;
-        case UIControlStateHighlighted | UIControlStateSelected:
-            image = _highlightedAndSelectedImage;
-            break;
-        default:
-            break;
-    }
-    
-    return image;
 }
 
 
@@ -122,37 +97,43 @@
     
     [super layoutSubviews];
     
-    [self.imageView sizeToFit];
+    UIImageView *imageView = self.imageView;
     
-    // Image view
-    CGRect imageViewFrame = self.imageView.frame;
-    imageViewFrame.origin.x = rint((CGRectGetWidth(self.bounds) - CGRectGetWidth(imageViewFrame)) / 2.0);
-    imageViewFrame.origin.y = rint((CGRectGetHeight(self.bounds) - CGRectGetHeight(imageViewFrame)) / 2.0);
+    if (imageView.image == nil && tb_needsLayoutImageView == false) {
+        return;
+    }
+    
+    CGFloat const displayScale = self.traitCollection.displayScale;
+    
+    [imageView sizeToFit];
+    
+    CGRect const frame = self.frame;
+    
+    CGRect imageViewFrame = imageView.frame;
+    imageViewFrame.origin = (CGPoint){TBFloorValueWithScale((CGRectGetWidth(frame) - CGRectGetWidth(imageViewFrame) / 2.0), displayScale), TBFloorValueWithScale((CGRectGetHeight(frame) - CGRectGetHeight(imageViewFrame) / 2.0), displayScale)};
     
     self.imageView.frame = imageViewFrame;
     
-    // Dot view
-    CGSize dotViewSize = (CGSize){5.0, 5.0};
-    CGPoint dotViewPosition = CGPointZero;
+    CGRect dotFrame = (CGRect){CGPointZero, (CGSize){_TBTabBarButtonDotSize, _TBTabBarButtonDotSize}};
     
     if (self.laysOutHorizontally) {
-        dotViewPosition = (CGPoint){rint(CGRectGetMaxX(self.bounds) - (dotViewSize.width * 2.0)), rint(CGRectGetMidY(self.bounds) - (dotViewSize.height / 2.0))};
+        dotFrame.origin = (CGPoint){TBFloorValueWithScale(CGRectGetMaxX(frame) - (_TBTabBarButtonDotSize * 2.0), displayScale), TBFloorValueWithScale(CGRectGetMidY(self.bounds) - (_TBTabBarButtonDotSize / 2.0), displayScale)};
     } else {
-        dotViewPosition = (CGPoint){rint(CGRectGetMidX(self.bounds) - (dotViewSize.width / 2.0)), rint(CGRectGetMaxY(self.bounds) - (dotViewSize.height + 3.0))};
+        dotFrame.origin = (CGPoint){TBFloorValueWithScale(CGRectGetMidX(frame) - (_TBTabBarButtonDotSize / 2.0), displayScale), TBFloorValueWithScale(CGRectGetMaxY(frame) - (_TBTabBarButtonDotSize + 3.0), displayScale)};
     }
     
-    self.dotView.frame = (CGRect){dotViewPosition, dotViewSize};
+    self.dotView.frame = dotFrame;
 }
 
 
 #pragma mark - Private
 
-- (void)tb_commonInit {
+- (void)tb_commonInitWithTabBarItem:(TBTabBarItem *)tabBarItem {
     
-    _normalImage = self.tabBarItem.image;
-    _selectedImage = self.tabBarItem.selectedImage;
+    _normalImage = tabBarItem.image;
+    _selectedImage = tabBarItem.selectedImage;
     
-    self.dotView.hidden = !self.tabBarItem.showDot;
+    self.dotView.hidden = !tabBarItem.showDot;
     
     [self tb_setup];
 }
