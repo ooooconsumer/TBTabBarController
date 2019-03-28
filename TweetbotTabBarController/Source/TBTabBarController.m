@@ -146,6 +146,16 @@ static void *tb_tabBarItemShowDotContext = &tb_tabBarItemShowDotContext;
 }
 
 
+- (void)viewDidLayoutSubviews {
+    
+    [super viewDidLayoutSubviews];
+    
+    if (self.selectedViewController != nil) {
+        self.selectedViewController.view.frame = self.view.frame;
+    }
+}
+
+
 #pragma mark UIContainerViewControllerProtectedMethods
 
 - (UIViewController *)childViewControllerForStatusBarStyle {
@@ -525,10 +535,10 @@ static void *tb_tabBarItemShowDotContext = &tb_tabBarItemShowDotContext;
     
     if (_visibleTabBar.isVertical) {
         self.containerView.hidden = false;
-        self.selectedViewController.additionalSafeAreaInsets = UIEdgeInsetsZero;
+        [self tb_setAdditionalSafeAreaInsets: UIEdgeInsetsMake(0.0, self.verticalTabBarWidth, 0.0, 0.0)];
     } else {
         _visibleTabBar.hidden = false;
-        self.selectedViewController.additionalSafeAreaInsets = UIEdgeInsetsMake(0.0, 0.0, self.horizontalTabBarHeight, 0.0);
+        [self tb_setAdditionalSafeAreaInsets: UIEdgeInsetsMake(0.0, 0.0, self.horizontalTabBarHeight, 0.0)];
     }
 }
 
@@ -542,6 +552,12 @@ static void *tb_tabBarItemShowDotContext = &tb_tabBarItemShowDotContext;
     } else {
         _hiddenTabBar.hidden = true;
     }
+}
+
+
+- (void)tb_setAdditionalSafeAreaInsets:(UIEdgeInsets)additionalSafeAreaInsets {
+    
+    self.selectedViewController.additionalSafeAreaInsets = additionalSafeAreaInsets;
 }
 
 
@@ -566,6 +582,12 @@ static void *tb_tabBarItemShowDotContext = &tb_tabBarItemShowDotContext;
         tb_preferredPosition = tb_currentPosition;
     }
     
+    if (self.visibleTabBar.isVertical) {
+        [self tb_setAdditionalSafeAreaInsets:UIEdgeInsetsMake(0.0, self.verticalTabBarWidth, 0.0, 0.0)];
+    } else {
+        [self tb_setAdditionalSafeAreaInsets:UIEdgeInsetsMake(0.0, 0.0, self.horizontalTabBarHeight, 0.0)];
+    }
+    
     [self.view setNeedsUpdateConstraints];
     [self setNeedsStatusBarAppearanceUpdate];
 }
@@ -577,16 +599,8 @@ static void *tb_tabBarItemShowDotContext = &tb_tabBarItemShowDotContext;
     
     [viewController willMoveToParentViewController:self];
     [self addChildViewController:viewController];
-    [self.view addSubview:viewController.view];
+    [self.view insertSubview:viewController.view atIndex:0];
     [viewController didMoveToParentViewController:self];
-    [self.view sendSubviewToBack:viewController.view];
-    
-    viewController.view.translatesAutoresizingMaskIntoConstraints = false;
-    
-    [viewController.view.leftAnchor constraintEqualToAnchor:_containerView.rightAnchor].active = true;
-    [viewController.view.rightAnchor constraintEqualToAnchor:self.view.rightAnchor].active = true;
-    [viewController.view.topAnchor constraintEqualToAnchor:self.view.topAnchor].active = true;
-    [viewController.view.bottomAnchor constraintEqualToAnchor:self.view.bottomAnchor].active = true;
 }
 
 
@@ -595,8 +609,6 @@ static void *tb_tabBarItemShowDotContext = &tb_tabBarItemShowDotContext;
     if (self.selectedViewController == nil) {
         return;
     }
-    
-    [NSLayoutConstraint deactivateConstraints:self.selectedViewController.view.constraints];
     
     [self.selectedViewController willMoveToParentViewController:nil];
     [self.selectedViewController removeFromParentViewController];
