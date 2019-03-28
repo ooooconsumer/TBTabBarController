@@ -43,7 +43,7 @@
 @implementation TBTabBar
 
 @synthesize defaultTintColor = _defaultTintColor;
-@synthesize dotTintColor = _dotTintColor;
+@synthesize dotsFillColor = _dotsFillColor;
 
 #pragma mark - Public
 
@@ -169,13 +169,13 @@
 }
 
 
-- (UIColor *)dotTintColor {
+- (UIColor *)dotsFillColor {
     
-    if (_dotTintColor == nil) {
-        _dotTintColor = self.tintColor;
+    if (_dotsFillColor == nil) {
+        _dotsFillColor = self.tintColor;
     }
     
-    return _dotTintColor;
+    return _dotsFillColor;
 }
 
 
@@ -210,7 +210,7 @@
         
         _TBTabBarButton *button = [[_TBTabBarButton alloc] initWithTabBarItem:item];
         button.tintColor = self.defaultTintColor;
-        button.dotLayer.fillColor = [self.dotTintColor CGColor];
+        button.dotLayer.fillColor = [self.dotsFillColor CGColor];
         button.laysOutHorizontally = self.isVertical;
         
         [button addTarget:self action:@selector(tb_didSelectItem:) forControlEvents:UIControlEventTouchUpInside];
@@ -246,16 +246,16 @@
 }
 
 
-- (void)setDotTintColor:(UIColor *)dotTintColor {
+- (void)setDotsFillColor:(UIColor *)dotTintColor {
     
     if (dotTintColor != nil) {
-        _dotTintColor = dotTintColor;
+        _dotsFillColor = dotTintColor;
     } else {
-        _dotTintColor = self.tintColor;
+        _dotsFillColor = self.tintColor;
     }
     
     for (_TBTabBarButton *button in self.buttons) {
-        button.dotLayer.fillColor = [_dotTintColor CGColor];
+        button.dotLayer.fillColor = [_dotsFillColor CGColor];
     }
 }
 
