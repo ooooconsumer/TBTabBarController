@@ -1,5 +1,5 @@
 //
-//  _TBDotView.h
+//  _TBDotLayer.m
 //  TweetbotTabBarController
 //
 //  Copyright (c) 2019 Timur Ganiev
@@ -22,12 +22,19 @@
 //  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 //  SOFTWARE.
 
-#import <UIKit/UIKit.h>
+#import "_TBDotLayer.h"
 
-NS_ASSUME_NONNULL_BEGIN
+@implementation _TBDotLayer
 
-@interface _TBDotView : UIView
+#pragma mark - Public
+
+#pragma mark Overrides
+
+- (void)drawInContext:(CGContextRef)ctx {
+    
+    UIGraphicsPushContext(ctx);
+    self.path = [UIBezierPath bezierPathWithOvalInRect:self.bounds].CGPath;
+    UIGraphicsPopContext();
+}
 
 @end
-
-NS_ASSUME_NONNULL_END

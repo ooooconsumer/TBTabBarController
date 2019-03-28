@@ -26,7 +26,7 @@
 
 #import "TBTabBar+Private.h"
 #import "_TBTabBarButton.h"
-#import "_TBDotView.h"
+#import "_TBDotLayer.h"
 
 #import "TBUtils.h"
 
@@ -318,8 +318,8 @@ static void *tb_tabBarItemShowDotContext = &tb_tabBarItemShowDotContext;
         leftTabBarButtonAtIndex.enabled = enabled;
     } else if (context == tb_tabBarItemShowDotContext) {
         BOOL const showDot = ![(NSNumber *)change[NSKeyValueChangeNewKey] boolValue];
-        bottomTabBarButtonAtIndex.dotView.hidden = showDot;
-        leftTabBarButtonAtIndex.dotView.hidden = showDot;
+        bottomTabBarButtonAtIndex.dotLayer.hidden = showDot;
+        leftTabBarButtonAtIndex.dotLayer.hidden = showDot;
     } else {
         [super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
     }

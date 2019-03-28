@@ -26,17 +26,18 @@
 
 #import "TBTabBarItem.h"
 
-#import "_TBDotView.h"
+#import "_TBDotLayer.h"
 
 #import "TBUtils.h"
 
 static const CGFloat _TBTabBarButtonDotSize = 5.0;
+static const CGFloat _TBTabBarButtonDotBottomInset = 3.0;
 
 @interface _TBTabBarButton ()
 
 @property (strong, nonatomic, readwrite) UIImageView *imageView;
 
-@property (strong, nonatomic, readwrite) _TBDotView *dotView;
+@property (strong, nonatomic, readwrite) _TBDotLayer *dotLayer;
 
 @end
 
@@ -99,7 +100,7 @@ static const CGFloat _TBTabBarButtonDotSize = 5.0;
     
     UIImageView *imageView = self.imageView;
     
-    if (imageView.image == nil && tb_needsLayoutImageView == false) {
+    if (imageView.image == nil) {
         return;
     }
     
@@ -107,24 +108,25 @@ static const CGFloat _TBTabBarButtonDotSize = 5.0;
     
     [imageView sizeToFit];
     
-    CGRect const frame = self.frame;
+    CGRect const bounds = self.bounds;
     
     CGRect imageViewFrame = imageView.frame;
-    imageViewFrame.origin = (CGPoint){TBFloorValueWithScale((CGRectGetWidth(frame) - CGRectGetWidth(imageViewFrame) / 2.0), displayScale), TBFloorValueWithScale((CGRectGetHeight(frame) - CGRectGetHeight(imageViewFrame) / 2.0), displayScale)};
+    imageViewFrame.origin = (CGPoint){TBFloorValueWithScale(((CGRectGetWidth(bounds) - CGRectGetWidth(imageViewFrame)) / 2.0), displayScale), TBFloorValueWithScale(((CGRectGetHeight(bounds) - CGRectGetHeight(imageViewFrame)) / 2.0), displayScale)};
     
     self.imageView.frame = imageViewFrame;
     
-    CGRect dotFrame = (CGRect){CGPointZero, (CGSize){_TBTabBarButtonDotSize, _TBTabBarButtonDotSize}};
+    CGRect dotLayerFrame = (CGRect){CGPointZero, (CGSize){_TBTabBarButtonDotSize, _TBTabBarButtonDotSize}};
     
     if (self.laysOutHorizontally) {
-        dotFrame.origin = (CGPoint){TBFloorValueWithScale(CGRectGetMaxX(frame) - (_TBTabBarButtonDotSize * 2.0), displayScale), TBFloorValueWithScale(CGRectGetMidY(self.bounds) - (_TBTabBarButtonDotSize / 2.0), displayScale)};
+        dotLayerFrame.origin = (CGPoint){TBFloorValueWithScale(CGRectGetWidth(bounds) - (_TBTabBarButtonDotSize * 2.0), displayScale), TBFloorValueWithScale((CGRectGetHeight(bounds) - _TBTabBarButtonDotSize) / 2.0, displayScale)};
     } else {
-        dotFrame.origin = (CGPoint){TBFloorValueWithScale(CGRectGetMidX(frame) - (_TBTabBarButtonDotSize / 2.0), displayScale), TBFloorValueWithScale(CGRectGetMaxY(frame) - (_TBTabBarButtonDotSize + 3.0), displayScale)};
+        dotLayerFrame.origin = (CGPoint){TBFloorValueWithScale((CGRectGetWidth(bounds) - _TBTabBarButtonDotSize) / 2.0, displayScale), TBFloorValueWithScale(CGRectGetHeight(bounds) - (_TBTabBarButtonDotSize + _TBTabBarButtonDotBottomInset), displayScale)};
     }
     
-    self.dotView.frame = dotFrame;
+    self.dotLayer.frame = dotLayerFrame;
+    
+    [self.dotLayer setNeedsDisplay];
 }
-
 
 #pragma mark - Private
 
@@ -133,7 +135,7 @@ static const CGFloat _TBTabBarButtonDotSize = 5.0;
     _normalImage = tabBarItem.image;
     _selectedImage = tabBarItem.selectedImage;
     
-    self.dotView.hidden = !tabBarItem.showDot;
+    self.dotLayer.hidden = !tabBarItem.showDot;
     
     [self tb_setup];
 }
@@ -147,7 +149,7 @@ static const CGFloat _TBTabBarButtonDotSize = 5.0;
     [self tb_updateImage];
     
     // Dot view
-    [self addSubview:self.dotView];
+    [self.layer addSublayer:self.dotLayer];
 }
 
 
@@ -187,15 +189,14 @@ static const CGFloat _TBTabBarButtonDotSize = 5.0;
 }
 
 
-- (_TBDotView *)dotView {
+- (_TBDotLayer *)dotLayer {
     
-    if (_dotView == nil) {
-        _dotView = [[_TBDotView alloc] initWithFrame:CGRectZero];
-        _dotView.hidden = true;
-        _dotView.translatesAutoresizingMaskIntoConstraints = false;
+    if (_dotLayer == nil) {
+        _dotLayer = [_TBDotLayer layer];
+        _dotLayer.hidden = true;
     }
     
-    return _dotView;
+    return _dotLayer;
 }
 
 

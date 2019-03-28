@@ -26,7 +26,7 @@
 
 #import "TBTabBar+Private.h"
 #import "_TBTabBarButton.h"
-#import "_TBDotView.h"
+#import "_TBDotLayer.h"
 
 @interface TBTabBar()
 
@@ -210,7 +210,7 @@
         
         _TBTabBarButton *button = [[_TBTabBarButton alloc] initWithTabBarItem:item];
         button.tintColor = self.defaultTintColor;
-        button.dotView.tintColor = self.dotTintColor;
+        button.dotLayer.fillColor = [self.dotTintColor CGColor];
         button.laysOutHorizontally = self.isVertical;
         
         [button addTarget:self action:@selector(tb_didSelectItem:) forControlEvents:UIControlEventTouchUpInside];
@@ -255,7 +255,7 @@
     }
     
     for (_TBTabBarButton *button in self.buttons) {
-        button.dotView.tintColor = _dotTintColor;
+        button.dotLayer.fillColor = [_dotTintColor CGColor];
     }
 }
 
