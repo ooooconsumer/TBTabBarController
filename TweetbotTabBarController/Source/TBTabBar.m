@@ -28,15 +28,11 @@
 #import "_TBTabBarButton.h"
 #import "_TBDotLayer.h"
 
+#import "TBUtils.h"
+
 @interface TBTabBar()
 
 @property (strong, nonatomic) NSArray <_TBTabBarButton *> *buttons;
-
-/** Stack view with tab bar buttons */
-@property (strong, nonatomic) UIStackView *stackView;
-
-/** An array of constraints */
-@property (strong, nonatomic) NSArray <NSLayoutConstraint *> *stackViewConstraints;
 
 @end
 
@@ -83,6 +79,39 @@
 }
 
 
+#pragma mark UIViewHierarchy
+
+- (void)layoutSubviews {
+    
+    [super layoutSubviews];
+    
+    NSUInteger const numberOfButtons = self.buttons.count;
+    
+    if (numberOfButtons == 0) {
+        return;
+    }
+    
+    CGRect const frame = self.frame;
+    
+    UIEdgeInsets const contentInsets = self.contentInsets;
+    UIEdgeInsets const safeAreaInsets = self.safeAreaInsets;
+    
+    CGPoint const originPoint = (CGPoint){contentInsets.left + safeAreaInsets.left, contentInsets.top + safeAreaInsets.top};
+    
+    CGFloat const displayScale = self.traitCollection.displayScale;
+    CGFloat const fNumberOfButtons = (CGFloat)numberOfButtons;
+    CGFloat const spaceBetween = self.spaceBetweenTabs * (fNumberOfButtons - 1.0) / fNumberOfButtons;
+    
+    if (self.isVertical) {
+        CGSize const size = (CGSize){TBFloorValueWithScale((CGRectGetWidth(frame) - contentInsets.left - contentInsets.right - safeAreaInsets.left), displayScale), TBFloorValueWithScale(((CGRectGetHeight(frame) - contentInsets.top - contentInsets.bottom) / fNumberOfButtons) - spaceBetween, displayScale)};
+        [self tb_layoutVerticalWith:originPoint size:size];
+    } else {
+        CGSize const size = (CGSize){TBFloorValueWithScale(((CGRectGetWidth(frame) - contentInsets.left - contentInsets.right - safeAreaInsets.left - safeAreaInsets.right) / fNumberOfButtons) - spaceBetween, displayScale), TBFloorValueWithScale((CGRectGetHeight(frame) - contentInsets.top - contentInsets.bottom - safeAreaInsets.bottom), displayScale)};
+        [self tb_layoutHorizontalWith:originPoint size:size];
+    }
+}
+
+
 #pragma mark - Private
 
 - (void)tb_commonInitWithLayoutOrientation:(TBTabBarLayoutOrientation)layoutOrientation {
@@ -99,39 +128,31 @@
 
 - (void)tb_setup {
     
-    // View
     self.backgroundColor = [UIColor whiteColor];
-    
-    // Stack view
-    _stackView = [[UIStackView alloc] initWithFrame:CGRectZero];
-    _stackView.axis = self.isVertical ? UILayoutConstraintAxisVertical : UILayoutConstraintAxisHorizontal;
-    _stackView.alignment = UIStackViewAlignmentCenter;
-    _stackView.distribution = UIStackViewDistributionFillEqually;
-    _stackView.spacing = 4.0;
-    _stackView.translatesAutoresizingMaskIntoConstraints = false;
-    
-    [self addSubview:_stackView];
-    
-    // Constraints
-    [self tb_setupConstraints];
+    self.spaceBetweenTabs = 4.0;
 }
 
 
 #pragma mark Layout
 
-- (void)tb_setupConstraints {
+- (void)tb_layoutVerticalWith:(CGPoint)originPoint size:(CGSize)size {
     
-    UILayoutGuide *layoutGuide = self.safeAreaLayoutGuide;
+    CGFloat offset = originPoint.y;
     
-    NSLayoutYAxisAnchor *bottomAnchor = self.isVertical ? self.bottomAnchor : layoutGuide.bottomAnchor; // Horizontal tab bar has to play cool with safe area
+    for (_TBTabBarButton *button in self.buttons) {
+        button.frame = (CGRect){(CGPoint){originPoint.x, offset}, size};
+        offset += size.height + self.spaceBetweenTabs;
+    }
+}
+
+- (void)tb_layoutHorizontalWith:(CGPoint)originPoint size:(CGSize)size {
     
-    UIStackView *stackView = self.stackView;
+    CGFloat offset = originPoint.x;
     
-    UIEdgeInsets contentInsets = self.contentInsets;
-    
-    _stackViewConstraints = @[[stackView.topAnchor constraintEqualToAnchor:self.topAnchor constant:contentInsets.top], [stackView.leftAnchor constraintEqualToAnchor:layoutGuide.leftAnchor constant:contentInsets.left], [stackView.bottomAnchor constraintEqualToAnchor:bottomAnchor constant:contentInsets.bottom], [stackView.rightAnchor constraintEqualToAnchor:layoutGuide.rightAnchor constant:contentInsets.right]]; // Capture stack view's constraints to update them later
-    
-    [NSLayoutConstraint activateConstraints:_stackViewConstraints];
+    for (_TBTabBarButton *button in self.buttons) {
+        button.frame = (CGRect){(CGPoint){offset, originPoint.y}, size};
+        offset += size.width + self.spaceBetweenTabs;
+    }
 }
 
 
@@ -179,12 +200,6 @@
 }
 
 
-- (CGFloat)spaceBetweenTabs {
-    
-    return _stackView.spacing;
-}
-
-
 #pragma mark Setters
 
 - (void)setItems:(NSArray <TBTabBarItem *> *)items {
@@ -204,8 +219,6 @@
     
     NSMutableArray <_TBTabBarButton *> *buttons = [NSMutableArray arrayWithCapacity:items.count];
     
-    UIStackView *stackView = self.stackView;
-    
     for (TBTabBarItem *item in _items) {
         
         _TBTabBarButton *button = [[_TBTabBarButton alloc] initWithTabBarItem:item];
@@ -215,13 +228,7 @@
         
         [button addTarget:self action:@selector(tb_didSelectItem:) forControlEvents:UIControlEventTouchUpInside];
         
-        [stackView addArrangedSubview:button];
-        
-        if (self.isVertical == false) {
-            [button.heightAnchor constraintEqualToAnchor:stackView.heightAnchor].active = true;
-        } else {
-            [button.widthAnchor constraintEqualToAnchor:stackView.widthAnchor].active = true;
-        }
+        [self addSubview:button];
         
         [buttons addObject:button];
     }
@@ -246,10 +253,10 @@
 }
 
 
-- (void)setDotsFillColor:(UIColor *)dotTintColor {
+- (void)setDotsFillColor:(UIColor *)dotsFillColor {
     
-    if (dotTintColor != nil) {
-        _dotsFillColor = dotTintColor;
+    if (dotsFillColor != nil) {
+        _dotsFillColor = dotsFillColor;
     } else {
         _dotsFillColor = self.tintColor;
     }
@@ -270,13 +277,11 @@
 
 - (void)setSelectedIndex:(NSUInteger)selectedIndex {
     
-    _TBTabBarButton *previouslySelectedButton = self.buttons[_selectedIndex];
-    previouslySelectedButton.tintColor = self.defaultTintColor;
+    self.buttons[_selectedIndex].tintColor = self.defaultTintColor;
     
     _selectedIndex = selectedIndex;
     
-    _TBTabBarButton *selectedButton = self.buttons[_selectedIndex];
-    selectedButton.tintColor = self.selectedTintColor;
+    self.buttons[_selectedIndex].tintColor = self.selectedTintColor;
 }
 
 
@@ -287,32 +292,6 @@
     }
     
     _contentInsets = insets;
-    
-    [_stackViewConstraints enumerateObjectsUsingBlock:^(NSLayoutConstraint * _Nonnull constraint, NSUInteger index, BOOL *_Nonnull stop) {
-        
-        switch (index) {
-            case 0:
-                constraint.constant = insets.top;
-                break;
-            case 1:
-                constraint.constant = insets.left;
-                break;
-            case 2:
-                constraint.constant = insets.bottom;
-                break;
-            case 3:
-                constraint.constant = insets.right;
-                break;
-            default:
-                break;
-        }
-    }];
-}
-
-
-- (void)setSpaceBetweenTabs:(CGFloat)spaceBetweenTabs {
-    
-    _stackView.spacing = spaceBetweenTabs;
 }
 
 @end
