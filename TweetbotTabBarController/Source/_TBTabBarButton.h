@@ -36,11 +36,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (assign, nonatomic) BOOL laysOutHorizontally;
 
-- (instancetype)initWithTabBarItem:(TBTabBarItem *)tabBarItem NS_DESIGNATED_INITIALIZER;
-
-- (instancetype)init NS_UNAVAILABLE;
-- (instancetype)initWithFrame:(CGRect)frame NS_UNAVAILABLE;
-- (instancetype)initWithCoder:(NSCoder *)aDecoder NS_UNAVAILABLE;
+- (instancetype)initWithTabBarItem:(TBTabBarItem *)tabBarItem;
 
 - (void)setImage:(nullable UIImage *)image forState:(UIControlState)state;
 

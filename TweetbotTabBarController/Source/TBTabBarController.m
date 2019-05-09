@@ -77,6 +77,8 @@ static TBTabBarControllerMethodOverrides tb_methodOverridesFlags;
         unsigned int shouldSelectViewController:1;
         unsigned int didSelectViewController:1;
     } tb_delegateFlags;
+    
+    BOOL _needsUpdateViewConstraints;
 }
 
 static void *tb_tabBarItemImageContext = &tb_tabBarItemImageContext;
@@ -200,10 +202,11 @@ static void *tb_tabBarItemShowDotContext = &tb_tabBarItemShowDotContext;
     
     [super updateViewConstraints];
     
-    if (tb_preferredPosition != TBTabBarControllerTabBarPositionUnspecified) {
+    if (_needsUpdateViewConstraints == true) {
         [self tb_updateViewConstraints];
         [self tb_updateFakeNavBarHeightConstraintConstant];
         tb_preferredPosition = TBTabBarControllerTabBarPositionUnspecified; // An unspecified position means that the trait collection has not been changed, so we have to rely on the current one
+        _needsUpdateViewConstraints = false;
     }
 }
 
@@ -245,23 +248,23 @@ static void *tb_tabBarItemShowDotContext = &tb_tabBarItemShowDotContext;
 
 - (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id <UIViewControllerTransitionCoordinator>)coordinator {
     
-    // Sometimes only the size of the view changes.
-    // Subclasses can rely on this change and show the tab bar on the other side.
-    
-    if (tb_methodOverridesFlags & TBTabBarControllerMethodOverridePreferredTabBarPositionForViewSize) {
+    if (CGSizeEqualToSize(self.view.frame.size, size) == false) {
         
-        // By default the preferredTabBarPositionForViewSize: method returns tb_preferredPosition property, so we have to capture it before a subclass will call super
-        // An unspecified position means that trait collection has not been changed in a while
-        [self tb_specifyPreferredPositionWithHorizontalSizeClassIfNecessary:self.traitCollection.horizontalSizeClass];
-        
-        TBTabBarControllerTabBarPosition preferredPosition = [self preferredTabBarPositionForViewSize:size];
-        
-        if (preferredPosition != tb_preferredPosition && preferredPosition != TBTabBarControllerTabBarPositionUnspecified) {
-            tb_preferredPosition = preferredPosition;
+        if (tb_methodOverridesFlags & TBTabBarControllerMethodOverridePreferredTabBarPositionForViewSize) {
+            
+            // By default the preferredTabBarPositionForViewSize: method returns tb_preferredPosition property, so we have to capture it before a subclass will call super
+            // An unspecified position means that trait collection has not been changed in a while
+            [self tb_specifyPreferredPositionWithHorizontalSizeClassIfNecessary:self.traitCollection.horizontalSizeClass];
+            
+            TBTabBarControllerTabBarPosition preferredPosition = [self preferredTabBarPositionForViewSize:size];
+            
+            if (preferredPosition != tb_preferredPosition && preferredPosition != TBTabBarControllerTabBarPositionUnspecified) {
+                tb_preferredPosition = preferredPosition;
+            }
         }
+        
+        [self tb_updateTabBarsVisibilityWithTransitionCoordinator:coordinator];
     }
-    
-    [self tb_updateTabBarsVisibilityWithTransitionCoordinator:coordinator];
     
     [super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
 }
@@ -290,6 +293,7 @@ static void *tb_tabBarItemShowDotContext = &tb_tabBarItemShowDotContext;
         [self tb_makeTabBarVisible:tabBarToShow];
         [self tb_makeTabBarHidden:tabBarToHide];
         // Update constraints
+        _needsUpdateViewConstraints = true;
         [self.view setNeedsUpdateConstraints];
         [self.view updateConstraintsIfNeeded];
         // Make the vertical tab bar look good
@@ -500,6 +504,7 @@ static void *tb_tabBarItemShowDotContext = &tb_tabBarItemShowDotContext;
     __weak typeof(self) weakSelf = self;
     
     if (tb_preferredPosition == TBTabBarControllerTabBarPositionUnspecified || tb_preferredPosition == tb_currentPosition) {
+        _needsUpdateViewConstraints = true;
         [coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
             [weakSelf.view setNeedsUpdateConstraints];
             [weakSelf.view updateConstraintsIfNeeded];
@@ -517,6 +522,8 @@ static void *tb_tabBarItemShowDotContext = &tb_tabBarItemShowDotContext;
     CGFloat const previousVerticalTabBarBottomInset = self.leftTabBar.contentInsets.bottom;
     
     [coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
+        typeof(self) strongSelf = weakSelf;
+        strongSelf->_needsUpdateViewConstraints = true;
         [weakSelf.view setNeedsUpdateConstraints];
         [weakSelf.view updateConstraintsIfNeeded];
         [weakSelf tb_setVerticalTabBarBottomContentInset:-(weakSelf.bottomTabBarHeightConstraint.constant)];
