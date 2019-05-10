@@ -78,7 +78,7 @@ static TBTabBarControllerMethodOverrides tb_methodOverridesFlags;
         unsigned int didSelectViewController:1;
     } tb_delegateFlags;
     
-    BOOL _needsUpdateViewConstraints;
+    BOOL tb_needsUpdateViewConstraints;
 }
 
 static void *tb_tabBarItemImageContext = &tb_tabBarItemImageContext;
@@ -202,11 +202,11 @@ static void *tb_tabBarItemShowDotContext = &tb_tabBarItemShowDotContext;
     
     [super updateViewConstraints];
     
-    if (_needsUpdateViewConstraints == true) {
+    if (tb_needsUpdateViewConstraints == true) {
         [self tb_updateViewConstraints];
         [self tb_updateFakeNavBarHeightConstraintConstant];
         tb_preferredPosition = TBTabBarControllerTabBarPositionUnspecified; // An unspecified position means that the trait collection has not been changed, so we have to rely on the current one
-        _needsUpdateViewConstraints = false;
+        tb_needsUpdateViewConstraints = false;
     }
 }
 
@@ -293,7 +293,7 @@ static void *tb_tabBarItemShowDotContext = &tb_tabBarItemShowDotContext;
         [self tb_makeTabBarVisible:tabBarToShow];
         [self tb_makeTabBarHidden:tabBarToHide];
         // Update constraints
-        _needsUpdateViewConstraints = true;
+        tb_needsUpdateViewConstraints = true;
         [self.view setNeedsUpdateConstraints];
         [self.view updateConstraintsIfNeeded];
         // Make the vertical tab bar look good
@@ -504,7 +504,7 @@ static void *tb_tabBarItemShowDotContext = &tb_tabBarItemShowDotContext;
     __weak typeof(self) weakSelf = self;
     
     if (tb_preferredPosition == TBTabBarControllerTabBarPositionUnspecified || tb_preferredPosition == tb_currentPosition) {
-        _needsUpdateViewConstraints = true;
+        tb_needsUpdateViewConstraints = true;
         [coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
             [weakSelf.view setNeedsUpdateConstraints];
             [weakSelf.view updateConstraintsIfNeeded];
@@ -523,7 +523,7 @@ static void *tb_tabBarItemShowDotContext = &tb_tabBarItemShowDotContext;
     
     [coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
         typeof(self) strongSelf = weakSelf;
-        strongSelf->_needsUpdateViewConstraints = true;
+        strongSelf->tb_needsUpdateViewConstraints = true;
         [weakSelf.view setNeedsUpdateConstraints];
         [weakSelf.view updateConstraintsIfNeeded];
         [weakSelf tb_setVerticalTabBarBottomContentInset:-(weakSelf.bottomTabBarHeightConstraint.constant)];

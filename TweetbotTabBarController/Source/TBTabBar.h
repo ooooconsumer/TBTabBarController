@@ -39,6 +39,12 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)tabBar:(TBTabBar *)tabBar didSelectItem:(TBTabBarItem *)item;
 
+/** @brief To be implemented. */
+- (BOOL)tabBar:(TBTabBar *)tabBar shouldChangeItem:(TBTabBarItem *)item NS_UNAVAILABLE;
+
+/** @brief To be implemented. */
+- (void)tabBar:(TBTabBar *)tabBar didChangeItem:(TBTabBarItem *)item toItem:(TBTabBarItem *)newItem NS_UNAVAILABLE;
+
 @end
 
 @interface TBTabBar : TBSimpleBar

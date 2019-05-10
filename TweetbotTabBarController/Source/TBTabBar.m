@@ -40,7 +40,14 @@
 
 @end
 
-@implementation TBTabBar
+@implementation TBTabBar {
+    
+    struct {
+        unsigned int didSelectItem:1;
+        unsigned int shouldChangeItem:1;
+        unsigned int didChangeItem:1;
+    } tb_delegateFlags;
+}
 
 @synthesize defaultTintColor = _defaultTintColor;
 @synthesize dotsFillColor = _dotsFillColor;
@@ -139,14 +146,11 @@
 
 - (void)tb_didSelectItem:(_TBTabBarButton *)button {
     
-    if (self.delegate == nil) {
-        return;
-    }
-    
-    NSUInteger const buttonIndex = [self.buttons indexOfObject:button];
-    
-    if (buttonIndex != NSNotFound) {
-        [self.delegate tabBar:self didSelectItem:self.items[buttonIndex]];
+    if (tb_delegateFlags.didSelectItem) {
+        NSUInteger const buttonIndex = [self.buttons indexOfObject:button];
+        if (buttonIndex != NSNotFound) {
+            [self.delegate tabBar:self didSelectItem:self.items[buttonIndex]];
+        }
     }
 }
 
@@ -313,6 +317,16 @@
 - (void)setSpaceBetweenTabs:(CGFloat)spaceBetweenTabs {
     
     _stackView.spacing = spaceBetweenTabs;
+}
+
+
+- (void)setDelegate:(id <TBTabBarDelegate>)delegate {
+    
+    _delegate = delegate;
+    
+    tb_delegateFlags.didSelectItem = [_delegate respondsToSelector:@selector(tabBar:didSelectItem:)];
+    tb_delegateFlags.shouldChangeItem = [_delegate respondsToSelector:@selector(tabBar:shouldChangeItem:)];
+    tb_delegateFlags.didChangeItem = [_delegate respondsToSelector:@selector(tabBar:didChangeItem:toItem:)];
 }
 
 @end
