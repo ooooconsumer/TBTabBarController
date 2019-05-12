@@ -188,7 +188,6 @@
     return _stackView.spacing;
 }
 
-
 #pragma mark Setters
 
 - (void)setItems:(NSArray <TBTabBarItem *> *)items {
@@ -197,20 +196,23 @@
         return;
     }
     
+    _items = items;
+    
     if (self.buttons.count > 0) {
         for (_TBTabBarButton *button in self.buttons) {
             [button removeFromSuperview];
         }
         self.buttons = nil;
+        if (items.count == 0 || items == nil) {
+            return;
+        }
     }
     
-    _items = items;
-    
-    NSMutableArray <_TBTabBarButton *> *buttons = [NSMutableArray arrayWithCapacity:items.count];
+    NSMutableArray <_TBTabBarButton *> *buttons = [NSMutableArray arrayWithCapacity:_items.count];
     
     UIStackView *stackView = self.stackView;
     
-    for (TBTabBarItem *item in _items) {
+    [_items enumerateObjectsUsingBlock:^(TBTabBarItem *_Nonnull item, NSUInteger index, BOOL * _Nonnull stop) {
         
         _TBTabBarButton *button = [[_TBTabBarButton alloc] initWithTabBarItem:item];
         button.tintColor = self.defaultTintColor;
@@ -228,7 +230,7 @@
         }
         
         [buttons addObject:button];
-    }
+    }];
     
     self.buttons = [buttons copy];
     

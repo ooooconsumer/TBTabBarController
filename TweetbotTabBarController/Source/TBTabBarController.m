@@ -775,7 +775,14 @@ static void *tb_tabBarItemShowDotContext = &tb_tabBarItemShowDotContext;
         return;
     }
     
-    NSAssert(viewControllers.count <= 5, @"The number of view controllers must not exceed 5.");
+    if (viewControllers.count == 0) {
+        [self tb_stopObservingTabBarItems];
+        [self tb_processChildrenOfViewControllersWithValue:nil];
+        [self tb_removeChildViewControllerIfExists];
+        self.items = nil;
+        _viewControllers = nil;
+        return;
+    }
     
     if (_viewControllers.count > 0) {
         [self tb_stopObservingTabBarItems];

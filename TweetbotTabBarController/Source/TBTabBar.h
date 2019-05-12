@@ -64,6 +64,9 @@ NS_ASSUME_NONNULL_BEGIN
 /** @brief The currently selected tab index. */
 @property (assign, nonatomic) NSUInteger selectedIndex;
 
+/** @brief To be implemented. */
+@property (strong, nonatomic, nullable) NSIndexSet *switchableItemIndexes;
+
 /** @brief Additional area around content. Affects the size of the tab bar. Default is UIEdgeInsetsZero. */
 @property (assign, nonatomic) UIEdgeInsets contentInsets UI_APPEARANCE_SELECTOR;
 
