@@ -131,7 +131,7 @@ static NSString *const _TBTabBarDotLayerAnimationKey = @"_TBTabBarDotLayerAnimat
     CABasicAnimation *opacityAnimation = [CABasicAnimation animationWithKeyPath:@"opacity"];
     CAAnimationGroup *groupAnimation = [CAAnimationGroup animation];
     groupAnimation.fillMode = kCAFillModeForwards;
-    // Deсide wheter should we show or hide a dot
+    // Deсide wheter we should show or hide a dot
     if (hidden == false) {
         dotLayer.hidden = false;
         positionAnimation = [CASpringAnimation animationWithKeyPath:keyPath];
