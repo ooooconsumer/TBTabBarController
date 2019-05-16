@@ -1,5 +1,5 @@
 //
-//  _TBDotLayer.h
+//  TBDotLayer.h
 //  TweetbotTabBarController
 //
 //  Copyright (c) 2019 Timur Ganiev
@@ -26,7 +26,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface _TBDotLayer : CAShapeLayer
+@interface TBDotLayer : CAShapeLayer
 
 @end
 

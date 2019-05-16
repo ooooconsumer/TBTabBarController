@@ -1,5 +1,5 @@
 //
-//  _TBDotLayer.m
+//  TBDotLayer.m
 //  TweetbotTabBarController
 //
 //  Copyright (c) 2019 Timur Ganiev
@@ -22,9 +22,9 @@
 //  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 //  SOFTWARE.
 
-#import "_TBDotLayer.h"
+#import "TBDotLayer.h"
 
-@implementation _TBDotLayer
+@implementation TBDotLayer
 
 #pragma mark - Public
 

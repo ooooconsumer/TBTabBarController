@@ -24,7 +24,7 @@
 
 #import <UIKit/UIKit.h>
 
-@class TBTabBarItem, _TBDotLayer;
+@class TBTabBarItem, TBDotLayer;
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -32,7 +32,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (strong, nonatomic, readonly) UIImageView *imageView;
 
-@property (strong, nonatomic, readonly) _TBDotLayer *dotLayer;
+@property (strong, nonatomic, readonly) TBDotLayer *dotLayer;
 
 @property (assign, nonatomic) BOOL laysOutHorizontally;
 

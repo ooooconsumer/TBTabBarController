@@ -24,7 +24,7 @@
 
 #import "TBSimpleBar.h"
 
-@class TBTabBar, TBTabBarItem;
+@class TBTabBar, TBTabBarItem, TBDotLayer;
 
 typedef NS_ENUM(NSInteger, TBTabBarLayoutOrientation) {
     TBTabBarLayoutOrientationHorizontal,
@@ -35,22 +35,30 @@ NS_ASSUME_NONNULL_BEGIN
 
 @protocol TBTabBarDelegate <NSObject>
 
+@required
+
+- (BOOL)isTabBarCurrentlyVisible:(TBTabBar *)tabBar;
+
 @optional
 
 - (void)tabBar:(TBTabBar *)tabBar didSelectItem:(TBTabBarItem *)item;
 
 /** @brief To be implemented. */
-- (BOOL)tabBar:(TBTabBar *)tabBar shouldChangeItem:(TBTabBarItem *)item NS_UNAVAILABLE;
+- (void)tabBar:(TBTabBar *)tabBar didSwitchItem:(TBTabBarItem *)item toItem:(TBTabBarItem *)newItem NS_UNAVAILABLE;
 
-/** @brief To be implemented. */
-- (void)tabBar:(TBTabBar *)tabBar didChangeItem:(TBTabBarItem *)item toItem:(TBTabBarItem *)newItem NS_UNAVAILABLE;
+- (BOOL)tabBar:(TBTabBar *)tabBar shouldAnimateDotAtTabIndex:(NSUInteger)index;
 
 @end
+
+typedef void (^TBTabTabBarDotLayerAnimationBlock)(TBDotLayer *dotLayer, BOOL hidden);
 
 @interface TBTabBar : TBSimpleBar
 
 /** @brief Items to display. */
 @property (weak, nonatomic, nullable) NSArray <TBTabBarItem *> *items;
+
+/** @brief The currently visible items. */
+@property (weak, nonatomic, nullable) NSArray <TBTabBarItem *> *visibleItems;
 
 /** @brief When a tab is not selected, its tint color. Default is 0.6 white. */
 @property (strong, nonatomic, null_resettable) UIColor *defaultTintColor UI_APPEARANCE_SELECTOR;
@@ -75,12 +83,21 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (weak, nonatomic, nullable) id <TBTabBarDelegate> delegate;
 
+/** @discussion Use this block to handle dot animation without subclassing. */
+@property (copy, nonatomic, nullable) TBTabTabBarDotLayerAnimationBlock dotLayerAnimationBlock;
+
 @property (assign, nonatomic, readonly) TBTabBarLayoutOrientation layoutOrientation;
 
 /** @brief Returns YES whenever layout orientation is vertical */
 @property (assign, nonatomic, readonly, getter = isVertical) BOOL vertical;
 
 - (instancetype)initWithLayoutOrientation:(TBTabBarLayoutOrientation)layoutOrientation;
+
+/**
+ * @brief Makes the dot layer visible or hidden. Do not call directly.
+ * @discussion You either can override this method by subclassing TBTabBar class or use a common TBTabTabBarDotLayerAnimationBlock block for every bar.
+ */
+- (void)setDotLayer:(TBDotLayer *)dotLayer hidden:(BOOL)hidden animated:(BOOL)animated;
 
 @end
 

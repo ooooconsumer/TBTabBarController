@@ -26,7 +26,7 @@
 
 #import "TBTabBarItem.h"
 
-#import "_TBDotLayer.h"
+#import "TBDotLayer.h"
 
 #import "TBUtils.h"
 
@@ -37,7 +37,7 @@ static const CGFloat _TBTabBarButtonDotBottomInset = 3.0;
 
 @property (strong, nonatomic, readwrite) UIImageView *imageView;
 
-@property (strong, nonatomic, readwrite) _TBDotLayer *dotLayer;
+@property (strong, nonatomic, readwrite) TBDotLayer *dotLayer;
 
 @end
 
@@ -189,10 +189,10 @@ static const CGFloat _TBTabBarButtonDotBottomInset = 3.0;
 }
 
 
-- (_TBDotLayer *)dotLayer {
+- (TBDotLayer *)dotLayer {
     
     if (_dotLayer == nil) {
-        _dotLayer = [_TBDotLayer layer];
+        _dotLayer = [TBDotLayer layer];
         _dotLayer.hidden = true;
     }
     

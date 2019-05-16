@@ -26,7 +26,7 @@
 
 #import "TBTabBar+Private.h"
 #import "_TBTabBarButton.h"
-#import "_TBDotLayer.h"
+#import "TBDotLayer.h"
 
 #import "TBUtils.h"
 
@@ -332,8 +332,8 @@ static void *tb_tabBarItemShowDotContext = &tb_tabBarItemShowDotContext;
         leftTabBarButtonAtIndex.enabled = enabled;
     } else if (context == tb_tabBarItemShowDotContext) {
         BOOL const showDot = ![(NSNumber *)change[NSKeyValueChangeNewKey] boolValue];
-        bottomTabBarButtonAtIndex.dotLayer.hidden = showDot;
-        leftTabBarButtonAtIndex.dotLayer.hidden = showDot;
+        [self.bottomTabBar tb_setDotHidden:showDot atTabIndex:itemIndex];
+        [self.leftTabBar tb_setDotHidden:showDot atTabIndex:itemIndex];
     } else {
         [super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
     }
@@ -341,6 +341,12 @@ static void *tb_tabBarItemShowDotContext = &tb_tabBarItemShowDotContext;
 
 
 #pragma mark TBTabBarDelegate
+
+- (BOOL)isTabBarCurrentlyVisible:(TBTabBar *)tabBar {
+    
+    return [tabBar isEqual:self.self.visibleTabBar];
+}
+
 
 - (void)tabBar:(TBTabBar *)tabBar didSelectItem:(TBTabBarItem *)item {
     

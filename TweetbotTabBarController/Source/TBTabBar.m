@@ -26,7 +26,13 @@
 
 #import "TBTabBar+Private.h"
 #import "_TBTabBarButton.h"
-#import "_TBDotLayer.h"
+#import "TBDotLayer.h"
+
+static const CGFloat _TBTabBarStackViewDefaultSpacing = 4.0;
+static const CGFloat _TBTabBarDotLayerPresentationAnimationDuration = 0.25;
+static const CGFloat _TBTabBarDotLayerDismissalAnimationDuration = 0.15;
+
+static NSString *const _TBTabBarDotLayerAnimationKey = @"_TBTabBarDotLayerAnimationKey";
 
 @interface TBTabBar()
 
@@ -43,9 +49,10 @@
 @implementation TBTabBar {
     
     struct {
+        unsigned int isTabBarCurrentlyVisible:1;
         unsigned int didSelectItem:1;
-        unsigned int shouldChangeItem:1;
-        unsigned int didChangeItem:1;
+        unsigned int didSwitchItem:1;
+        unsigned int shouldAnimateDot:1;
     } tb_delegateFlags;
 }
 
@@ -90,6 +97,66 @@
 }
 
 
+- (void)setDotLayer:(TBDotLayer *)dotLayer hidden:(BOOL)hidden animated:(BOOL)animated {
+    
+    if (self.dotLayerAnimationBlock != nil) {
+        self.dotLayerAnimationBlock(dotLayer, hidden);
+        return;
+    }
+    
+    if (animated == false) {
+        dotLayer.hidden = hidden;
+        return;
+    }
+    
+    // Begin transcation
+    [CATransaction begin];
+    [CATransaction setAnimationTimingFunction:[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut]];
+    // Common variables for different animations
+    NSString *keyPath = nil;
+    CGFloat dotLayerSize = 0.0;
+    CGFloat dotLayerOriginalPos = 0.0;
+    // Move a dot by its larger size
+    if (self.isVertical == true) {
+        keyPath = @"position.x";
+        dotLayerSize = CGRectGetWidth(dotLayer.frame);
+        dotLayerOriginalPos = dotLayer.position.x;
+    } else {
+        keyPath = @"position.y";
+        dotLayerSize = CGRectGetHeight(dotLayer.frame);
+        dotLayerOriginalPos = dotLayer.position.y;
+    }
+    // Animations
+    __kindof CABasicAnimation *positionAnimation = nil;
+    CABasicAnimation *opacityAnimation = [CABasicAnimation animationWithKeyPath:@"opacity"];
+    CAAnimationGroup *groupAnimation = [CAAnimationGroup animation];
+    groupAnimation.fillMode = kCAFillModeForwards;
+    // Deсide wheter should we show or hide a dot
+    if (hidden == false) {
+        dotLayer.hidden = false;
+        positionAnimation = [CASpringAnimation animationWithKeyPath:keyPath];
+        ((CASpringAnimation *)positionAnimation).damping = 8.5;
+        positionAnimation.fromValue = @(dotLayerOriginalPos + dotLayerSize);
+        positionAnimation.byValue = @(-dotLayerSize);
+        opacityAnimation.fromValue = @0.0;
+        opacityAnimation.toValue = @1.0;
+        groupAnimation.duration = _TBTabBarDotLayerPresentationAnimationDuration;
+    } else {
+        [CATransaction setCompletionBlock:^{
+            dotLayer.hidden = true;
+        }];
+        positionAnimation = [CABasicAnimation animationWithKeyPath:keyPath];
+        positionAnimation.byValue = @(dotLayerSize);
+        opacityAnimation.toValue = @0.0;
+        groupAnimation.duration = _TBTabBarDotLayerDismissalAnimationDuration;
+    }
+    // Apply animations
+    groupAnimation.animations = @[positionAnimation, opacityAnimation];
+    [dotLayer addAnimation:groupAnimation forKey:_TBTabBarDotLayerAnimationKey];
+    [CATransaction commit];
+}
+
+
 #pragma mark - Private
 
 - (void)tb_commonInitWithLayoutOrientation:(TBTabBarLayoutOrientation)layoutOrientation {
@@ -114,13 +181,36 @@
     _stackView.axis = self.isVertical ? UILayoutConstraintAxisVertical : UILayoutConstraintAxisHorizontal;
     _stackView.alignment = UIStackViewAlignmentCenter;
     _stackView.distribution = UIStackViewDistributionFillEqually;
-    _stackView.spacing = 4.0;
+    _stackView.spacing = _TBTabBarStackViewDefaultSpacing;
     _stackView.translatesAutoresizingMaskIntoConstraints = false;
     
     [self addSubview:_stackView];
     
     // Constraints
     [self tb_setupConstraints];
+}
+
+
+- (void)tb_setDotHidden:(BOOL)hidden atTabIndex:(NSUInteger)index {
+    
+    TBDotLayer *dot = _buttons[index].dotLayer;
+    
+    if (dot.hidden == hidden) {
+        return;
+    }
+    
+    if ((tb_delegateFlags.isTabBarCurrentlyVisible && [_delegate isTabBarCurrentlyVisible:self]) == false) {
+        dot.hidden = hidden;
+        return;
+    }
+    
+    BOOL animated = true;
+    
+    if (tb_delegateFlags.shouldAnimateDot) {
+        animated = [_delegate tabBar:self shouldAnimateDotAtTabIndex:index];
+    }
+    
+    [self setDotLayer:dot hidden:hidden animated:animated];
 }
 
 
@@ -147,7 +237,7 @@
 - (void)tb_didSelectItem:(_TBTabBarButton *)button {
     
     if (tb_delegateFlags.didSelectItem) {
-        NSUInteger const buttonIndex = [self.buttons indexOfObject:button];
+        NSUInteger const buttonIndex = [_buttons indexOfObject:button];
         if (buttonIndex != NSNotFound) {
             [self.delegate tabBar:self didSelectItem:self.items[buttonIndex]];
         }
@@ -198,11 +288,11 @@
     
     _items = items;
     
-    if (self.buttons.count > 0) {
-        for (_TBTabBarButton *button in self.buttons) {
+    if (_buttons.count > 0) {
+        for (_TBTabBarButton *button in _buttons) {
             [button removeFromSuperview];
         }
-        self.buttons = nil;
+        _buttons = nil;
         if (items.count == 0 || items == nil) {
             return;
         }
@@ -232,9 +322,9 @@
         [buttons addObject:button];
     }];
     
-    self.buttons = [buttons copy];
+    _buttons = [buttons copy];
     
-    self.buttons[self.selectedIndex].tintColor = self.selectedTintColor;
+    _buttons[self.selectedIndex].tintColor = self.selectedTintColor;
 }
 
 
@@ -246,7 +336,7 @@
         _defaultTintColor = [UIColor colorWithWhite:0.6 alpha:1.0];
     }
     
-    for (_TBTabBarButton *button in self.buttons) {
+    for (_TBTabBarButton *button in _buttons) {
         button.tintColor = _defaultTintColor;
     }
 }
@@ -260,7 +350,7 @@
         _dotsFillColor = self.tintColor;
     }
     
-    for (_TBTabBarButton *button in self.buttons) {
+    for (_TBTabBarButton *button in _buttons) {
         button.dotLayer.fillColor = [_dotsFillColor CGColor];
     }
 }
@@ -270,18 +360,18 @@
     
     _selectedTintColor = selectedTintColor;
     
-    self.buttons[self.selectedIndex].tintColor = _selectedTintColor;
+    _buttons[self.selectedIndex].tintColor = _selectedTintColor;
 }
 
 
 - (void)setSelectedIndex:(NSUInteger)selectedIndex {
     
-    _TBTabBarButton *previouslySelectedButton = self.buttons[_selectedIndex];
+    _TBTabBarButton *previouslySelectedButton = _buttons[_selectedIndex];
     previouslySelectedButton.tintColor = self.defaultTintColor;
     
     _selectedIndex = selectedIndex;
     
-    _TBTabBarButton *selectedButton = self.buttons[_selectedIndex];
+    _TBTabBarButton *selectedButton = _buttons[_selectedIndex];
     selectedButton.tintColor = self.selectedTintColor;
 }
 
@@ -326,9 +416,10 @@
     
     _delegate = delegate;
     
+    tb_delegateFlags.isTabBarCurrentlyVisible = [_delegate respondsToSelector:@selector(isTabBarCurrentlyVisible:)];
     tb_delegateFlags.didSelectItem = [_delegate respondsToSelector:@selector(tabBar:didSelectItem:)];
-    tb_delegateFlags.shouldChangeItem = [_delegate respondsToSelector:@selector(tabBar:shouldChangeItem:)];
-    tb_delegateFlags.didChangeItem = [_delegate respondsToSelector:@selector(tabBar:didChangeItem:toItem:)];
+    tb_delegateFlags.didSwitchItem = [_delegate respondsToSelector:@selector(tabBar:didSwitchItem:toItem:)];
+    tb_delegateFlags.shouldAnimateDot = [_delegate respondsToSelector:@selector(tabBar:shouldAnimateDotAtTabIndex:)];
 }
 
 @end

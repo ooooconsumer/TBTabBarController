@@ -32,6 +32,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (strong, nonatomic, readonly, nullable) NSArray <_TBTabBarButton *> *buttons;
 
+- (void)tb_setDotHidden:(BOOL)hidden atTabIndex:(NSUInteger)index;
+
 @end
 
 NS_ASSUME_NONNULL_END

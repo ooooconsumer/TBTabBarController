@@ -9,8 +9,8 @@
 /* Begin PBXBuildFile section */
 		810282902249D24C000E2447 /* TBUtils.h in Headers */ = {isa = PBXBuildFile; fileRef = 8102828E2249D24C000E2447 /* TBUtils.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		810282912249D24C000E2447 /* TBUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 8102828F2249D24C000E2447 /* TBUtils.m */; };
-		816A3AA6224269FE00E0ED4C /* _TBDotLayer.h in Headers */ = {isa = PBXBuildFile; fileRef = 816A3AA4224269FE00E0ED4C /* _TBDotLayer.h */; settings = {ATTRIBUTES = (Private, ); }; };
-		816A3AA7224269FE00E0ED4C /* _TBDotLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 816A3AA5224269FE00E0ED4C /* _TBDotLayer.m */; };
+		816A3AA6224269FE00E0ED4C /* TBDotLayer.h in Headers */ = {isa = PBXBuildFile; fileRef = 816A3AA4224269FE00E0ED4C /* TBDotLayer.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		816A3AA7224269FE00E0ED4C /* TBDotLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 816A3AA5224269FE00E0ED4C /* TBDotLayer.m */; };
 		8179A048222F8296006307F7 /* TweetbotTabBarController.h in Headers */ = {isa = PBXBuildFile; fileRef = 8179A046222F8296006307F7 /* TweetbotTabBarController.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		8179A05E222F8417006307F7 /* TBTabBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 8179A051222F8417006307F7 /* TBTabBar.m */; };
 		8179A05F222F8417006307F7 /* TBFakeNavigationBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 8179A052222F8417006307F7 /* TBFakeNavigationBar.m */; };
@@ -30,8 +30,8 @@
 /* Begin PBXFileReference section */
 		8102828E2249D24C000E2447 /* TBUtils.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TBUtils.h; sourceTree = "<group>"; };
 		8102828F2249D24C000E2447 /* TBUtils.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TBUtils.m; sourceTree = "<group>"; };
-		816A3AA4224269FE00E0ED4C /* _TBDotLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _TBDotLayer.h; sourceTree = "<group>"; };
-		816A3AA5224269FE00E0ED4C /* _TBDotLayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _TBDotLayer.m; sourceTree = "<group>"; };
+		816A3AA4224269FE00E0ED4C /* TBDotLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TBDotLayer.h; sourceTree = "<group>"; };
+		816A3AA5224269FE00E0ED4C /* TBDotLayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TBDotLayer.m; sourceTree = "<group>"; };
 		8179A043222F8296006307F7 /* TweetbotTabBarController.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = TweetbotTabBarController.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		8179A046222F8296006307F7 /* TweetbotTabBarController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TweetbotTabBarController.h; sourceTree = "<group>"; };
 		8179A047222F8296006307F7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -99,8 +99,8 @@
 				8179A055222F8417006307F7 /* TBTabBarItem.m */,
 				8179A057222F8417006307F7 /* _TBTabBarButton.h */,
 				8179A05A222F8417006307F7 /* _TBTabBarButton.m */,
-				816A3AA4224269FE00E0ED4C /* _TBDotLayer.h */,
-				816A3AA5224269FE00E0ED4C /* _TBDotLayer.m */,
+				816A3AA4224269FE00E0ED4C /* TBDotLayer.h */,
+				816A3AA5224269FE00E0ED4C /* TBDotLayer.m */,
 				8179A053222F8417006307F7 /* TBFakeNavigationBar.h */,
 				8179A052222F8417006307F7 /* TBFakeNavigationBar.m */,
 				81C69AA922464892002B4691 /* TBSimpleBar.h */,
@@ -118,13 +118,13 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				816A3AA6224269FE00E0ED4C /* _TBDotLayer.h in Headers */,
 				8179A066222F8417006307F7 /* TBTabBarItem.h in Headers */,
 				8179A069222F8417006307F7 /* TBTabBar.h in Headers */,
 				8179A063222F8417006307F7 /* TBTabBarController.h in Headers */,
 				8179A060222F8417006307F7 /* TBFakeNavigationBar.h in Headers */,
 				810282902249D24C000E2447 /* TBUtils.h in Headers */,
 				81C69AAB22464892002B4691 /* TBSimpleBar.h in Headers */,
+				816A3AA6224269FE00E0ED4C /* TBDotLayer.h in Headers */,
 				8179A064222F8417006307F7 /* _TBTabBarButton.h in Headers */,
 				8179A06A222F8417006307F7 /* TBTabBar+Private.h in Headers */,
 				8179A048222F8296006307F7 /* TweetbotTabBarController.h in Headers */,
@@ -198,7 +198,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				816A3AA7224269FE00E0ED4C /* _TBDotLayer.m in Sources */,
+				816A3AA7224269FE00E0ED4C /* TBDotLayer.m in Sources */,
 				8179A05F222F8417006307F7 /* TBFakeNavigationBar.m in Sources */,
 				8179A05E222F8417006307F7 /* TBTabBar.m in Sources */,
 				810282912249D24C000E2447 /* TBUtils.m in Sources */,
