@@ -74,6 +74,12 @@ extern const CGFloat TBFakeNavigationBarAutomaticDimension;
 /** @brief The currently selected tab index. */
 @property (assign, nonatomic) NSUInteger selectedIndex;
 
+/**
+ * @brief A pop gesture recognizer for the left tab bar.
+ * @discussion Since default solution does not work when the left bar is presented (i.e. on iPhones when landscape), users can swipe right to pop view controller.
+ */
+@property (strong, nonatomic, readonly) UISwipeGestureRecognizer *popGestureRecognizer;
+
 /** @brief The horizontal tab bar at the bottom of the controller. */
 @property (strong, nonatomic, readonly) TBTabBar *bottomTabBar;
 
@@ -92,17 +98,17 @@ extern const CGFloat TBFakeNavigationBarAutomaticDimension;
  */
 @property (weak, nonatomic, readonly, nullable) TBTabBar *hiddenTabBar;
 
-/** @brief The height of the bottom tab bar. Default is 49pt. */
-@property (assign, nonatomic) CGFloat horizontalTabBarHeight;
-
-/** @brief The width of the left tab bar. Default is 60pt. */
-@property (assign, nonatomic) CGFloat verticalTabBarWidth;
-
 /**
  * @discussion View that mimics UINavigationBar.
  * Appears only when the left tab bar is presented.
  */
 @property (strong, nonatomic, readonly) TBFakeNavigationBar *fakeNavigationBar;
+
+/** @brief The height of the bottom tab bar. Default is 49pt. */
+@property (assign, nonatomic) CGFloat horizontalTabBarHeight;
+
+/** @brief The width of the left tab bar. Default is 60pt. */
+@property (assign, nonatomic) CGFloat verticalTabBarWidth;
 
 /** @brief The height of the fake navigation bar. Default is TBFakeNavigationBarAutomaticDimension. */
 @property (assign, nonatomic) CGFloat fakeNavigationBarHeight;

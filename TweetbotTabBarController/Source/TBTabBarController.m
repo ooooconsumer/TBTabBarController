@@ -86,6 +86,8 @@ static void *tb_tabBarItemSelectedImageContext = &tb_tabBarItemSelectedImageCont
 static void *tb_tabBarItemEnabledContext = &tb_tabBarItemEnabledContext;
 static void *tb_tabBarItemShowDotContext = &tb_tabBarItemShowDotContext;
 
+@synthesize popGestureRecognizer = _popGestureRecognizer;
+
 #pragma mark - Public
 
 - (instancetype)init {
@@ -408,6 +410,8 @@ static void *tb_tabBarItemShowDotContext = &tb_tabBarItemShowDotContext;
     // Verical tab bar
     [_containerView addArrangedSubview:self.fakeNavigationBar];
     [_containerView addArrangedSubview:self.leftTabBar];
+    
+    [self.leftTabBar addGestureRecognizer:self.popGestureRecognizer];
     
     // Constraints
     [self tb_setupConstraints];
@@ -738,6 +742,18 @@ static void *tb_tabBarItemShowDotContext = &tb_tabBarItemShowDotContext;
 }
 
 
+#pragma mark Actions
+
+- (void)tb_handlePopGestureRecognizer:(UISwipeGestureRecognizer *)gestureRecognizer {
+    
+    if (_childNavigationController == nil || _childNavigationController.viewControllers.count < 2) {
+        return;
+    }
+    
+    [_childNavigationController popViewControllerAnimated:true];
+}
+
+
 #pragma mark Getters
 
 - (TBTabBar *)bottomTabBar {
@@ -770,6 +786,17 @@ static void *tb_tabBarItemShowDotContext = &tb_tabBarItemShowDotContext;
     }
     
     return _fakeNavigationBar;
+}
+
+
+- (UISwipeGestureRecognizer *)popGestureRecognizer {
+    
+    if (_popGestureRecognizer == nil) {
+        _popGestureRecognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(tb_handlePopGestureRecognizer:)];
+        _popGestureRecognizer.direction = UISwipeGestureRecognizerDirectionRight;
+    }
+    
+    return _popGestureRecognizer;
 }
 
 
