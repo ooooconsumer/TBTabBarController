@@ -90,6 +90,8 @@
     CGFloat const height = CGRectGetHeight(bounds);
     CGFloat const displayScale = self.tb_displayScale;
     
+    // Separator
+    
     CGFloat const separatorSize = self.separatorSize;
     
     CGRect frame = CGRectZero;
@@ -112,6 +114,14 @@
     
     if (!CGRectEqualToRect(CGRectZero, frame)) {
         _separatorImageView.frame = frame;
+    }
+    
+    // Content view
+    
+    UIView *contentView = self.contentView;
+    
+    if (contentView != nil && contentView.superview != nil) {
+        contentView.frame = bounds;
     }
 }
 
@@ -257,7 +267,6 @@
 - (void)setContentView:(UIView *)contentView {
     
     if (contentView != nil) {
-        contentView.frame = self.bounds;
         [self insertSubview:contentView atIndex:0];
     } else {
         [_contentView removeFromSuperview];
