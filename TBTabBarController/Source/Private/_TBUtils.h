@@ -38,10 +38,6 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-#pragma mark - UIImage
-
-extern UIImage *_TBResizeImageToPreferredSize(UIImage *image, CGSize preferredSize);
-
 #pragma mark - CoreGraphics
 
 extern CGPoint _TBFloorPointWithScale(CGPoint p, CGFloat scale);

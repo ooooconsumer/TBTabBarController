@@ -26,16 +26,6 @@
 
 #import <objc/runtime.h>
 
-#pragma mark - UIImage
-
-UIImage * _TBResizeImageToPreferredSize(UIImage *image, CGSize preferredSize) {
-    UIGraphicsImageRenderer *renderer = [[UIGraphicsImageRenderer alloc] initWithSize:preferredSize];
-    UIImage *resizedImage = [renderer imageWithActions:^(UIGraphicsImageRendererContext * _Nonnull rendererContext) {
-        [image drawInRect:(CGRect){CGPointZero, preferredSize}];
-    }];
-    return resizedImage;
-}
-
 #pragma mark - CoreGraphics
 
 CGFloat _TBFloorValueWithScale(CGFloat v, CGFloat scale) {
