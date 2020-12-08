@@ -69,7 +69,7 @@ _TBTriangularMatrix *_TBDiffingDescent(NSArray *a, NSArray *b, int *count) {
         _TBTriangularMatrix prev_v = v;
         result[d] = v;
         *count = *count + 1;
-        v = _TBTriangularMatrixWithLargestIndex(d); // malloc is a real bottleneck in here. But for our usage is ok
+        v = _TBTriangularMatrixWithLargestIndex(d); // malloc is a real bottleneck in here. But for our usage it is ok
         for (short int k = -d; k <= d; k += 2) {
             if (k == -d) {
                 x = _TBTriangularMatrixGetValueAtIndex(prev_v, _TBDiffingPlus(k, 1));
