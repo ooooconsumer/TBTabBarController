@@ -26,7 +26,7 @@
 
 - (TBTabBarControllerTabBarPosition)preferredTabBarPositionForViewSize:(CGSize)size {
     
-    // Show the vertical tab bar whenever device's orientation is landscape
+    // Show the vertical tab bar whenever the device orientation is landscape
     
     return size.width >= size.height ? TBTabBarControllerTabBarPositionLeading : TBTabBarControllerTabBarPositionBottom;
 }
