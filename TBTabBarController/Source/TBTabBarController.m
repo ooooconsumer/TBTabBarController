@@ -536,8 +536,8 @@ static _TBTabBarControllerMethodOverrides tbtbbrcntrlr_methodOverridesFlag;
     
     tbtbbrcntrlr_needsUpdateTabBarPosition = true;
     
-    TBTabBar *hiddenTabBar;
-    [self currentlyVisibleTabBar:nil hiddenTabBar:&hiddenTabBar];
+    TBTabBar *visibleTabBar, *hiddenTabBar;
+    [self currentlyVisibleTabBar:&visibleTabBar hiddenTabBar:&hiddenTabBar];
     
     if (_preferredPosition != TBTabBarControllerTabBarPositionHidden) {
         if (tbtbbrcntrlr_nestedNavigationController != nil) {
@@ -552,6 +552,27 @@ static _TBTabBarControllerMethodOverrides tbtbbrcntrlr_methodOverridesFlag;
                     _isHorizontalTabBarHidden = false;
                 }
             }
+        }
+    }
+    
+    if (_preferredPosition != _currentPosition) {
+        id<TBTabBarControllerDelegate> delegate = self.delegate;
+        switch (_preferredPosition) {
+            case TBTabBarControllerTabBarPositionHidden:
+                if (visibleTabBar != nil && _delegateFlags.willHideTabBar) {
+                    [delegate tabBarController:self willHideTabBar:visibleTabBar];
+                }
+                break;
+            case TBTabBarControllerTabBarPositionLeading:
+            case TBTabBarControllerTabBarPositionBottom:
+                if (hiddenTabBar != nil && _delegateFlags.willShowTabBar) {
+                    [delegate tabBarController:self willShowTabBar:hiddenTabBar];
+                }
+                if (visibleTabBar != nil && _delegateFlags.willHideTabBar) {
+                    [delegate tabBarController:self willHideTabBar:visibleTabBar];
+                }
+            default:
+                break;
         }
     }
     
@@ -570,8 +591,29 @@ static _TBTabBarControllerMethodOverrides tbtbbrcntrlr_methodOverridesFlag;
         return;
     }
     
-    TBTabBar *visibleTabBar;
-    [self currentlyVisibleTabBar:&visibleTabBar hiddenTabBar:nil];
+    TBTabBar *visibleTabBar, *hiddenTabBar;
+    [self currentlyVisibleTabBar:&visibleTabBar hiddenTabBar:&hiddenTabBar];
+    
+    if (_preferredPosition != _currentPosition) {
+        id<TBTabBarControllerDelegate> delegate = self.delegate;
+        switch (_preferredPosition) {
+            case TBTabBarControllerTabBarPositionHidden:
+                if (visibleTabBar != nil && _delegateFlags.didHideTabBar) {
+                    [delegate tabBarController:self didHideTabBar:visibleTabBar];
+                }
+                break;
+            case TBTabBarControllerTabBarPositionLeading:
+            case TBTabBarControllerTabBarPositionBottom:
+                if (hiddenTabBar != nil && _delegateFlags.didShowTabBar) {
+                    [delegate tabBarController:self didShowTabBar:hiddenTabBar];
+                }
+                if (visibleTabBar != nil && _delegateFlags.didHideTabBar) {
+                    [delegate tabBarController:self didHideTabBar:visibleTabBar];
+                }
+            default:
+                break;
+        }
+    }
     
     [self tbtbbrcntrlr_endUpdateTabBarVisibility:visibleTabBar];
     
@@ -601,7 +643,7 @@ static _TBTabBarControllerMethodOverrides tbtbbrcntrlr_methodOverridesFlag;
 
 - (void)tbtbbrcntrlr_beginTabBarVisibilityUpdate:(TBTabBar *)hiddenTabBar {
     
-    if (_preferredPosition != TBTabBarControllerTabBarPositionHidden) {
+    if (_preferredPosition != TBTabBarControllerTabBarPositionHidden && _preferredPosition != _currentPosition) {
         [self tbtbbrcntrlr_showTabBar:hiddenTabBar];
     }
 }
@@ -614,7 +656,9 @@ static _TBTabBarControllerMethodOverrides tbtbbrcntrlr_methodOverridesFlag;
     
     _currentPosition = _preferredPosition;
     
-    [self tbtbbrcntrlr_hideTabBar:visibleTabBar];
+    if (_currentPosition != TBTabBarControllerTabBarPositionHidden) {
+        [self tbtbbrcntrlr_hideTabBar:visibleTabBar];
+    }
 }
 
 - (void)tbtbbrcntrlr_presentTabBar {
@@ -645,12 +689,6 @@ static _TBTabBarControllerMethodOverrides tbtbbrcntrlr_methodOverridesFlag;
 
 - (void)tbtbbrcntrlr_showTabBar:(TBTabBar *)tabBar {
     
-    id<TBTabBarControllerDelegate> delegate = self.delegate;
-    
-    if (_delegateFlags.willShowTabBar) {
-        [delegate tabBarController:self willShowTabBar:tabBar];
-    }
-    
     if (tabBar.isVertical) {
         _dummyBar.hidden = false;
     }
@@ -658,19 +696,9 @@ static _TBTabBarControllerMethodOverrides tbtbbrcntrlr_methodOverridesFlag;
     tabBar.hidden = false;
     
     self.visibleTabBar = tabBar;
-    
-    if (_delegateFlags.didShowTabBar) {
-        [delegate tabBarController:self didShowTabBar:tabBar];
-    }
 }
 
 - (void)tbtbbrcntrlr_hideTabBar:(TBTabBar *)tabBar {
-    
-    id<TBTabBarControllerDelegate> delegate = self.delegate;
-    
-    if (_delegateFlags.willHideTabBar) {
-        [delegate tabBarController:self willHideTabBar:tabBar];
-    }
     
     if (tabBar.isVertical) {
         _dummyBar.hidden = true;
@@ -681,10 +709,6 @@ static _TBTabBarControllerMethodOverrides tbtbbrcntrlr_methodOverridesFlag;
     }
 
     tabBar.hidden = true;
-    
-    if (_delegateFlags.didHideTabBar) {
-        [delegate tabBarController:self didHideTabBar:tabBar];
-    }
 }
 
 - (CGRect)tbtbbrcntrlr_horizontalTabBarFrameForBounds:(CGRect)bounds hidden:(BOOL)hidden {
