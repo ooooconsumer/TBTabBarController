@@ -9,14 +9,6 @@
 import UIKit
 import TBTabBarController
 
-class TabBar: TBTabBar {
-    
-    override func applyVisibleItemsDifference(_ difference: TBTabBarItemsDifference) {
-        
-        
-    }
-}
-
 class TabBarController: TBTabBarController {
     
     // MARK: - Public
