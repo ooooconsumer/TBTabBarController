@@ -24,11 +24,11 @@
 
 #import <UIKit/UIKit.h>
 
+#import <TBTabBarController/TBDummyBar.h>
 #import <TBTabBarController/TBTabBar.h>
+#import <TBTabBarController/TBTabBarItem.h>
 
 @class TBTabBarController;
-@class TBDummyBar;
-@class TBTabBarItem;
 
 NS_ASSUME_NONNULL_BEGIN
 

@@ -26,8 +26,10 @@
 #import <UIKit/UIKit.h>
 
 #import <TBTabBarController/TBSimpleBar.h>
+#import <TBTabBarController/TBTabBarItemsDifference.h>
+#import <TBTabBarController/TBTabBarButton.h>
 
-@class TBTabBar, TBTabBarItem, TBTabBarButton, TBTabBarItemsDifference;
+@class TBTabBar, TBTabBarItem;
 @class _TBTabBarLongPressContext;
 
 NS_ASSUME_NONNULL_BEGIN
