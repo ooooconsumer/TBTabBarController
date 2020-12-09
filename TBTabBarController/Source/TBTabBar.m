@@ -217,7 +217,7 @@
     _maxNumberOfVisibleTabs = 5;
     _vertical = (_layoutOrientation == TBTabBarLayoutOrientationVertical);
     
-    self.contentInsets = _vertical ? UIEdgeInsetsMake(0.0, 1.0, 0.0, 1.0) : UIEdgeInsetsMake(1.0, 0.0, 1.0, 0.0);
+    self.contentInsets = _vertical ? UIEdgeInsetsMake(2.0, 1.0, 2.0, 1.0) : UIEdgeInsetsMake(1.0, 2.0, 1.0, 2.0);
 }
 
 - (void)tbtbbr_setup {
