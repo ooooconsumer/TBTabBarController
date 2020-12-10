@@ -105,7 +105,7 @@ typedef NS_ENUM(NSInteger, TBTabBarButtonLayoutOrientation) {
 - (CGRect)notificationIndicatorViewFrameForBounds:(CGRect)bounds;
 
 /**
- * @abstract The duration of the animation for showing or hiding the notification indicator.  Default value is 0.25.
+ * @abstract The duration of the animation for showing or hiding the notification indicator. Default value is 0.25.
  * @param presenting Whether the notification indicator is showing or hiding.
  */
 - (NSTimeInterval)notificationIndicatorAnimationDuration:(BOOL)presenting;
