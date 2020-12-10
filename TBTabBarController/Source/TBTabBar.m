@@ -171,6 +171,7 @@
     
     UIEdgeInsets const safeAreaInsets = self.safeAreaInsets;
     UIEdgeInsets const contentInsets = self.contentInsets;
+    UIEdgeInsets const additionalContentInsets = _additionalContentInsets;
     
     CGRect const bounds = self.bounds;
     
@@ -180,7 +181,7 @@
     
     // Stack view
     _TBStackView *stackView = self.stackView;
-    stackView.frame = _TBFloorRectWithScale((CGRect){(CGPoint){safeAreaInsets.left + contentInsets.left, contentInsets.top}, (CGSize){width - safeAreaInsets.left - safeAreaInsets.right - contentInsets.left - contentInsets.right, height - safeAreaInsets.bottom - contentInsets.top - contentInsets.bottom}}, displayScale);
+    stackView.frame = _TBFloorRectWithScale((CGRect){(CGPoint){safeAreaInsets.left + contentInsets.left + additionalContentInsets.left, contentInsets.top + additionalContentInsets.top}, (CGSize){width - safeAreaInsets.left - safeAreaInsets.right - contentInsets.left - contentInsets.right - additionalContentInsets.left - additionalContentInsets.right, height - safeAreaInsets.bottom - contentInsets.top - contentInsets.bottom - additionalContentInsets.top - additionalContentInsets.bottom}}, displayScale);
 }
 
 - (void)tintColorDidChange {
@@ -690,6 +691,17 @@
     NSArray<TBTabBarButton *> *buttons = self.stackView.subviews;
     
     [buttons[index] setNotificationIndicatorHidden:hidden animated:self.isVisible];
+}
+
+- (void)_setAdditionalContentInsets:(UIEdgeInsets)additionalContentInsets {
+    
+    if (UIEdgeInsetsEqualToEdgeInsets(_additionalContentInsets, additionalContentInsets)) {
+        return;
+    }
+    
+    _additionalContentInsets = additionalContentInsets;
+    
+    [self setNeedsLayout];
 }
 
 @end

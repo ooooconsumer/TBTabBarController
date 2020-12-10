@@ -133,6 +133,8 @@
     _contentInsets = UIEdgeInsetsZero;
     _separatorPosition = TBSimpleBarSeparatorPositionHidden;
     
+    _additionalContentInsets =  UIEdgeInsetsZero;
+    
     _separatorImageView = [[UIImageView alloc] initWithImage:self.separatorImage];
     _separatorImageView.tintColor = self.separatorColor;
     _separatorImageView.autoresizingMask = UIViewAutoresizingNone;

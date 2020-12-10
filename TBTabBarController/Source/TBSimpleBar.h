@@ -38,6 +38,9 @@ typedef NS_ENUM(NSUInteger, TBSimpleBarSeparatorPosition) {
 @interface TBSimpleBar : UIView {
     
 @protected
+    
+    UIEdgeInsets _additionalContentInsets;
+    
     UIImageView *_separatorImageView;
 }
 
