@@ -272,7 +272,7 @@ typedef NS_ENUM(NSUInteger, TBTabBarControllerTabBarPosition) {
  * @warning The current implementation does not handle removal of the view controller, if there is any.
  * @b Workaround: manually remove the view controller from the view controllers list and set the updated array to the @b `viewControllers` property.
  */
-- (void)removeItemAtIndex:(NSUInteger)index NS_SWIFT_NAME(removeItem(atIndex:));
+- (void)removeItemAtIndex:(NSUInteger)index NS_SWIFT_NAME(removeItem(at:));
 
 
 @end
