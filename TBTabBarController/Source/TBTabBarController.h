@@ -110,6 +110,7 @@ typedef NS_ENUM(NSUInteger, TBTabBarControllerTabBarPosition) {
 @interface TBTabBarController : UIViewController <TBTabBarDelegate> {
     
 @protected
+    
     BOOL _shouldSelectViewController;
     BOOL _didPresentTabBarOnce;
     BOOL _isHorizontalTabBarHidden;
@@ -271,7 +272,7 @@ typedef NS_ENUM(NSUInteger, TBTabBarControllerTabBarPosition) {
  * @warning The current implementation does not handle removal of the view controller, if there is any.
  * @b Workaround: manually remove the view controller from the view controllers list and set the updated array to the @b `viewControllers` property.
  */
-- (void)removeItemAtIndex:(NSUInteger)index;
+- (void)removeItemAtIndex:(NSUInteger)index NS_SWIFT_NAME(removeItem(atIndex:));
 
 
 @end

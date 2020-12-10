@@ -91,6 +91,7 @@ typedef NS_ENUM(NSInteger, TBTabBarLayoutOrientation) {
 @interface TBTabBar : TBSimpleBar <UIGestureRecognizerDelegate> {
     
 @protected
+    
     BOOL _shouldSelectItem;
     
     NSUInteger _itemsCount;
@@ -188,13 +189,13 @@ typedef NS_ENUM(NSInteger, TBTabBarLayoutOrientation) {
 /**
  * @abstract Selects an item if it is presented either in the visible items list or in the hidden items list.
  */
-- (void)selectItem:(__kindof TBTabBarItem *)item;
+- (void)selectItem:(__kindof TBTabBarItem *)item NS_SWIFT_NAME(select(item:));
 
 /**
  * @abstract Return a button at the tab index, if any.
  * @discussion You can use this method to get buttons, since there is no public way to get all of them.
  */
-- (nullable TBTabBarButton *)buttonAtTabIndex:(NSUInteger)tabIndex;
+- (nullable TBTabBarButton *)buttonAtTabIndex:(NSUInteger)tabIndex NS_SWIFT_NAME(button(atTabIndex:));
 
 @end
 
