@@ -54,6 +54,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)_setNotificationIndicatorHidden:(BOOL)hidden forButtonAtIndex:(NSUInteger)index;
 
+- (void)_setAdditionalContentInsets:(UIEdgeInsets)additionalContentInsets;
+
 @end
 
 NS_ASSUME_NONNULL_END
