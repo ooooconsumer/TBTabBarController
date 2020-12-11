@@ -561,6 +561,7 @@ static _TBTabBarControllerMethodOverrides tbtbbrcntrlr_methodOverridesFlag;
             BOOL const shouldHideTabBar = tbtbbrcntrlr_transitionContext != nil ? _visibleViewControllerWantsHideTabBar : [self _visibleViewController].tb_hidesTabBarWhenPushed;
             if (shouldHideTabBar) {
                 _preferredPosition = TBTabBarControllerTabBarPositionHidden;
+                _visibleViewControllerWantsHideTabBar = true;
             } else {
                 _visibleViewControllerWantsHideTabBar = false;
             }
