@@ -13,6 +13,8 @@ class SettingsViewController: UITableViewController {
 
     // MARK: - Public
     
+    // MARK: Lifecycle
+    
     init() {
         if #available(iOS 13.0, *) {
             super.init(style: .insetGrouped)
@@ -33,7 +35,7 @@ class SettingsViewController: UITableViewController {
         
         title = "Settings"
         
-        let hidesTabBarOnPushSettingCell = ToggleTableViewCell(with: "Hides tab bar on push", enabled: (navigationController?.viewControllers.first?.tb_hidesTabBarWhenPushed)!)
+        let hidesTabBarOnPushSettingCell = ToggleTableViewCell(with: "Hides tab bar on push", enabled: tb_hidesTabBarWhenPushed)
         hidesTabBarOnPushSettingCell.addTarget(target: self, action: #selector(_setHideTabBarOnPush(sender:)))
         
         let showsNotificationIndicatorCell = ToggleTableViewCell(with: "Shows notification indicator", enabled: (navigationController?.tb_tabBarItem.showsNotificationIndicator)!)
@@ -53,6 +55,13 @@ class SettingsViewController: UITableViewController {
         
         return _cells[indexPath.row]
     }
+    
+    // MARK: UITableViewDelegate
+    
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        
+        tableView.deselectRow(at: indexPath, animated: true)
+    }
 
     // MARK: - Private
     
@@ -71,7 +80,7 @@ class SettingsViewController: UITableViewController {
         
         _isUpdatingTabBarPosition.toggle()
         
-        navigationController?.viewControllers.first?.tb_hidesTabBarWhenPushed.toggle()
+        tb_hidesTabBarWhenPushed.toggle()
         
         UIView.animate(withDuration: 0.35, delay: 0.0, options: UIView.AnimationOptions(rawValue: 7 << 16)) {
             self.navigationController?.tb_tabBarController?.beginUpdateTabBarPosition()

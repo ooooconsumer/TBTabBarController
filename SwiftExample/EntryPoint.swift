@@ -25,11 +25,7 @@ class EntryPoint {
         var viewControllers = [UIViewController]()
         
         for index in 0..<5 {
-            let tabViewController = _tabViewController(for: index);
-            if index > 1 {
-                tabViewController.tb_hidesTabBarWhenPushed = true
-            }
-            viewControllers.append(_navigationController(with: tabViewController))
+            viewControllers.append(_navigationController(with: _tabViewController(for: index)))
         }
         
         let tabBarController = TabBarController()

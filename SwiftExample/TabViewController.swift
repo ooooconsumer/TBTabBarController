@@ -13,6 +13,8 @@ class TabViewController: UITableViewController {
     
     // MARK: - Public
     
+    // MARK: Lifecycle
+    
     init() {
         if #available(iOS 13.0, *) {
             super.init(style: .insetGrouped)
@@ -81,7 +83,10 @@ class TabViewController: UITableViewController {
         
         tableView.deselectRow(at: indexPath, animated: true)
         
-        navigationController?.pushViewController(SettingsViewController(), animated: true)
+        let settingsViewController = SettingsViewController()
+        settingsViewController.tb_hidesTabBarWhenPushed = true
+        
+        navigationController?.pushViewController(settingsViewController, animated: true)
     }
     
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {

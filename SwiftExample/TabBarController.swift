@@ -22,9 +22,7 @@ class TabBarController: TBTabBarController {
         // Make the bottom tab bar translucent
         
         horizontalTabBar.backgroundColor = .clear
-        horizontalTabBar.contentView = UIVisualEffectView(effect: UIBlurEffect(style: .light))
-        
-        
+        horizontalTabBar.contentView = UIVisualEffectView(effect: UIBlurEffect(style: .prominent))
     }
     
     override func preferredTabBarPosition(forViewSize size: CGSize) -> TBTabBarControllerTabBarPosition {
