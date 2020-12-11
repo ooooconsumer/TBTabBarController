@@ -710,13 +710,13 @@ static _TBTabBarControllerMethodOverrides tbtbbrcntrlr_methodOverridesFlag;
     [self willPresentTabBar];
     
     if (_currentPosition != TBTabBarControllerTabBarPositionHidden) {
-        TBTabBar *tabBarToShow, *tabBarToHide;
-        [self currentlyVisibleTabBar:&tabBarToShow hiddenTabBar:&tabBarToHide];
-        [self tbtbbrcntrlr_showTabBar:tabBarToShow];
-        [self tbtbbrcntrlr_hideTabBar:tabBarToHide];
+        TBTabBar *visibleTabBar, *hiddenTabBar;
+        [self currentlyVisibleTabBar:&visibleTabBar hiddenTabBar:&hiddenTabBar];
+        [self tbtbbrcntrlr_showTabBar:visibleTabBar];
+        [hiddenTabBar _setVisible:false];
     } else {
-        [self tbtbbrcntrlr_hideTabBar:self.horizontalTabBar];
-        [self tbtbbrcntrlr_hideTabBar:self.verticalTabBar];
+        [self.horizontalTabBar _setVisible:false];
+        [self.verticalTabBar _setVisible:false];
     }
     
     [self didPresentTabBar];
@@ -725,10 +725,24 @@ static _TBTabBarControllerMethodOverrides tbtbbrcntrlr_methodOverridesFlag;
 - (void)tbtbbrcntrlr_showTabBar:(TBTabBar *)tabBar {
     
     if (tabBar.isVertical) {
-        _dummyBar.hidden = false;
+        TBTabBar *horizontalTabBar = self.horizontalTabBar;
+        if (horizontalTabBar.superview != nil) {
+            [self.view insertSubview:tabBar aboveSubview:horizontalTabBar];
+            [self.view insertSubview:_dummyBar aboveSubview:tabBar];
+        } else {
+            [self.view addSubview:tabBar];
+            [self.view addSubview:_dummyBar];
+        }
+    } else {
+        TBTabBar *verticalTabBar = self.verticalTabBar;
+        if (verticalTabBar.superview != nil) {
+            [self.view insertSubview:tabBar belowSubview:verticalTabBar];
+        } else {
+            [self.view addSubview:tabBar];
+        }
     }
     
-    tabBar.hidden = false;
+    [tabBar _setVisible:true];
     
     self.visibleTabBar = tabBar;
 }
@@ -736,14 +750,16 @@ static _TBTabBarControllerMethodOverrides tbtbbrcntrlr_methodOverridesFlag;
 - (void)tbtbbrcntrlr_hideTabBar:(TBTabBar *)tabBar {
     
     if (tabBar.isVertical) {
-        _dummyBar.hidden = true;
+        [_dummyBar removeFromSuperview];
     }
+    
+    [tabBar removeFromSuperview];
+    
+    [tabBar _setVisible:false];
     
     if ([self.visibleTabBar isEqual:tabBar]) {
         self.visibleTabBar = nil;
     }
-
-    tabBar.hidden = true;
 }
 
 #pragma mark Layout

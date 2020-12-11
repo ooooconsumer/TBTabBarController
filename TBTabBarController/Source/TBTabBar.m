@@ -199,13 +199,6 @@
     return self.isVertical ? self.tb_isLeftToRight ? TBSimpleBarSeparatorPositionRight : TBSimpleBarSeparatorPositionLeft : TBSimpleBarSeparatorPositionTop;
 }
 
-- (void)setHidden:(BOOL)hidden {
-    
-    [super setHidden:hidden];
-    
-    _visible = !hidden;
-}
-
 #pragma mark - Private
 
 - (void)tbtbbr_commonInitWithLayoutOrientation:(TBTabBarLayoutOrientation)layoutOrientation {
@@ -702,6 +695,11 @@
     _additionalContentInsets = additionalContentInsets;
     
     [self setNeedsLayout];
+}
+
+- (void)_setVisible:(BOOL)visible {
+    
+    _visible = visible;
 }
 
 @end
