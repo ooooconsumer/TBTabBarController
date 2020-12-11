@@ -42,7 +42,7 @@
     
     self.title = @"Settings";
     
-    ToggleTableViewCell *hidesTabBarOnPushSettingCell = [[ToggleTableViewCell alloc] initWithText:@"Hides tab bar on push" enabled:self.navigationController.viewControllers.firstObject.tb_hidesTabBarWhenPushed];
+    ToggleTableViewCell *hidesTabBarOnPushSettingCell = [[ToggleTableViewCell alloc] initWithText:@"Hides tab bar on push" enabled:self.tb_hidesTabBarWhenPushed];
     [hidesTabBarOnPushSettingCell addTarget:self action:@selector(_setHideTabBarOnPush:)];
     
     ToggleTableViewCell *showsNotificationIndicatorCell = [[ToggleTableViewCell alloc] initWithText:@"Shows notification indicator" enabled:self.navigationController.tb_tabBarItem.showsNotificationIndicator];
@@ -88,7 +88,7 @@
     
     _isUpdatingTabBarPosition = true;
     
-    self.navigationController.viewControllers.firstObject.tb_hidesTabBarWhenPushed = !self.navigationController.viewControllers.firstObject.tb_hidesTabBarWhenPushed;
+    self.tb_hidesTabBarWhenPushed = !self.tb_hidesTabBarWhenPushed;
     
     [UIView animateWithDuration:0.35 delay:0.0 options:7 << 16 animations:^{
         [self.navigationController.tb_tabBarController beginUpdateTabBarPosition];

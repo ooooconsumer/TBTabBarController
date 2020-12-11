@@ -36,12 +36,7 @@ static EntryPoint *_shared;
     NSMutableArray<UIViewController *> *viewControllers = [NSMutableArray array];
     
     for (NSUInteger index = 0; index < 5; index += 1) {
-        TabViewController *tabViewController = [self _tabViewControllerForIndex:index];
-        if (index > 1) {
-            tabViewController.tb_hidesTabBarWhenPushed = true;
-        }
-        UINavigationController *navigationController = [self _navigationControllerWithTabViewController:tabViewController];
-        [viewControllers addObject:navigationController];
+        [viewControllers addObject:[self _navigationControllerWithTabViewController:[self _tabViewControllerForIndex:index]]];
     }
     
     TabBarController *tabBarController = [[TabBarController alloc] init];

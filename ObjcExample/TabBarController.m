@@ -21,7 +21,7 @@
     // Make the bottom tab bar translucent
     
     self.horizontalTabBar.backgroundColor = [UIColor clearColor];
-    self.horizontalTabBar.contentView = [[UIVisualEffectView alloc] initWithEffect:[UIBlurEffect effectWithStyle:UIBlurEffectStyleLight]];
+    self.horizontalTabBar.contentView = [[UIVisualEffectView alloc] initWithEffect:[UIBlurEffect effectWithStyle:UIBlurEffectStyleProminent]];
 }
 
 - (TBTabBarControllerTabBarPosition)preferredTabBarPositionForViewSize:(CGSize)size {

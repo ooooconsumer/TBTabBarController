@@ -85,7 +85,10 @@
     
     [tableView deselectRowAtIndexPath:indexPath animated:true];
     
-    [self.navigationController pushViewController:[[SettingsViewController alloc] init] animated:true];
+    SettingsViewController *settingsViewController = [[SettingsViewController alloc] init];
+    settingsViewController.tb_hidesTabBarWhenPushed = true;
+    
+    [self.navigationController pushViewController:settingsViewController animated:true];
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
