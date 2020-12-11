@@ -113,8 +113,7 @@ typedef NS_ENUM(NSUInteger, TBTabBarControllerTabBarPosition) {
     
     BOOL _shouldSelectViewController;
     BOOL _didPresentTabBarOnce;
-    BOOL _isHorizontalTabBarHidden;
-    BOOL _isVerticalTabBarHidden;
+    BOOL _visibleViewControllerWantsHideTabBar;
     
     TBTabBarControllerTabBarPosition _currentPosition;
     TBTabBarControllerTabBarPosition _preferredPosition;
@@ -213,9 +212,9 @@ typedef NS_ENUM(NSUInteger, TBTabBarControllerTabBarPosition) {
 
 - (instancetype)initWithCoder:(NSCoder *)coder NS_UNAVAILABLE;
 /**
- * @abstract Notifies the tab bar controller before the visible tab bar will be added to a view hierarchy for the first time. By default does nothing. Do not call directly.
+ * @abstract Notifies the tab bar controller before the visible tab bar will be added to a view hierarchy for the first time. Do not call directly.
  */
-- (void)willPresentTabBar;
+- (void)willPresentTabBar NS_REQUIRES_SUPER;
 
 /**
  * @abstract Notifies the tab bar controller just after the tab bar was added to a view hierarchy for the first time. Do not call directly.
