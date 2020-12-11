@@ -276,9 +276,11 @@ static _TBTabBarControllerMethodOverrides tbtbbrcntrlr_methodOverridesFlag;
                     case TBTabBarControllerTabBarPositionLeading:
                     case TBTabBarControllerTabBarPositionBottom:
                         hTabBar.frame = [self tbtbbrcntrlr_horizontalTabBarFrameForBounds:bounds hidden:true];
-                        CGRect frame =  [self tbtbbrcntrlr_verticalTabBarFrameForBounds:bounds hidden:false];
-                        frame.size.height += hTabBar.frame.size.height;
-                        vTabBar.frame = frame;
+                        CGRect vTabBarFrame = [self tbtbbrcntrlr_verticalTabBarFrameForBounds:bounds hidden:false];
+                        if (tbtbbrcntrlr_isTransitioning) {
+                            vTabBarFrame.size.height += hTabBar.frame.size.height;
+                        }
+                        vTabBar.frame = vTabBarFrame;
                         dummyBar.frame = [self tbtbbrcntrlr_dummyBarFrameForBounds:bounds hidden:false];
                         break;
                     default:
