@@ -72,6 +72,8 @@ static char *tb_privateDelegateKey;
         return previousViewController;
     }
     
+    [previousViewController setValue:nil forKey:NSStringFromSelector(@selector(tb_tabBarController))];
+    
     [self tb_popViewController:previousViewController destinationViewController:self.topViewController animated:animated];
  
     return previousViewController;
@@ -79,13 +81,19 @@ static char *tb_privateDelegateKey;
 
 - (NSArray<__kindof UIViewController *> *)tb_popToViewController:(UIViewController *)viewController animated:(BOOL)animated {
     
+    UIViewController *previousViewController = self.topViewController;
+    
     NSArray<__kindof UIViewController *> *viewControllers = [self tb_popToViewController:viewController animated:animated];
     
     if (!self.tb_isNestedInTBTabBarController) {
         return viewControllers;
     }
     
-    [self tb_popViewController:viewController destinationViewController:self.topViewController animated:animated];
+    for (UIViewController *viewController in viewControllers) {
+        [viewController setValue:nil forKey:NSStringFromSelector(@selector(tb_tabBarController))];
+    }
+    
+    [self tb_popViewController:previousViewController destinationViewController:viewController animated:animated];
     
     return viewControllers;
 }
@@ -95,6 +103,10 @@ static char *tb_privateDelegateKey;
     UIViewController *previousViewController = self.topViewController;
     
     NSArray<__kindof UIViewController *> *viewControllers = [self tb_popToRootViewControllerAnimated:animated];
+    
+    for (UIViewController *viewController in viewControllers) {
+        [viewController setValue:nil forKey:NSStringFromSelector(@selector(tb_tabBarController))];
+    }
     
     [self tb_popViewController:previousViewController destinationViewController:self.topViewController animated:animated];
     
@@ -109,6 +121,8 @@ static char *tb_privateDelegateKey;
     }
     
     UIViewController *prevViewController = self.topViewController; // Get the top view controller before it will be replaced with a new view controller
+    
+    [viewController setValue:prevViewController.tb_tabBarController forKey:NSStringFromSelector(@selector(tb_tabBarController))];
     
     [self tb_pushViewController:viewController animated:animated];
 
