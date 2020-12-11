@@ -52,7 +52,7 @@ static inline short int _TBDiffingMinus(short int lhs, short int rhs) {
     }
 }
 
-_TBTriangularMatrix *_TBDiffingDescent(NSArray *a, NSArray *b, int *count) {
+_TBTriangularMatrix *_TBDiffingDescent(NSArray *a, NSArray *b, short int *count) {
     
     short int const n = (short int)a.count;
     short int const m = (short int)b.count;
@@ -109,7 +109,7 @@ _TBTriangularMatrix *_TBDiffingDescent(NSArray *a, NSArray *b, int *count) {
     return result;
 }
 
-NSArray<TBTabBarItemChange *> *_TBDiffingFormChanges(NSArray *a, NSArray *b, _TBTriangularMatrix *trace, int count) {
+NSArray<TBTabBarItemChange *> *_TBDiffingFormChanges(NSArray *a, NSArray *b, _TBTriangularMatrix *trace, short int count) {
     
     if (count == 0) {
         return @[];
@@ -144,8 +144,6 @@ NSArray<TBTabBarItemChange *> *_TBDiffingFormChanges(NSArray *a, NSArray *b, _TB
     
     _TBTriangularMatrixRelease(trace[0]); // Release the first matrix in the array since the loop does not actually touch it
     
-    free(trace);
-    
     return [changes copy];
 }
 
@@ -153,7 +151,13 @@ NSArray<TBTabBarItemChange *> *_TBDiffingFormChanges(NSArray *a, NSArray *b, _TB
 
 NSArray<TBTabBarItemChange *> *_TBDiffingCalculateChanges(NSArray<TBTabBarItem *> *from, NSArray<TBTabBarItem *> *to) {
     
-    int count = 0;
+    short int count = 0;
     
-    return _TBDiffingFormChanges(from, to, _TBDiffingDescent(from, to, &count), count);
+    _TBTriangularMatrix *trace = _TBDiffingDescent(from, to, &count);
+    
+    NSArray<TBTabBarItemChange *> *changes = _TBDiffingFormChanges(from, to, trace, count);
+    
+    free(trace);
+    
+    return changes;
 }
