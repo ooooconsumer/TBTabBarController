@@ -44,7 +44,7 @@
     if (self) {
         _changes = changes;
         _insertions = [_changes filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"%K == %ld", NSStringFromSelector(@selector(type)), TBTabBarItemChangeInsert]];
-        _removals = [_changes filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"%K == %ld", NSStringFromSelector(@selector(type)), TBTabBarItemChangeRemove]];
+        _removals = _insertions.count != _changes.count ? [_changes filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"%K == %ld", NSStringFromSelector(@selector(type)), TBTabBarItemChangeRemove]] : @[];
         _hasChanges = _changes.count > 0;
     }
     
@@ -62,6 +62,12 @@
 }
 
 + (instancetype)differenceWithItems:(NSArray<TBTabBarItem *> *)array from:(NSArray<TBTabBarItem *> *)other {
+    
+    if (array.count == 0) {
+        return [[TBTabBarItemsDifference alloc] initWithChanges:[self _changesFrom:array insertion:false]];
+    } else if (other.count == 0) {
+        return [[TBTabBarItemsDifference alloc] initWithChanges:[self _changesFrom:array insertion:true]];
+    }
     
 #if TB_AT_LEAST_IOS13
     if (@available(iOS 13.0, *)) {
@@ -96,6 +102,29 @@
 - (NSUInteger)countByEnumeratingWithState:(NSFastEnumerationState *)state objects:(__unsafe_unretained id _Nullable [])buffer count:(NSUInteger)len {
     
     return [_changes countByEnumeratingWithState:state objects:buffer count:len];
+}
+
+#pragma mark - Private
+
+#pragma mark Helpers
+
++ (NSArray<TBTabBarItemChange *> *)_changesFrom:(NSArray<TBTabBarItem *> *)items insertion:(BOOL)insertion {
+    
+    NSUInteger const length = items.count;
+    
+    if (length == 0) {
+        return @[];
+    }
+    
+    NSMutableArray *changes = [NSMutableArray arrayWithCapacity:length];
+    
+    TBTabBarItemChangeType const type = insertion ? TBTabBarItemChangeInsert : TBTabBarItemChangeRemove;
+    
+    for (NSUInteger index = 0; index < length; index += 1) {
+        [changes insertObject:[[TBTabBarItemChange alloc] initWithItem:items[index] type:type index:index] atIndex:index];
+    }
+    
+    return changes;
 }
 
 @end

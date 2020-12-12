@@ -38,7 +38,7 @@
     
     [containerViewController didMoveToParentViewController:self];
     
-    containerViewController.view.frame = self.view.frame;
+    containerViewController.view.frame = self.view.bounds;
 }
 
 - (void)tb_addContainerViewController:(UIViewController *)containerViewController atSubviewsIndex:(NSUInteger)index {
@@ -48,7 +48,7 @@
     
     [containerViewController didMoveToParentViewController:self];
     
-    containerViewController.view.frame = self.view.frame;
+    containerViewController.view.frame = self.view.bounds;
 }
 
 - (void)tb_removeContainerViewController:(UIViewController *)containerViewController {

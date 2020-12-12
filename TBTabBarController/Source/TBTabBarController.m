@@ -497,19 +497,19 @@ static _TBTabBarControllerMethodOverrides tbtbbrcntrlr_methodOverridesFlag;
     }
     
     TBTabBar *otherTabBar = tabBar.isVertical ? self.horizontalTabBar : self.verticalTabBar;
-    
+
     if (_delegateFlags.shouldSelectViewController && ![self.delegate tabBarController:self shouldSelectViewController:self.viewControllers[index]]) {
         return;
     }
-    
+
     [self tbtbbrcntrlr_moveToViewControllerAtIndex:index];
-    
+
     [tabBar _setSelectedIndex:index quitly:true];
-    
+
     if (otherTabBar.visibleItems.count > 0) {
         [otherTabBar _setSelectedIndex:[otherTabBar.visibleItems indexOfObject:item] quitly:true];
     }
-    
+
     if (_delegateFlags.didSelectViewController) {
         [self.delegate tabBarController:self didSelectViewController:_selectedViewController];
     }
@@ -939,9 +939,6 @@ static _TBTabBarControllerMethodOverrides tbtbbrcntrlr_methodOverridesFlag;
 - (void)tbtbbrcntrlr_captureItems {
     
     _items = [self.viewControllers valueForKeyPath:[NSString stringWithFormat:@"@unionOfObjects.%@", NSStringFromSelector(@selector(tb_tabBarItem))]];
-    
-    [self.horizontalTabBar _setItems:_items];
-    [self.verticalTabBar _setItems:_items];
 }
 
 - (void)tbtbbrcntrlr_handleItemSelectionAtIndex:(NSUInteger)index {
@@ -1041,16 +1038,19 @@ static _TBTabBarControllerMethodOverrides tbtbbrcntrlr_methodOverridesFlag;
         [_items removeAllObjects];
     }
     
-    _viewControllers = [viewControllers copy];
-    
-    if (_viewControllers.count == 0) {
-        [self.horizontalTabBar _setItems:_items];
-        [self.verticalTabBar _setItems:_items];
+    if (viewControllers != nil) {
+        _viewControllers = [viewControllers copy];
+        if (_viewControllers.count > 0) {
+            [self tbtbbrcntrlr_captureItems];
+            [self tbtbbrcntrlr_observeItems];
+            [self tbtbbrcntrlr_processViewControllersWithValue:self];
+        }
     } else {
-        [self tbtbbrcntrlr_captureItems];
-        [self tbtbbrcntrlr_observeItems];
-        [self tbtbbrcntrlr_processViewControllersWithValue:self];
+        _viewControllers = nil;
     }
+    
+    [self.horizontalTabBar _setItems:_items];
+    [self.verticalTabBar _setItems:_items];
 }
 
 - (void)setSelectedIndex:(NSUInteger)selectedIndex {

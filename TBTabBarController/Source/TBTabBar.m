@@ -594,7 +594,11 @@
     [self updateItems];
     
     if (shouldNotifyDelegate && _delegateFlags.didSelectItemAtIndex) {
-        [self.delegate tabBar:self didSelectItem:self.visibleItems[self.selectedIndex] atIndex:self.selectedIndex];
+        NSArray *visibleItems = self.visibleItems;
+        if (visibleItems.count > 0) {
+            NSUInteger const selectedIndex = self.selectedIndex;
+            [self.delegate tabBar:self didSelectItem:visibleItems[selectedIndex] atIndex:selectedIndex];
+        }
     }
 }
 
