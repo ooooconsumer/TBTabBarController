@@ -30,7 +30,7 @@
 
 static const CGFloat _TBTabBarButtonNotificationIndicatorSize = 5.0;
 static const CGFloat _TBTabBarButtonNotificationIndicatorPresentationAnimationDuration = 0.25;
-static const CGFloat _TBTabBarButtonNotificationIndicatorDismissalAnimationDuration = 0.15;
+static const CGFloat _TBTabBarButtonNotificationIndicatorDismissalAnimationDuration = 0.25;
 
 static NSString *const _TBTabBarButtonNotificationIndicatorAnimationKey = @"_TBTabBarButtonNotificationIndicatorAnimationKey";
 
@@ -143,9 +143,9 @@ typedef NS_ENUM(NSUInteger, _TBTabBarButtonNotificationIndicatorViewAnimationSta
             _notificationIndicatorViewAnimationState = _TBTabBarButtonNotificationIndicatorViewAnimationStateShow;
             // When there is a very small (less than animation duration) gap in time between hiding and showing the indicator view we should animate it without extra spring animation to make it look smooth
             if (_prevAnimationState == _TBTabBarButtonNotificationIndicatorViewAnimationStateHide) {
-                [UIView animateWithDuration:_TBTabBarButtonNotificationIndicatorPresentationAnimationDuration delay:0.0 options:UIViewAnimationOptionTransitionCrossDissolve | UIViewAnimationOptionBeginFromCurrentState animations:animations completion:completion];
+                [UIView animateWithDuration:[self notificationIndicatorAnimationDuration:true] delay:0.0 options:UIViewAnimationOptionTransitionCrossDissolve | UIViewAnimationOptionBeginFromCurrentState animations:animations completion:completion];
             } else {
-                [UIView animateWithDuration:_TBTabBarButtonNotificationIndicatorPresentationAnimationDuration delay:0.0 usingSpringWithDamping:0.5 initialSpringVelocity:0.25 options:UIViewAnimationOptionTransitionCrossDissolve | UIViewAnimationOptionBeginFromCurrentState animations:animations completion:completion];
+                [UIView animateWithDuration:[self notificationIndicatorAnimationDuration:true] delay:0.0 usingSpringWithDamping:0.5 initialSpringVelocity:0.25 options:UIViewAnimationOptionTransitionCrossDissolve | UIViewAnimationOptionBeginFromCurrentState animations:animations completion:completion];
             }
         }
     } else {
@@ -157,7 +157,7 @@ typedef NS_ENUM(NSUInteger, _TBTabBarButtonNotificationIndicatorViewAnimationSta
         } else {
             _notificationIndicatorViewAnimationState = _TBTabBarButtonNotificationIndicatorViewAnimationStateHide;
             [self setNeedsLayout];
-            [UIView animateWithDuration:_TBTabBarButtonNotificationIndicatorDismissalAnimationDuration delay:0.0 options:UIViewAnimationOptionBeginFromCurrentState animations:^{
+            [UIView animateWithDuration:[self notificationIndicatorAnimationDuration:false] delay:0.0 options:UIViewAnimationOptionBeginFromCurrentState animations:^{
                 [self layoutIfNeeded];
                 notificationIndicatorView.alpha = 0.0;
             } completion:^(BOOL finished) {
@@ -476,6 +476,11 @@ typedef NS_ENUM(NSUInteger, _TBTabBarButtonNotificationIndicatorViewAnimationSta
     }
     
     return _TBFloorRectWithScale((CGRect){indicatorOrigin, (CGSize)indicatorSize}, displayScale);
+}
+
+- (NSTimeInterval)notificationIndicatorAnimationDuration:(BOOL)presenting {
+    
+    return presenting ? _TBTabBarButtonNotificationIndicatorPresentationAnimationDuration : _TBTabBarButtonNotificationIndicatorDismissalAnimationDuration;
 }
 
 @end

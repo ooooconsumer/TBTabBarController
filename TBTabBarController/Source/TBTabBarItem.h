@@ -85,7 +85,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface TBTabBarItem (TBExtendedTabBarItem)
 
-- (BOOL)isEqualToItem:(TBTabBarItem *)item;
+- (BOOL)isEqualToItem:(TBTabBarItem *)item NS_SWIFT_NAME(isEqual(to:));
 
 @end
 

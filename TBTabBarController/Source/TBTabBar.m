@@ -171,6 +171,7 @@
     
     UIEdgeInsets const safeAreaInsets = self.safeAreaInsets;
     UIEdgeInsets const contentInsets = self.contentInsets;
+    UIEdgeInsets const additionalContentInsets = _additionalContentInsets;
     
     CGRect const bounds = self.bounds;
     
@@ -180,7 +181,7 @@
     
     // Stack view
     _TBStackView *stackView = self.stackView;
-    stackView.frame = _TBFloorRectWithScale((CGRect){(CGPoint){safeAreaInsets.left + contentInsets.left, contentInsets.top}, (CGSize){width - safeAreaInsets.left - safeAreaInsets.right - contentInsets.left - contentInsets.right, height - safeAreaInsets.bottom - contentInsets.top - contentInsets.bottom}}, displayScale);
+    stackView.frame = _TBFloorRectWithScale((CGRect){(CGPoint){safeAreaInsets.left + contentInsets.left + additionalContentInsets.left, contentInsets.top + additionalContentInsets.top}, (CGSize){width - safeAreaInsets.left - safeAreaInsets.right - contentInsets.left - contentInsets.right - additionalContentInsets.left - additionalContentInsets.right, height - safeAreaInsets.bottom - contentInsets.top - contentInsets.bottom - additionalContentInsets.top - additionalContentInsets.bottom}}, displayScale);
 }
 
 - (void)tintColorDidChange {
@@ -198,13 +199,6 @@
     return self.isVertical ? self.tb_isLeftToRight ? TBSimpleBarSeparatorPositionRight : TBSimpleBarSeparatorPositionLeft : TBSimpleBarSeparatorPositionTop;
 }
 
-- (void)setHidden:(BOOL)hidden {
-    
-    [super setHidden:hidden];
-    
-    _visible = !hidden;
-}
-
 #pragma mark - Private
 
 - (void)tbtbbr_commonInitWithLayoutOrientation:(TBTabBarLayoutOrientation)layoutOrientation {
@@ -217,7 +211,7 @@
     _maxNumberOfVisibleTabs = 5;
     _vertical = (_layoutOrientation == TBTabBarLayoutOrientationVertical);
     
-    self.contentInsets = _vertical ? UIEdgeInsetsMake(0.0, 1.0, 0.0, 1.0) : UIEdgeInsetsMake(1.0, 0.0, 1.0, 0.0);
+    self.contentInsets = _vertical ? UIEdgeInsetsMake(2.0, 1.0, 2.0, 1.0) : UIEdgeInsetsMake(1.0, 2.0, 1.0, 2.0);
 }
 
 - (void)tbtbbr_setup {
@@ -600,7 +594,11 @@
     [self updateItems];
     
     if (shouldNotifyDelegate && _delegateFlags.didSelectItemAtIndex) {
-        [self.delegate tabBar:self didSelectItem:self.visibleItems[self.selectedIndex] atIndex:self.selectedIndex];
+        NSArray *visibleItems = self.visibleItems;
+        if (visibleItems.count > 0) {
+            NSUInteger const selectedIndex = self.selectedIndex;
+            [self.delegate tabBar:self didSelectItem:visibleItems[selectedIndex] atIndex:selectedIndex];
+        }
     }
 }
 
@@ -690,6 +688,22 @@
     NSArray<TBTabBarButton *> *buttons = self.stackView.subviews;
     
     [buttons[index] setNotificationIndicatorHidden:hidden animated:self.isVisible];
+}
+
+- (void)_setAdditionalContentInsets:(UIEdgeInsets)additionalContentInsets {
+    
+    if (UIEdgeInsetsEqualToEdgeInsets(_additionalContentInsets, additionalContentInsets)) {
+        return;
+    }
+    
+    _additionalContentInsets = additionalContentInsets;
+    
+    [self setNeedsLayout];
+}
+
+- (void)_setVisible:(BOOL)visible {
+    
+    _visible = visible;
 }
 
 @end

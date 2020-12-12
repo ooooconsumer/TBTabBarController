@@ -31,9 +31,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface _TBTabBarControllerTransitionContext : NSObject
 
 @property (assign, nonatomic, readonly) BOOL backwards;
-
 @property (assign, nonatomic, readonly) BOOL isShowing;
-
 @property (assign, nonatomic, readonly) BOOL isHiding;
 
 @property (assign, nonatomic, readonly) TBTabBarControllerTabBarPosition initialPosition;

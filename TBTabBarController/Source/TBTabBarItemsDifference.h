@@ -24,7 +24,9 @@
 
 #import <Foundation/Foundation.h>
 
-@class TBTabBarItemChange, TBTabBarItem;
+#import <TBTabBarController/TBTabBarItemChange.h>
+
+@class TBTabBarItem;
 
 NS_ASSUME_NONNULL_BEGIN
 

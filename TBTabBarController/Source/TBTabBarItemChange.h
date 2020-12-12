@@ -24,7 +24,7 @@
 
 #import <Foundation/Foundation.h>
 
-@class TBTabBarItem;
+#import <TBTabBarController/TBTabBarItem.h>
 
 typedef NS_ENUM(NSInteger, TBTabBarItemChangeType) {
     TBTabBarItemChangeInsert,

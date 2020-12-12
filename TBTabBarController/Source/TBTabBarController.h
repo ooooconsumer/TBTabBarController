@@ -24,11 +24,11 @@
 
 #import <UIKit/UIKit.h>
 
+#import <TBTabBarController/TBDummyBar.h>
 #import <TBTabBarController/TBTabBar.h>
+#import <TBTabBarController/TBTabBarItem.h>
 
 @class TBTabBarController;
-@class TBDummyBar;
-@class TBTabBarItem;
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -110,10 +110,10 @@ typedef NS_ENUM(NSUInteger, TBTabBarControllerTabBarPosition) {
 @interface TBTabBarController : UIViewController <TBTabBarDelegate> {
     
 @protected
+    
     BOOL _shouldSelectViewController;
     BOOL _didPresentTabBarOnce;
-    BOOL _isHorizontalTabBarHidden;
-    BOOL _isVerticalTabBarHidden;
+    BOOL _visibleViewControllerWantsHideTabBar;
     
     TBTabBarControllerTabBarPosition _currentPosition;
     TBTabBarControllerTabBarPosition _preferredPosition;
@@ -212,9 +212,9 @@ typedef NS_ENUM(NSUInteger, TBTabBarControllerTabBarPosition) {
 
 - (instancetype)initWithCoder:(NSCoder *)coder NS_UNAVAILABLE;
 /**
- * @abstract Notifies the tab bar controller before the visible tab bar will be added to a view hierarchy for the first time. By default does nothing. Do not call directly.
+ * @abstract Notifies the tab bar controller before the visible tab bar will be added to a view hierarchy for the first time. Do not call directly.
  */
-- (void)willPresentTabBar;
+- (void)willPresentTabBar NS_REQUIRES_SUPER;
 
 /**
  * @abstract Notifies the tab bar controller just after the tab bar was added to a view hierarchy for the first time. Do not call directly.
@@ -271,7 +271,7 @@ typedef NS_ENUM(NSUInteger, TBTabBarControllerTabBarPosition) {
  * @warning The current implementation does not handle removal of the view controller, if there is any.
  * @b Workaround: manually remove the view controller from the view controllers list and set the updated array to the @b `viewControllers` property.
  */
-- (void)removeItemAtIndex:(NSUInteger)index;
+- (void)removeItemAtIndex:(NSUInteger)index NS_SWIFT_NAME(removeItem(at:));
 
 
 @end
@@ -318,11 +318,11 @@ typedef NS_ENUM(NSUInteger, TBTabBarControllerTabBarPosition) {
 
 @interface UIViewController (TBTabBarControllerExtension)
 
-@property (nonatomic, null_resettable, setter = tb_setTabBarItem:) TBTabBarItem *tb_tabBarItem;
+@property (strong, nonatomic, null_resettable, setter = tb_setTabBarItem:) TBTabBarItem *tb_tabBarItem;
 
-@property (nonatomic, readonly, nullable) TBTabBarController *tb_tabBarController;
+@property (assign, nonatomic, readonly, nullable) TBTabBarController *tb_tabBarController;
 
-@property (nonatomic, setter = tb_setHidesTabBarWhenPushed:) BOOL tb_hidesTabBarWhenPushed;
+@property (assign, nonatomic, setter = tb_setHidesTabBarWhenPushed:) BOOL tb_hidesTabBarWhenPushed;
 
 @end
 

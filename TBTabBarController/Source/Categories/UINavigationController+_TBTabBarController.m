@@ -54,8 +54,10 @@ static char *tb_privateDelegateKey;
     
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        _TBSwizzleMethod([self class], @selector(pushViewController:animated:), @selector(tb_pushViewController:animated:));
         _TBSwizzleMethod([self class], @selector(popViewControllerAnimated:), @selector(tb_popViewControllerAnimated:));
+        _TBSwizzleMethod([self class], @selector(popToViewController:animated:), @selector(tb_popToViewController:animated:));
+        _TBSwizzleMethod([self class], @selector(popToRootViewControllerAnimated:), @selector(tb_popToRootViewControllerAnimated:));
+        _TBSwizzleMethod([self class], @selector(pushViewController:animated:), @selector(tb_pushViewController:animated:));
         _TBSwizzleMethod([self class], @selector(didMoveToParentViewController:), @selector(tb_didMoveToParentViewController:));
     });
 }
@@ -64,77 +66,51 @@ static char *tb_privateDelegateKey;
 
 - (UIViewController *)tb_popViewControllerAnimated:(BOOL)animated {
     
-    UIViewController *poppedViewController = [self tb_popViewControllerAnimated:animated];
+    UIViewController *previousViewController = [self tb_popViewControllerAnimated:animated];
     
     if (!self.tb_isNestedInTBTabBarController) {
-        return poppedViewController;
+        return previousViewController;
     }
     
-    id<UIViewControllerTransitionCoordinator> const transitionCoordinator = self.transitionCoordinator;
+    [previousViewController setValue:nil forKey:NSStringFromSelector(@selector(tb_tabBarController))];
     
-    UIViewController *destinationViewController = self.topViewController;
-    
-    [self.tb_delegate tb_navigationController:self didBeginTransitionFrom:poppedViewController to:destinationViewController backwards:true];
-    
-    if (transitionCoordinator != nil) {
-        
-        if (transitionCoordinator.isInteractive) {
-            
-            __weak typeof(self) weakSelf = self;
-            
-            [transitionCoordinator notifyWhenInteractionChangesUsingBlock:^(id<UIViewControllerTransitionCoordinatorContext> _Nonnull context) {
-                if (weakSelf == nil) {
-                    return;
-                }
-                typeof(self) strongSelf = weakSelf;
-                BOOL const isCancelled = context.isCancelled;
-                if (animated) {
-                    [UIView animateWithDuration:transitionCoordinator.transitionDuration delay:0.0 usingSpringWithDamping:1.0 initialSpringVelocity:transitionCoordinator.completionVelocity options:transitionCoordinator.completionCurve << 16 animations:^{
-                        [strongSelf.tb_delegate tb_navigationController:strongSelf willEndTransitionFrom:poppedViewController to:destinationViewController cancelled:isCancelled];
-                    } completion:^(BOOL finished) {
-                        [strongSelf.tb_delegate tb_navigationController:strongSelf didEndTransitionFrom:poppedViewController to:destinationViewController cancelled:isCancelled];
-                    }];
-                } else {
-                    [strongSelf.tb_delegate tb_navigationController:strongSelf willEndTransitionFrom:poppedViewController to:destinationViewController cancelled:isCancelled];
-                    [strongSelf.tb_delegate tb_navigationController:strongSelf didEndTransitionFrom:poppedViewController to:destinationViewController cancelled:isCancelled];
-                }
-            }];
-            
-        } else {
-            
-            __weak typeof(self) weakSelf = self;
-            
-            [transitionCoordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
-                if (weakSelf == nil) {
-                    return;
-                }
-                typeof(self) strongSelf = weakSelf;
-                [strongSelf.tb_delegate tb_navigationController:strongSelf willEndTransitionFrom:poppedViewController to:destinationViewController cancelled:context.isCancelled];
-            } completion:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
-                if (weakSelf == nil) {
-                    return;
-                }
-                typeof(self) strongSelf = weakSelf;
-                [strongSelf.tb_delegate tb_navigationController:strongSelf didEndTransitionFrom:poppedViewController to:destinationViewController cancelled:context.isCancelled];
-            }];
-            
-        }
-        
-    } else {
-        
-        if (animated) {
-            [UIView animateWithDuration:0.35 delay:0.0 usingSpringWithDamping:1.0 initialSpringVelocity:1.0 options:7 << 16 animations:^{
-                [self.tb_delegate tb_navigationController:self willEndTransitionFrom:poppedViewController to:destinationViewController cancelled:false];
-            } completion:^(BOOL finished) {
-                [self.tb_delegate tb_navigationController:self didEndTransitionFrom:poppedViewController to:destinationViewController cancelled:false];
-            }];
-        } else {
-            [self.tb_delegate tb_navigationController:self willEndTransitionFrom:poppedViewController to:destinationViewController cancelled:false];
-            [self.tb_delegate tb_navigationController:self didEndTransitionFrom:poppedViewController to:destinationViewController cancelled:false];
-        }
-    }
+    [self tb_popViewController:previousViewController destinationViewController:self.topViewController animated:animated];
  
-    return poppedViewController;
+    return previousViewController;
+}
+
+- (NSArray<__kindof UIViewController *> *)tb_popToViewController:(UIViewController *)viewController animated:(BOOL)animated {
+    
+    UIViewController *previousViewController = self.topViewController;
+    
+    NSArray<__kindof UIViewController *> *viewControllers = [self tb_popToViewController:viewController animated:animated];
+    
+    if (!self.tb_isNestedInTBTabBarController) {
+        return viewControllers;
+    }
+    
+    for (UIViewController *viewController in viewControllers) {
+        [viewController setValue:nil forKey:NSStringFromSelector(@selector(tb_tabBarController))];
+    }
+    
+    [self tb_popViewController:previousViewController destinationViewController:viewController animated:animated];
+    
+    return viewControllers;
+}
+
+- (NSArray<__kindof UIViewController *> *)tb_popToRootViewControllerAnimated:(BOOL)animated {
+    
+    UIViewController *previousViewController = self.topViewController;
+    
+    NSArray<__kindof UIViewController *> *viewControllers = [self tb_popToRootViewControllerAnimated:animated];
+    
+    for (UIViewController *viewController in viewControllers) {
+        [viewController setValue:nil forKey:NSStringFromSelector(@selector(tb_tabBarController))];
+    }
+    
+    [self tb_popViewController:previousViewController destinationViewController:self.topViewController animated:animated];
+    
+    return viewControllers;
 }
 
 - (void)tb_pushViewController:(UIViewController *)viewController animated:(BOOL)animated {
@@ -145,6 +121,8 @@ static char *tb_privateDelegateKey;
     }
     
     UIViewController *prevViewController = self.topViewController; // Get the top view controller before it will be replaced with a new view controller
+    
+    [viewController setValue:prevViewController.tb_tabBarController forKey:NSStringFromSelector(@selector(tb_tabBarController))];
     
     [self tb_pushViewController:viewController animated:animated];
 
@@ -176,7 +154,16 @@ static char *tb_privateDelegateKey;
         
     } else {
         
-        
+        if (animated) {
+            [UIView animateWithDuration:0.35 delay:0.0 options:7 << 16 animations:^{
+                [self.tb_delegate tb_navigationController:self willEndTransitionFrom:prevViewController to:viewController cancelled:false];
+            } completion:^(BOOL finished) {
+                [self.tb_delegate tb_navigationController:self didEndTransitionFrom:prevViewController to:viewController cancelled:false];
+            }];
+        } else {
+            [self.tb_delegate tb_navigationController:self willEndTransitionFrom:prevViewController to:viewController cancelled:false];
+            [self.tb_delegate tb_navigationController:self didEndTransitionFrom:prevViewController to:viewController cancelled:false];
+        }
     }
 }
 
@@ -234,6 +221,71 @@ static char *tb_privateDelegateKey;
 
 #pragma mark Helpers
 
+- (void)tb_popViewController:(UIViewController *)previousViewController destinationViewController:(UIViewController *)destinationViewController animated:(BOOL)animated {
+    
+    id<UIViewControllerTransitionCoordinator> const transitionCoordinator = self.transitionCoordinator;
+    
+    [self.tb_delegate tb_navigationController:self didBeginTransitionFrom:previousViewController to:destinationViewController backwards:true];
+    
+    if (transitionCoordinator != nil) {
+        
+        if (transitionCoordinator.isInteractive) {
+            
+            __weak typeof(self) weakSelf = self;
+            
+            [transitionCoordinator notifyWhenInteractionChangesUsingBlock:^(id<UIViewControllerTransitionCoordinatorContext> _Nonnull context) {
+                if (weakSelf == nil) {
+                    return;
+                }
+                typeof(self) strongSelf = weakSelf;
+                BOOL const isCancelled = context.isCancelled;
+                if (animated) {
+                    [UIView animateWithDuration:transitionCoordinator.transitionDuration delay:0.0 usingSpringWithDamping:1.0 initialSpringVelocity:transitionCoordinator.completionVelocity options:transitionCoordinator.completionCurve << 16 animations:^{
+                        [strongSelf.tb_delegate tb_navigationController:strongSelf willEndTransitionFrom:previousViewController to:destinationViewController cancelled:isCancelled];
+                    } completion:^(BOOL finished) {
+                        [strongSelf.tb_delegate tb_navigationController:strongSelf didEndTransitionFrom:previousViewController to:destinationViewController cancelled:isCancelled];
+                    }];
+                } else {
+                    [strongSelf.tb_delegate tb_navigationController:strongSelf willEndTransitionFrom:previousViewController to:destinationViewController cancelled:isCancelled];
+                    [strongSelf.tb_delegate tb_navigationController:strongSelf didEndTransitionFrom:previousViewController to:destinationViewController cancelled:isCancelled];
+                }
+            }];
+            
+        } else {
+            
+            __weak typeof(self) weakSelf = self;
+            
+            [transitionCoordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
+                if (weakSelf == nil) {
+                    return;
+                }
+                typeof(self) strongSelf = weakSelf;
+                [strongSelf.tb_delegate tb_navigationController:strongSelf willEndTransitionFrom:previousViewController to:destinationViewController cancelled:context.isCancelled];
+            } completion:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
+                if (weakSelf == nil) {
+                    return;
+                }
+                typeof(self) strongSelf = weakSelf;
+                [strongSelf.tb_delegate tb_navigationController:strongSelf didEndTransitionFrom:previousViewController to:destinationViewController cancelled:context.isCancelled];
+            }];
+            
+        }
+        
+    } else {
+        
+        if (animated) {
+            [UIView animateWithDuration:0.35 delay:0.0 usingSpringWithDamping:1.0 initialSpringVelocity:1.0 options:7 << 16 animations:^{
+                [self.tb_delegate tb_navigationController:self willEndTransitionFrom:previousViewController to:destinationViewController cancelled:false];
+            } completion:^(BOOL finished) {
+                [self.tb_delegate tb_navigationController:self didEndTransitionFrom:previousViewController to:destinationViewController cancelled:false];
+            }];
+        } else {
+            [self.tb_delegate tb_navigationController:self willEndTransitionFrom:previousViewController to:destinationViewController cancelled:false];
+            [self.tb_delegate tb_navigationController:self didEndTransitionFrom:previousViewController to:destinationViewController cancelled:false];
+        }
+    }
+}
+
 - (void)tb_update {
     
     CGFloat value = 0.0;
@@ -279,7 +331,7 @@ static char *tb_privateDelegateKey;
 
 - (void)tb_setPrivateDelegate:(id<TBNavigationControllerExtensionDelegate>)tb_privateDelegate {
     
-    objc_setAssociatedObject(self, &tb_privateDelegateKey, tb_privateDelegate, OBJC_ASSOCIATION_RETAIN);
+    objc_setAssociatedObject(self, &tb_privateDelegateKey, tb_privateDelegate, OBJC_ASSOCIATION_ASSIGN);
 }
 
 @end

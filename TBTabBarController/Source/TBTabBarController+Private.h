@@ -32,7 +32,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)_setNeedsLayoutView NS_REQUIRES_SUPER;
 
-- (void)_specifyPreferredTabBarPositionForHorizontalSizeClass:(UIUserInterfaceSizeClass)horizontalSizeClass size:(CGSize)size;
+- (void)_specifyPreferredTabBarPositionForHorizontalSizeClass:(UIUserInterfaceSizeClass)horizontalSizeClass size:(CGSize)size NS_SWIFT_NAME(_specifyPreferredTabBarPosition(for:size:));
 
 - (void)_changeItem:(TBTabBarItem *)item toItem:(TBTabBarItem *)newItem;
 

@@ -36,7 +36,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)_setSelectedIndex:(NSUInteger)selectedIndex quitly:(BOOL)quitly;
 
-- (__kindof TBTabBarButton *)_buttonWithItem:(__kindof TBTabBarItem *)item;
+- (__kindof TBTabBarButton *)_buttonWithItem:(__kindof TBTabBarItem *)item NS_SWIFT_NAME(_button(with:));
 
 - (NSArray<__kindof TBTabBarButton *> *)_buttons;
 
@@ -53,6 +53,10 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)_setNotificationIndicatorImage:(UIImage *)image forButtonAtIndex:(NSUInteger)index;
 
 - (void)_setNotificationIndicatorHidden:(BOOL)hidden forButtonAtIndex:(NSUInteger)index;
+
+- (void)_setAdditionalContentInsets:(UIEdgeInsets)additionalContentInsets;
+
+- (void)_setVisible:(BOOL)visible;
 
 @end
 

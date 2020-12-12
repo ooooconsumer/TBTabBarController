@@ -24,7 +24,7 @@
 
 #import <UIKit/UIKit.h>
 
-@class TBTabBarItem;
+#import <TBTabBarController/TBTabBarItem.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -103,6 +103,12 @@ typedef NS_ENUM(NSInteger, TBTabBarButtonLayoutOrientation) {
 - (CGRect)imageViewFrameForBounds:(CGRect)bounds;
 
 - (CGRect)notificationIndicatorViewFrameForBounds:(CGRect)bounds;
+
+/**
+ * @abstract The duration of the animation for showing or hiding the notification indicator. Default value is 0.25.
+ * @param presenting Whether the notification indicator is showing or hiding.
+ */
+- (NSTimeInterval)notificationIndicatorAnimationDuration:(BOOL)presenting;
 
 @end
 
