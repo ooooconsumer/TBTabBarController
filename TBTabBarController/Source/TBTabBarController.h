@@ -318,11 +318,11 @@ typedef NS_ENUM(NSUInteger, TBTabBarControllerTabBarPosition) {
 
 @interface UIViewController (TBTabBarControllerExtension)
 
-@property (nonatomic, null_resettable, setter = tb_setTabBarItem:) TBTabBarItem *tb_tabBarItem;
+@property (strong, nonatomic, null_resettable, setter = tb_setTabBarItem:) TBTabBarItem *tb_tabBarItem;
 
-@property (nonatomic, readonly, nullable) TBTabBarController *tb_tabBarController;
+@property (assign, nonatomic, readonly, nullable) TBTabBarController *tb_tabBarController;
 
-@property (nonatomic, setter = tb_setHidesTabBarWhenPushed:) BOOL tb_hidesTabBarWhenPushed;
+@property (assign, nonatomic, setter = tb_setHidesTabBarWhenPushed:) BOOL tb_hidesTabBarWhenPushed;
 
 @end
 

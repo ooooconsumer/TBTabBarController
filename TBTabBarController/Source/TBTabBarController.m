@@ -1200,7 +1200,7 @@ static char *_tabBarControllerCategoryHidesTabBarWhenPushedKey;
 
 - (void)setTb_tabBarController:(TBTabBarController * _Nullable)tb_tabBarController {
     
-    objc_setAssociatedObject(self, &_tabBarControllerPropertyKey, tb_tabBarController, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    objc_setAssociatedObject(self, &_tabBarControllerPropertyKey, tb_tabBarController, OBJC_ASSOCIATION_ASSIGN);
 }
 
 - (void)tb_setHidesTabBarWhenPushed:(BOOL)_hidesTabBarWhenPushed {

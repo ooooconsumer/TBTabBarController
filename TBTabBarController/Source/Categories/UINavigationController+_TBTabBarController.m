@@ -331,7 +331,7 @@ static char *tb_privateDelegateKey;
 
 - (void)tb_setPrivateDelegate:(id<TBNavigationControllerExtensionDelegate>)tb_privateDelegate {
     
-    objc_setAssociatedObject(self, &tb_privateDelegateKey, tb_privateDelegate, OBJC_ASSOCIATION_RETAIN);
+    objc_setAssociatedObject(self, &tb_privateDelegateKey, tb_privateDelegate, OBJC_ASSOCIATION_ASSIGN);
 }
 
 @end
