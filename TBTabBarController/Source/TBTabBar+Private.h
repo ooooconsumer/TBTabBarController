@@ -2,7 +2,7 @@
 //  TBTabBar+Private.h
 //  TBTabBarController
 //
-//  Copyright (c) 2019-2020 Timur Ganiev
+//  Copyright (c) 2019-2023 Timur Ganiev
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -34,7 +34,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)_setItems:(NSArray <__kindof TBTabBarItem *> *)items;
 
-- (void)_setSelectedIndex:(NSUInteger)selectedIndex quitly:(BOOL)quitly;
+- (void)_setSelectedIndex:(NSUInteger)selectedIndex quietly:(BOOL)quietly;
 
 - (__kindof TBTabBarButton *)_buttonWithItem:(__kindof TBTabBarItem *)item NS_SWIFT_NAME(_button(with:));
 

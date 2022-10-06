@@ -2,7 +2,7 @@
 //  TBDummyBar.m
 //  TBTabBarController
 //
-//  Copyright (c) 2019-2020 Timur Ganiev
+//  Copyright (c) 2019-2023 Timur Ganiev
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -23,9 +23,8 @@
 //  SOFTWARE.
 
 #import "TBDummyBar.h"
-
 #import "_TBUtils.h"
-#import "UIView+_TBTabBarController.h"
+#import "UIView+Extensions.h"
 
 @implementation TBDummyBar
 
@@ -66,7 +65,7 @@
     CGFloat const width = CGRectGetWidth(bounds);
     CGFloat const height = CGRectGetHeight(bounds);
     CGFloat const displayScale = self.tb_displayScale;
-    
+
     UIEdgeInsets const safeAreaInsets = self.safeAreaInsets;
     UIEdgeInsets const contentInsets = self.contentInsets;
     
@@ -76,7 +75,7 @@
     frame.size = [subview sizeThatFits:(CGSize){width - safeAreaInsets.left - safeAreaInsets.right - contentInsets.left, height - contentInsets.top - contentInsets.bottom - safeAreaInsets.top}];
     frame.origin = (CGPoint){safeAreaInsets.left + (((width - safeAreaInsets.left) - frame.size.width) / 2.0) , height + contentInsets.top - contentInsets.bottom - frame.size.height};
     
-    subview.frame = _TBFloorRectWithScale(frame, displayScale);
+    subview.frame = _TBPixelAccurateRect(frame, displayScale, true);
 }
 
 - (TBSimpleBarSeparatorPosition)separatorPosition {

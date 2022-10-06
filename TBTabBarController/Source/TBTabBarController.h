@@ -2,7 +2,7 @@
 //  TBTabBarController.h
 //  TBTabBarController
 //
-//  Copyright (c) 2019-2020 Timur Ganiev
+//  Copyright (c) 2019-2023 Timur Ganiev
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -57,24 +57,29 @@ typedef NS_ENUM(NSUInteger, TBTabBarControllerTabBarPosition) {
 /**
  * @abstract Notifies the delegate before selecting a new tab item.
  */
-- (BOOL)tabBarController:(TBTabBarController *)tabBarController shouldSelectItem:(__kindof TBTabBarItem *)item atIndex:(NSUInteger)index;
+- (BOOL)tabBarController:(TBTabBarController *)tabBarController
+        shouldSelectItem:(__kindof TBTabBarItem *)item atIndex:(NSUInteger)index;
 
 /**
  * @abstract Notifies the delegate that the tab bar controller did select new tab.
  */
-- (void)tabBarController:(TBTabBarController *)tabBarController didSelectItem:(__kindof TBTabBarItem *)item atIndex:(NSUInteger)index;
+- (void)tabBarController:(TBTabBarController *)tabBarController
+           didSelectItem:(__kindof TBTabBarItem *)item atIndex:(NSUInteger)index;
 
 /**
  * @abstract Notifies the delegate before selecting a new view controller.
- * @discussion Use this method if you want to do something with the view controller before it will be selected.
+ * @discussion Use this method if you want to do something with the view controller
+ * before it will be selected.
  */
-- (BOOL)tabBarController:(TBTabBarController *)tabBarController shouldSelectViewController:(__kindof UIViewController * _Nullable)viewController;
+- (BOOL)tabBarController:(TBTabBarController *)tabBarController
+shouldSelectViewController:(__kindof UIViewController * _Nullable)viewController;
 
 /**
  * @abstract Notifies the delegate that the tab bar controller did select new tab.
  * @discussion If you want to do something with the selected view controller before the user will actually select it you can use the method above.
  */
-- (void)tabBarController:(TBTabBarController *)tabBarController didSelectViewController:(__kindof UIViewController *)viewController;
+- (void)tabBarController:(TBTabBarController *)tabBarController
+ didSelectViewController:(__kindof UIViewController *)viewController;
 
 /**
  * @abstract Notifies the delegate before the controller will show a tab bar.
@@ -101,11 +106,14 @@ typedef NS_ENUM(NSUInteger, TBTabBarControllerTabBarPosition) {
 #pragma mark - Tab bar controller
 
 /**
- * @abstract A view controller that can display multiple child view controllers with either a vertical or horizontal tab bar.
+ * @abstract A view controller that can display multiple child view controllers
+ * with either a vertical or horizontal tab bar.
  * @discussion You have to keep in mind, that controller actually contains @em two tab bars.
- * The first one is horizontal and lives on the bottom of the view, and the other one is vertical and can be displayed on the left or right side.
+ * The first one is horizontal and lives on the bottom of the view,
+ * and the other one is vertical and can be displayed on the left or right side.
  * Which one will be displayed depends on either the view size or the horizontal size class.
- * By default, the controller relies on the horizontal size classes, but you can always override this behaviour.
+ * By default, the controller relies on the horizontal size classes,
+ * but you can always override this behaviour.
  */
 @interface TBTabBarController : UIViewController <TBTabBarDelegate> {
     
@@ -157,7 +165,7 @@ typedef NS_ENUM(NSUInteger, TBTabBarControllerTabBarPosition) {
 @property (strong, nonatomic, readonly) UISwipeGestureRecognizer *popGestureRecognizer;
 
 /**
- * @abstract An empty view that mathes the navigation bar of the selected view controller, if any.
+ * @abstract An empty view that matches the navigation bar of the selected view controller, if any.
  */
 @property (strong, nonatomic, readonly) TBDummyBar *dummyBar;
 
@@ -171,14 +179,14 @@ typedef NS_ENUM(NSUInteger, TBTabBarControllerTabBarPosition) {
  */
 @property (strong, nonatomic, readonly) TBTabBar *verticalTabBar;
 
-@property (strong, nonatomic, nullable) __kindof UIView *sidebar NS_UNAVAILABLE;
-
 /**
  * @abstract The currently visible tab bar, if any.
- * @discussion Because this property may return nil value (see note), you probably want to use  @em `currentlyVisibleTabBar:hiddenTabBar:` method.
+ * @discussion Because this property may return nil value (see note),
+ * you probably want to use  @em `currentlyVisibleTabBar:hiddenTabBar:` method.
  * That method retrieves both the visible tab bar and the hidden one.
  * @note Before iOS 13 equals to nil when the trait collection is not initialazed yet.
- * It can be nil as well either when there is no visible tab bar, or when the controller is updating the tab bar position.
+ * It can be nil as well either when there is no visible tab bar, or
+ * when the controller is updating the tab bar position.
  */
 @property (weak, nonatomic, readonly, nullable) TBTabBar *visibleTabBar;
 
@@ -204,33 +212,46 @@ typedef NS_ENUM(NSUInteger, TBTabBarControllerTabBarPosition) {
 
 @property (assign, nonatomic) CGFloat dummyBarHeight NS_UNAVAILABLE;
 
-@property (assign, nonatomic) CGFloat sidebarWidth NS_UNAVAILABLE;
-
 - (instancetype)init NS_DESIGNATED_INITIALIZER;
 
-- (instancetype)initWithNibName:(nullable NSString *)nibNameOrNil bundle:(nullable NSBundle *)nibBundleOrNil NS_UNAVAILABLE;
+- (instancetype)initWithNibName:(nullable NSString *)nibNameOrNil
+                         bundle:(nullable NSBundle *)nibBundleOrNil NS_UNAVAILABLE;
 
 - (instancetype)initWithCoder:(NSCoder *)coder NS_UNAVAILABLE;
 /**
- * @abstract Notifies the tab bar controller before the visible tab bar will be added to a view hierarchy for the first time. Do not call directly.
+ * @abstract Notifies the tab bar controller before the visible tab bar will be added
+ * to a view hierarchy for the first time. Do not call directly.
  */
 - (void)willPresentTabBar NS_REQUIRES_SUPER;
 
 /**
- * @abstract Notifies the tab bar controller just after the tab bar was added to a view hierarchy for the first time. Do not call directly.
+ * @abstract Notifies the tab bar controller just after the tab bar was added
+ * to a view hierarchy for the first time. Do not call directly.
  */
 - (void)didPresentTabBar NS_REQUIRES_SUPER;
 
 /**
- * @abstract A method that relies on the current tab bar position (or the preferred one — which one is used is depending on the context) and returns pointers to both visible tab bar and the hidden one, if possible.
+ * @abstract A method that relies on the current tab bar position (or the preferred one — which one
+ * is used is depending on the context) and returns pointers to both visible tab bar
+ * and the hidden one, if possible.
  * @discussion If there's no visible or hidden tab bar, it means that they are both hidden.
  * So, you have to call @b `_specifyPreferredTabBarPositionForHorizontalSizeClass:size:` method.
- * It will specify the preferred tab bar position, so you can call this method again to fetch the hidden tab bar.
+ * It will specify the preferred tab bar position, so you can call this method again to fetch
+ * the hidden tab bar.
  * @code
     TBTabBar *visibleTabBar, *hiddenTabBar;
     [self currentlyVisibleTabBar:&visibleTabBar hiddenTabBar:&hiddenTabBar];
+
+    if (visibleTabBar != nil) {
+        // do things with the visible bar
+    } else if (hiddenTabBar != nil) {
+        // do things with the hidden bar
+    } else {
+        // there are no bars — you should specify their visibility manually
+    }
  */
-- (void)currentlyVisibleTabBar:(TBTabBar *_Nullable *_Nullable)visibleTabBar hiddenTabBar:(TBTabBar *_Nullable *_Nullable)hiddenTabBar;
+- (void)currentlyVisibleTabBar:(TBTabBar *_Nullable *_Nullable)visibleTabBar
+                  hiddenTabBar:(TBTabBar *_Nullable *_Nullable)hiddenTabBar;
 /**
  * @abstract Begins the tab bar position update if needed. Animatable.
  * @discussion To perform any changes to the tab bar position (hiding, changing side, etc...)  you have to create a new subclass of @p `TBTabBarController` class.
@@ -262,7 +283,7 @@ typedef NS_ENUM(NSUInteger, TBTabBarControllerTabBarPosition) {
 
 /**
  * @abstract Inserts an item to the items list at the specific index. Animatable.
- * @see Please, see @b `addItem:` method descriptiption.
+ * @see Please, see @b `addItem:` method description.
  */
 - (void)insertItem:(__kindof TBTabBarItem *)item atIndex:(NSUInteger)index;
 
@@ -272,7 +293,6 @@ typedef NS_ENUM(NSUInteger, TBTabBarControllerTabBarPosition) {
  * @b Workaround: manually remove the view controller from the view controllers list and set the updated array to the @b `viewControllers` property.
  */
 - (void)removeItemAtIndex:(NSUInteger)index NS_SWIFT_NAME(removeItem(at:));
-
 
 @end
 

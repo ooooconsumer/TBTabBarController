@@ -2,7 +2,7 @@
 //  TBSimpleBar.m
 //  TBTabBarController
 //
-//  Copyright (c) 2019-2020 Timur Ganiev
+//  Copyright (c) 2019-2023 Timur Ganiev
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -23,10 +23,8 @@
 //  SOFTWARE.
 
 #import "TBSimpleBar.h"
-
 #import "_TBUtils.h"
-#import "_TBImageCache.h"
-#import "UIView+_TBTabBarController.h"
+#import "UIView+Extensions.h"
 
 @implementation TBSimpleBar {
     
@@ -99,20 +97,27 @@
     switch (self.separatorPosition) {
         case TBSimpleBarSeparatorPositionHidden:
             break;
+
         case TBSimpleBarSeparatorPositionLeft:
-            frame = (CGRect){CGPointZero, {separatorSize, height}};
+            frame = (CGRect){CGPointZero, (CGSize){separatorSize, height}};
             break;
+
         case TBSimpleBarSeparatorPositionRight:
-            frame = (CGRect){_TBFloorPointWithScale((CGPoint){width - separatorSize, 0.0}, displayScale), {separatorSize, height}};
+            frame = (CGRect){
+                _TBPixelAccuratePoint((CGPoint){width - separatorSize, 0.0}, displayScale, false),
+                (CGSize){separatorSize, height}
+            };
             break;
+
         case TBSimpleBarSeparatorPositionTop:
             frame = (CGRect){CGPointZero, (CGSize){width, separatorSize}};
             break;
+
         default:
             break;
     }
     
-    if (!CGRectEqualToRect(CGRectZero, frame)) {
+    if (!CGRectEqualToRect(CGRectZero, frame) && !CGRectIsInfinite(frame)) {
         _separatorImageView.frame = frame;
     }
     
@@ -160,18 +165,8 @@
 
 #pragma mark Helpers
 
-- (UIImage *)tbsmplbr_cachedSeparatorImage {
-    
-    UIImage *separatorImage = [[_TBImageCache cache] cachedImageWithName:@"separator"];
-    
-    if (separatorImage == nil) {
-        CGFloat const displayScale = self.tb_displayScale;
-        CGFloat const pixelSize = (1.0 / displayScale);
-        separatorImage = _TBDrawFilledRectangleWithSize((CGSize){pixelSize, pixelSize});
-        [[_TBImageCache cache] cacheImage:separatorImage withName:@"separator"];
-    }
-    
-    return separatorImage;
+- (UIImage *)makeSeparatorImage {
+    return _TBDrawFilledRectangleWithSize((CGSize){self.tb_displayScale, self.tb_displayScale});
 }
 
 #pragma mark Layout
@@ -201,7 +196,7 @@
 - (UIImage *)separatorImage {
     
     if (tbsmplbr_separatorImage == nil) {
-        tbsmplbr_separatorImage = [self tbsmplbr_cachedSeparatorImage];
+        tbsmplbr_separatorImage = [self makeSeparatorImage];
     }
     
     return tbsmplbr_separatorImage;
@@ -282,7 +277,7 @@
     if (separatorImage != nil) {
         tbsmplbr_separatorImage = separatorImage;
     } else {
-        tbsmplbr_separatorImage = [self tbsmplbr_cachedSeparatorImage];
+        tbsmplbr_separatorImage = [self makeSeparatorImage];
     }
     
     _separatorImageView.image = tbsmplbr_separatorImage;

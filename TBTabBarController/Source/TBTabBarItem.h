@@ -2,7 +2,7 @@
 //  TBTabBarItem.h
 //  TBTabBarController
 //
-//  Copyright (c) 2019-2020 Timur Ganiev
+//  Copyright (c) 2019-2023 Timur Ganiev
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -29,7 +29,7 @@ NS_ASSUME_NONNULL_BEGIN
 #pragma mark - Item
 
 /**
- * @abstract An item in a tab bar. Similiar to UITabBarItem.
+ * @abstract An item in a tab bar. Similar to UITabBarItem.
  */
 @interface TBTabBarItem : NSObject <NSCopying>
 
@@ -39,7 +39,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (assign, nonatomic, getter = isEnabled) BOOL enabled NS_SWIFT_NAME(isEnabled);
 
 /**
- * @abstract Describes whether should show a notification indicator next to the tab icon. Default value is NO.
+ * @abstract Describes whether should show a notification indicator next to the tab icon.
+ * Default value is NO.
  */
 @property (assign, nonatomic) BOOL showsNotificationIndicator;
 
@@ -59,21 +60,28 @@ NS_ASSUME_NONNULL_BEGIN
 @property (strong, nonatomic, nullable) UIImage *selectedImage;
 
 /**
- * @abstract A notification indicator image that appears next to the tab icon. By default it's a small dot.
+ * @abstract A notification indicator image that appears next to the tab icon.
+ * By default it's a small dot.
  */
 @property (strong, nonatomic, null_resettable) UIImage *notificationIndicator;
 
 /**
- * @abstract A button class, instance of which will be displayed in the tab bar. By default it's @b `TBTabBarButton` class.
- * @note It is supposed to be a subclass of @b `TBTabBarButton` class.
+ * @abstract A button class, instance of which will be displayed in the tab bar.
+ * By default it's @b `TBTabBarButton` class.
+ * @note It is supposed to be a kind of @b `TBTabBarButton` class.
  */
-@property (strong, nonatomic, readonly) Class buttonClass UI_APPEARANCE_SELECTOR;
+@property (strong, nonatomic, readonly) Class buttonClass;
 
 - (instancetype)initWithImage:(UIImage *)image buttonClass:(nullable Class)buttonClass;
 
-- (instancetype)initWithImage:(UIImage *)image selectedImage:(nullable UIImage *)selectedImage buttonClass:(nullable Class)buttonClass;
+- (instancetype)initWithImage:(UIImage *)image
+                selectedImage:(nullable UIImage *)selectedImage
+                  buttonClass:(nullable Class)buttonClass;
 
-- (instancetype)initWithImage:(UIImage *)image selectedImage:(nullable UIImage *)selectedImage title:(nullable NSString *)title buttonClass:(nullable Class)buttonClass NS_DESIGNATED_INITIALIZER;
+- (instancetype)initWithImage:(UIImage *)image
+                selectedImage:(nullable UIImage *)selectedImage
+                        title:(nullable NSString *)title
+                  buttonClass:(nullable Class)buttonClass NS_DESIGNATED_INITIALIZER;
 
 - (instancetype)init NS_UNAVAILABLE;
 

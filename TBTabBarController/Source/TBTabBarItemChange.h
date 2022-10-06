@@ -2,7 +2,7 @@
 //  TBTabBarItemChange.h
 //  TBTabBarController
 //
-//  Copyright (c) 2019-2020 Timur Ganiev
+//  Copyright (c) 2019-2023 Timur Ganiev
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -23,7 +23,6 @@
 //  SOFTWARE.
 
 #import <Foundation/Foundation.h>
-
 #import <TBTabBarController/TBTabBarItem.h>
 
 typedef NS_ENUM(NSInteger, TBTabBarItemChangeType) {
@@ -41,7 +40,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (assign, nonatomic, readonly) NSUInteger index;
 
-- (instancetype)initWithItem:(TBTabBarItem *)item type:(TBTabBarItemChangeType)type index:(NSUInteger)index NS_DESIGNATED_INITIALIZER;
+- (instancetype)initWithItem:(TBTabBarItem *)item
+                        type:(TBTabBarItemChangeType)type
+                       index:(NSUInteger)index NS_DESIGNATED_INITIALIZER;
 
 - (instancetype)initWithCollectionChange:(NSOrderedCollectionChange *)collectionChange API_AVAILABLE(ios(13.0));
 

@@ -7,18 +7,17 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		812AEA552551ABC4003AB231 /* UIView+_TBTabBarController.h in Headers */ = {isa = PBXBuildFile; fileRef = 812AEA532551ABC4003AB231 /* UIView+_TBTabBarController.h */; settings = {ATTRIBUTES = (Private, ); }; };
-		812AEA562551ABC4003AB231 /* UIView+_TBTabBarController.m in Sources */ = {isa = PBXBuildFile; fileRef = 812AEA542551ABC4003AB231 /* UIView+_TBTabBarController.m */; };
+		8102CDCD2982FFFB0073CBAB /* ToggleItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8102CDCC2982FFFB0073CBAB /* ToggleItem.swift */; };
+		8102CDD02983932F0073CBAB /* UIApplication+Extensions.h in Headers */ = {isa = PBXBuildFile; fileRef = 8102CDCE2983932F0073CBAB /* UIApplication+Extensions.h */; };
+		8102CDD12983932F0073CBAB /* UIApplication+Extensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 8102CDCF2983932F0073CBAB /* UIApplication+Extensions.m */; };
+		812AEA552551ABC4003AB231 /* UIView+Extensions.h in Headers */ = {isa = PBXBuildFile; fileRef = 812AEA532551ABC4003AB231 /* UIView+Extensions.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		812AEA562551ABC4003AB231 /* UIView+Extensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 812AEA542551ABC4003AB231 /* UIView+Extensions.m */; };
 		812AEA712552929B003AB231 /* TBTabBarItemsDifference.h in Headers */ = {isa = PBXBuildFile; fileRef = 812AEA6F2552929B003AB231 /* TBTabBarItemsDifference.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		812AEA722552929B003AB231 /* TBTabBarItemsDifference.m in Sources */ = {isa = PBXBuildFile; fileRef = 812AEA702552929B003AB231 /* TBTabBarItemsDifference.m */; };
 		812AEA77255292DF003AB231 /* TBTabBarItemChange.h in Headers */ = {isa = PBXBuildFile; fileRef = 812AEA75255292DF003AB231 /* TBTabBarItemChange.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		812AEA78255292DF003AB231 /* TBTabBarItemChange.m in Sources */ = {isa = PBXBuildFile; fileRef = 812AEA76255292DF003AB231 /* TBTabBarItemChange.m */; };
 		813570BC2558E9E100CC91B8 /* _TBStackView.h in Headers */ = {isa = PBXBuildFile; fileRef = 813570BA2558E9E100CC91B8 /* _TBStackView.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		813570BD2558E9E100CC91B8 /* _TBStackView.m in Sources */ = {isa = PBXBuildFile; fileRef = 813570BB2558E9E100CC91B8 /* _TBStackView.m */; };
-		8142144A255717D400B8A7A7 /* _TBTriangularMatrix.h in Headers */ = {isa = PBXBuildFile; fileRef = 81421448255717D400B8A7A7 /* _TBTriangularMatrix.h */; settings = {ATTRIBUTES = (Private, ); }; };
-		8142144B255717D400B8A7A7 /* _TBTriangularMatrix.c in Sources */ = {isa = PBXBuildFile; fileRef = 81421449255717D400B8A7A7 /* _TBTriangularMatrix.c */; };
-		814214502557180A00B8A7A7 /* _TBDiffing.h in Headers */ = {isa = PBXBuildFile; fileRef = 8142144E2557180A00B8A7A7 /* _TBDiffing.h */; settings = {ATTRIBUTES = (Private, ); }; };
-		814214512557180A00B8A7A7 /* _TBDiffing.m in Sources */ = {isa = PBXBuildFile; fileRef = 8142144F2557180A00B8A7A7 /* _TBDiffing.m */; };
 		814B128924BAD64E0063A09D /* TBTabBarControllerFramework.h in Headers */ = {isa = PBXBuildFile; fileRef = 814B128724BAD64E0063A09D /* TBTabBarControllerFramework.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		814C6EB7257FD65700D7C6DC /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 814C6EB6257FD65700D7C6DC /* AppDelegate.m */; };
 		814C6EBA257FD65700D7C6DC /* SceneDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 814C6EB9257FD65700D7C6DC /* SceneDelegate.m */; };
@@ -45,8 +44,6 @@
 		814C6F1E2580D16500D7C6DC /* EntryPoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 814C6F1D2580D16500D7C6DC /* EntryPoint.swift */; };
 		815C582E256A4DA200001E21 /* TBSimpleBar.h in Headers */ = {isa = PBXBuildFile; fileRef = 815C582C256A4DA200001E21 /* TBSimpleBar.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		815C582F256A4DA200001E21 /* TBSimpleBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 815C582D256A4DA200001E21 /* TBSimpleBar.m */; };
-		815C5836256A530200001E21 /* _TBImageCache.h in Headers */ = {isa = PBXBuildFile; fileRef = 815C5834256A530200001E21 /* _TBImageCache.h */; settings = {ATTRIBUTES = (Private, ); }; };
-		815C5837256A530200001E21 /* _TBImageCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 815C5835256A530200001E21 /* _TBImageCache.m */; };
 		81B2147024BAD90800DF7E2C /* TBTabBarController.h in Headers */ = {isa = PBXBuildFile; fileRef = 81B2146E24BAD90800DF7E2C /* TBTabBarController.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		81B2147124BAD90800DF7E2C /* TBTabBarController.m in Sources */ = {isa = PBXBuildFile; fileRef = 81B2146F24BAD90800DF7E2C /* TBTabBarController.m */; };
 		81B2147624BAD96C00DF7E2C /* TBTabBar.h in Headers */ = {isa = PBXBuildFile; fileRef = 81B2147424BAD96C00DF7E2C /* TBTabBar.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -62,10 +59,10 @@
 		81B2148924BADA5800DF7E2C /* _TBTabBarLongPressContext.m in Sources */ = {isa = PBXBuildFile; fileRef = 81B2148724BADA5800DF7E2C /* _TBTabBarLongPressContext.m */; };
 		81B2148C24BADBDC00DF7E2C /* _TBUtils.h in Headers */ = {isa = PBXBuildFile; fileRef = 81B2148A24BADBDC00DF7E2C /* _TBUtils.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		81B2148D24BADBDC00DF7E2C /* _TBUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 81B2148B24BADBDC00DF7E2C /* _TBUtils.m */; };
-		81B2149024BADC2000DF7E2C /* UIViewController+_TBTabBarController.h in Headers */ = {isa = PBXBuildFile; fileRef = 81B2148E24BADC2000DF7E2C /* UIViewController+_TBTabBarController.h */; settings = {ATTRIBUTES = (Private, ); }; };
-		81B2149124BADC2000DF7E2C /* UIViewController+_TBTabBarController.m in Sources */ = {isa = PBXBuildFile; fileRef = 81B2148F24BADC2000DF7E2C /* UIViewController+_TBTabBarController.m */; };
-		81B2149424BAEBFA00DF7E2C /* UINavigationController+_TBTabBarController.h in Headers */ = {isa = PBXBuildFile; fileRef = 81B2149224BAEBFA00DF7E2C /* UINavigationController+_TBTabBarController.h */; settings = {ATTRIBUTES = (Private, ); }; };
-		81B2149524BAEBFA00DF7E2C /* UINavigationController+_TBTabBarController.m in Sources */ = {isa = PBXBuildFile; fileRef = 81B2149324BAEBFA00DF7E2C /* UINavigationController+_TBTabBarController.m */; };
+		81B2149024BADC2000DF7E2C /* UIViewController+Extensions.h in Headers */ = {isa = PBXBuildFile; fileRef = 81B2148E24BADC2000DF7E2C /* UIViewController+Extensions.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		81B2149124BADC2000DF7E2C /* UIViewController+Extensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 81B2148F24BADC2000DF7E2C /* UIViewController+Extensions.m */; };
+		81B2149424BAEBFA00DF7E2C /* UINavigationController+Extensions.h in Headers */ = {isa = PBXBuildFile; fileRef = 81B2149224BAEBFA00DF7E2C /* UINavigationController+Extensions.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		81B2149524BAEBFA00DF7E2C /* UINavigationController+Extensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 81B2149324BAEBFA00DF7E2C /* UINavigationController+Extensions.m */; };
 		81BC8E252574E15E00222814 /* TBTabBarController+Private.h in Headers */ = {isa = PBXBuildFile; fileRef = 81B2147224BAD94700DF7E2C /* TBTabBarController+Private.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		81BC8E322575208800222814 /* _TBTabBarControllerTransitionContext.h in Headers */ = {isa = PBXBuildFile; fileRef = 81BC8E302575208800222814 /* _TBTabBarControllerTransitionContext.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		81BC8E332575208800222814 /* _TBTabBarControllerTransitionContext.m in Sources */ = {isa = PBXBuildFile; fileRef = 81BC8E312575208800222814 /* _TBTabBarControllerTransitionContext.m */; };
@@ -114,18 +111,17 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		812AEA532551ABC4003AB231 /* UIView+_TBTabBarController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIView+_TBTabBarController.h"; sourceTree = "<group>"; };
-		812AEA542551ABC4003AB231 /* UIView+_TBTabBarController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIView+_TBTabBarController.m"; sourceTree = "<group>"; };
+		8102CDCC2982FFFB0073CBAB /* ToggleItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToggleItem.swift; sourceTree = "<group>"; };
+		8102CDCE2983932F0073CBAB /* UIApplication+Extensions.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIApplication+Extensions.h"; sourceTree = "<group>"; };
+		8102CDCF2983932F0073CBAB /* UIApplication+Extensions.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIApplication+Extensions.m"; sourceTree = "<group>"; };
+		812AEA532551ABC4003AB231 /* UIView+Extensions.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIView+Extensions.h"; sourceTree = "<group>"; };
+		812AEA542551ABC4003AB231 /* UIView+Extensions.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIView+Extensions.m"; sourceTree = "<group>"; };
 		812AEA6F2552929B003AB231 /* TBTabBarItemsDifference.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TBTabBarItemsDifference.h; sourceTree = "<group>"; };
 		812AEA702552929B003AB231 /* TBTabBarItemsDifference.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TBTabBarItemsDifference.m; sourceTree = "<group>"; };
 		812AEA75255292DF003AB231 /* TBTabBarItemChange.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TBTabBarItemChange.h; sourceTree = "<group>"; };
 		812AEA76255292DF003AB231 /* TBTabBarItemChange.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TBTabBarItemChange.m; sourceTree = "<group>"; };
 		813570BA2558E9E100CC91B8 /* _TBStackView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = _TBStackView.h; sourceTree = "<group>"; };
 		813570BB2558E9E100CC91B8 /* _TBStackView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = _TBStackView.m; sourceTree = "<group>"; };
-		81421448255717D400B8A7A7 /* _TBTriangularMatrix.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = _TBTriangularMatrix.h; sourceTree = "<group>"; };
-		81421449255717D400B8A7A7 /* _TBTriangularMatrix.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = _TBTriangularMatrix.c; sourceTree = "<group>"; };
-		8142144E2557180A00B8A7A7 /* _TBDiffing.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = _TBDiffing.h; sourceTree = "<group>"; };
-		8142144F2557180A00B8A7A7 /* _TBDiffing.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = _TBDiffing.m; sourceTree = "<group>"; };
 		814B128424BAD64E0063A09D /* TBTabBarController.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = TBTabBarController.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		814B128724BAD64E0063A09D /* TBTabBarControllerFramework.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TBTabBarControllerFramework.h; sourceTree = "<group>"; };
 		814B128824BAD64E0063A09D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -161,8 +157,6 @@
 		814C6F1D2580D16500D7C6DC /* EntryPoint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EntryPoint.swift; sourceTree = "<group>"; };
 		815C582C256A4DA200001E21 /* TBSimpleBar.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TBSimpleBar.h; sourceTree = "<group>"; };
 		815C582D256A4DA200001E21 /* TBSimpleBar.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TBSimpleBar.m; sourceTree = "<group>"; };
-		815C5834256A530200001E21 /* _TBImageCache.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = _TBImageCache.h; sourceTree = "<group>"; };
-		815C5835256A530200001E21 /* _TBImageCache.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = _TBImageCache.m; sourceTree = "<group>"; };
 		81B2146E24BAD90800DF7E2C /* TBTabBarController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TBTabBarController.h; sourceTree = "<group>"; };
 		81B2146F24BAD90800DF7E2C /* TBTabBarController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TBTabBarController.m; sourceTree = "<group>"; };
 		81B2147224BAD94700DF7E2C /* TBTabBarController+Private.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "TBTabBarController+Private.h"; sourceTree = "<group>"; };
@@ -179,10 +173,10 @@
 		81B2148724BADA5800DF7E2C /* _TBTabBarLongPressContext.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = _TBTabBarLongPressContext.m; sourceTree = "<group>"; };
 		81B2148A24BADBDC00DF7E2C /* _TBUtils.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = _TBUtils.h; sourceTree = "<group>"; };
 		81B2148B24BADBDC00DF7E2C /* _TBUtils.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = _TBUtils.m; sourceTree = "<group>"; };
-		81B2148E24BADC2000DF7E2C /* UIViewController+_TBTabBarController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIViewController+_TBTabBarController.h"; sourceTree = "<group>"; };
-		81B2148F24BADC2000DF7E2C /* UIViewController+_TBTabBarController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIViewController+_TBTabBarController.m"; sourceTree = "<group>"; };
-		81B2149224BAEBFA00DF7E2C /* UINavigationController+_TBTabBarController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UINavigationController+_TBTabBarController.h"; sourceTree = "<group>"; };
-		81B2149324BAEBFA00DF7E2C /* UINavigationController+_TBTabBarController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UINavigationController+_TBTabBarController.m"; sourceTree = "<group>"; };
+		81B2148E24BADC2000DF7E2C /* UIViewController+Extensions.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIViewController+Extensions.h"; sourceTree = "<group>"; };
+		81B2148F24BADC2000DF7E2C /* UIViewController+Extensions.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIViewController+Extensions.m"; sourceTree = "<group>"; };
+		81B2149224BAEBFA00DF7E2C /* UINavigationController+Extensions.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UINavigationController+Extensions.h"; sourceTree = "<group>"; };
+		81B2149324BAEBFA00DF7E2C /* UINavigationController+Extensions.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UINavigationController+Extensions.m"; sourceTree = "<group>"; };
 		81BC8E302575208800222814 /* _TBTabBarControllerTransitionContext.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = _TBTabBarControllerTransitionContext.h; sourceTree = "<group>"; };
 		81BC8E312575208800222814 /* _TBTabBarControllerTransitionContext.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = _TBTabBarControllerTransitionContext.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -214,6 +208,21 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		8102CDCB2982F4EC0073CBAB /* UIKit */ = {
+			isa = PBXGroup;
+			children = (
+				81B2149224BAEBFA00DF7E2C /* UINavigationController+Extensions.h */,
+				81B2149324BAEBFA00DF7E2C /* UINavigationController+Extensions.m */,
+				812AEA532551ABC4003AB231 /* UIView+Extensions.h */,
+				812AEA542551ABC4003AB231 /* UIView+Extensions.m */,
+				81B2148E24BADC2000DF7E2C /* UIViewController+Extensions.h */,
+				81B2148F24BADC2000DF7E2C /* UIViewController+Extensions.m */,
+				8102CDCE2983932F0073CBAB /* UIApplication+Extensions.h */,
+				8102CDCF2983932F0073CBAB /* UIApplication+Extensions.m */,
+			);
+			path = UIKit;
+			sourceTree = "<group>";
+		};
 		814B127A24BAD64E0063A09D = {
 			isa = PBXGroup;
 			children = (
@@ -290,26 +299,26 @@
 		81B5B10A256ED57D00A9194E /* Source */ = {
 			isa = PBXGroup;
 			children = (
-				81B2146E24BAD90800DF7E2C /* TBTabBarController.h */,
-				81B2146F24BAD90800DF7E2C /* TBTabBarController.m */,
-				81B2147224BAD94700DF7E2C /* TBTabBarController+Private.h */,
-				81B2147424BAD96C00DF7E2C /* TBTabBar.h */,
-				81B2147524BAD96C00DF7E2C /* TBTabBar.m */,
-				81B2148024BAD9F500DF7E2C /* TBTabBar+Private.h */,
-				81B2147824BAD99400DF7E2C /* TBTabBarItem.h */,
-				81B2147924BAD99400DF7E2C /* TBTabBarItem.m */,
-				81B2147C24BAD9C100DF7E2C /* TBTabBarButton.h */,
-				81B2147D24BAD9C100DF7E2C /* TBTabBarButton.m */,
+				81B5B111256ED59000A9194E /* Categories */,
+				81B5B114256ED5A600A9194E /* Private */,
 				81B2148224BADA1500DF7E2C /* TBDummyBar.h */,
 				81B2148324BADA1500DF7E2C /* TBDummyBar.m */,
 				815C582C256A4DA200001E21 /* TBSimpleBar.h */,
 				815C582D256A4DA200001E21 /* TBSimpleBar.m */,
-				812AEA6F2552929B003AB231 /* TBTabBarItemsDifference.h */,
-				812AEA702552929B003AB231 /* TBTabBarItemsDifference.m */,
+				81B2147424BAD96C00DF7E2C /* TBTabBar.h */,
+				81B2147524BAD96C00DF7E2C /* TBTabBar.m */,
+				81B2148024BAD9F500DF7E2C /* TBTabBar+Private.h */,
+				81B2147C24BAD9C100DF7E2C /* TBTabBarButton.h */,
+				81B2147D24BAD9C100DF7E2C /* TBTabBarButton.m */,
+				81B2146E24BAD90800DF7E2C /* TBTabBarController.h */,
+				81B2146F24BAD90800DF7E2C /* TBTabBarController.m */,
+				81B2147224BAD94700DF7E2C /* TBTabBarController+Private.h */,
+				81B2147824BAD99400DF7E2C /* TBTabBarItem.h */,
+				81B2147924BAD99400DF7E2C /* TBTabBarItem.m */,
 				812AEA75255292DF003AB231 /* TBTabBarItemChange.h */,
 				812AEA76255292DF003AB231 /* TBTabBarItemChange.m */,
-				81B5B114256ED5A600A9194E /* Private */,
-				81B5B111256ED59000A9194E /* Categories */,
+				812AEA6F2552929B003AB231 /* TBTabBarItemsDifference.h */,
+				812AEA702552929B003AB231 /* TBTabBarItemsDifference.m */,
 			);
 			path = Source;
 			sourceTree = "<group>";
@@ -317,12 +326,7 @@
 		81B5B111256ED59000A9194E /* Categories */ = {
 			isa = PBXGroup;
 			children = (
-				81B2148E24BADC2000DF7E2C /* UIViewController+_TBTabBarController.h */,
-				81B2148F24BADC2000DF7E2C /* UIViewController+_TBTabBarController.m */,
-				812AEA532551ABC4003AB231 /* UIView+_TBTabBarController.h */,
-				812AEA542551ABC4003AB231 /* UIView+_TBTabBarController.m */,
-				81B2149224BAEBFA00DF7E2C /* UINavigationController+_TBTabBarController.h */,
-				81B2149324BAEBFA00DF7E2C /* UINavigationController+_TBTabBarController.m */,
+				8102CDCB2982F4EC0073CBAB /* UIKit */,
 			);
 			path = Categories;
 			sourceTree = "<group>";
@@ -332,18 +336,12 @@
 			children = (
 				813570BA2558E9E100CC91B8 /* _TBStackView.h */,
 				813570BB2558E9E100CC91B8 /* _TBStackView.m */,
-				8142144E2557180A00B8A7A7 /* _TBDiffing.h */,
-				8142144F2557180A00B8A7A7 /* _TBDiffing.m */,
-				81421448255717D400B8A7A7 /* _TBTriangularMatrix.h */,
-				81421449255717D400B8A7A7 /* _TBTriangularMatrix.c */,
-				81B2148A24BADBDC00DF7E2C /* _TBUtils.h */,
-				81B2148B24BADBDC00DF7E2C /* _TBUtils.m */,
-				815C5834256A530200001E21 /* _TBImageCache.h */,
-				815C5835256A530200001E21 /* _TBImageCache.m */,
-				81B2148624BADA5800DF7E2C /* _TBTabBarLongPressContext.h */,
-				81B2148724BADA5800DF7E2C /* _TBTabBarLongPressContext.m */,
 				81BC8E302575208800222814 /* _TBTabBarControllerTransitionContext.h */,
 				81BC8E312575208800222814 /* _TBTabBarControllerTransitionContext.m */,
+				81B2148624BADA5800DF7E2C /* _TBTabBarLongPressContext.h */,
+				81B2148724BADA5800DF7E2C /* _TBTabBarLongPressContext.m */,
+				81B2148A24BADBDC00DF7E2C /* _TBUtils.h */,
+				81B2148B24BADBDC00DF7E2C /* _TBUtils.m */,
 			);
 			path = Private;
 			sourceTree = "<group>";
@@ -376,13 +374,11 @@
 				81BC8E322575208800222814 /* _TBTabBarControllerTransitionContext.h in Headers */,
 				81B2148824BADA5800DF7E2C /* _TBTabBarLongPressContext.h in Headers */,
 				81B2148C24BADBDC00DF7E2C /* _TBUtils.h in Headers */,
-				814214502557180A00B8A7A7 /* _TBDiffing.h in Headers */,
-				8142144A255717D400B8A7A7 /* _TBTriangularMatrix.h in Headers */,
+				8102CDD02983932F0073CBAB /* UIApplication+Extensions.h in Headers */,
 				813570BC2558E9E100CC91B8 /* _TBStackView.h in Headers */,
-				81B2149424BAEBFA00DF7E2C /* UINavigationController+_TBTabBarController.h in Headers */,
-				81B2149024BADC2000DF7E2C /* UIViewController+_TBTabBarController.h in Headers */,
-				812AEA552551ABC4003AB231 /* UIView+_TBTabBarController.h in Headers */,
-				815C5836256A530200001E21 /* _TBImageCache.h in Headers */,
+				81B2149424BAEBFA00DF7E2C /* UINavigationController+Extensions.h in Headers */,
+				81B2149024BADC2000DF7E2C /* UIViewController+Extensions.h in Headers */,
+				812AEA552551ABC4003AB231 /* UIView+Extensions.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -452,7 +448,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 1230;
-				LastUpgradeCheck = 1230;
+				LastUpgradeCheck = 1420;
 				ORGANIZATIONNAME = "Timur Ganiev";
 				TargetAttributes = {
 					814B128324BAD64E0063A09D = {
@@ -519,6 +515,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8102CDD12983932F0073CBAB /* UIApplication+Extensions.m in Sources */,
 				81B2148D24BADBDC00DF7E2C /* _TBUtils.m in Sources */,
 				81B2147124BAD90800DF7E2C /* TBTabBarController.m in Sources */,
 				81B2148524BADA1500DF7E2C /* TBDummyBar.m in Sources */,
@@ -526,17 +523,14 @@
 				81BC8E332575208800222814 /* _TBTabBarControllerTransitionContext.m in Sources */,
 				81B2147F24BAD9C100DF7E2C /* TBTabBarButton.m in Sources */,
 				813570BD2558E9E100CC91B8 /* _TBStackView.m in Sources */,
-				812AEA562551ABC4003AB231 /* UIView+_TBTabBarController.m in Sources */,
-				81B2149124BADC2000DF7E2C /* UIViewController+_TBTabBarController.m in Sources */,
+				812AEA562551ABC4003AB231 /* UIView+Extensions.m in Sources */,
+				81B2149124BADC2000DF7E2C /* UIViewController+Extensions.m in Sources */,
 				81B2148924BADA5800DF7E2C /* _TBTabBarLongPressContext.m in Sources */,
-				814214512557180A00B8A7A7 /* _TBDiffing.m in Sources */,
-				81B2149524BAEBFA00DF7E2C /* UINavigationController+_TBTabBarController.m in Sources */,
+				81B2149524BAEBFA00DF7E2C /* UINavigationController+Extensions.m in Sources */,
 				815C582F256A4DA200001E21 /* TBSimpleBar.m in Sources */,
 				81B2147724BAD96C00DF7E2C /* TBTabBar.m in Sources */,
-				815C5837256A530200001E21 /* _TBImageCache.m in Sources */,
 				812AEA78255292DF003AB231 /* TBTabBarItemChange.m in Sources */,
 				81B2147B24BAD99400DF7E2C /* TBTabBarItem.m in Sources */,
-				8142144B255717D400B8A7A7 /* _TBTriangularMatrix.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -716,6 +710,7 @@
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
 				VALIDATE_PRODUCT = YES;
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";

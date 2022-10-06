@@ -2,7 +2,7 @@
 //  _TBStackView.m
 //  TBTabBarController
 //
-//  Copyright (c) 2019-2020 Timur Ganiev
+//  Copyright (c) 2019-2023 Timur Ganiev
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -23,10 +23,9 @@
 //  SOFTWARE.
 
 #import "_TBStackView.h"
-
 #import "TBTabBarButton.h"
 #import "_TBUtils.h"
-#import "UIView+_TBTabBarController.h"
+#import "UIView+Extensions.h"
 
 typedef NS_ENUM(NSUInteger, _TBStackViewPixelDistributionRule) {
     _TBStackViewPixelDistributionRuleStraight,
@@ -43,8 +42,6 @@ typedef struct _TBStackViewPixelDistribution {
     
     BOOL _needsLayout;
 }
-
-#pragma mark - Public
 
 #pragma mark Lifecycle
 
@@ -84,11 +81,6 @@ typedef struct _TBStackViewPixelDistribution {
     return self;
 }
 
-+ (instancetype)new {
-    
-    return [[_TBStackView alloc] initWithFrame:CGRectZero];
-}
-
 #pragma mark Overrides
 
 - (void)setNeedsLayout {
@@ -109,45 +101,47 @@ typedef struct _TBStackViewPixelDistribution {
     _needsLayout = false;
     
     NSArray<TBTabBarButton *> *subviews = self.subviews;
-    
     NSUInteger const tabsCount = subviews.count;
     
     if (tabsCount == 0) {
         return;
     }
-    
-    CGRect const bounds = self.bounds;
-    
-    CGFloat const width = CGRectGetWidth(bounds);
-    CGFloat const height = CGRectGetHeight(bounds);
+
+    CGFloat const width = CGRectGetWidth(self.bounds);
+    CGFloat const height = CGRectGetHeight(self.bounds);
     CGFloat const displayScale = self.tb_displayScale;
     CGFloat const pixelSize = (1.0 / displayScale);
-    
-    CGRect frames[tabsCount];
-
     CGFloat const spacing = self.spacing;
-    
     CGFloat const totalSpacing = (spacing * (tabsCount - 1));
-    
     BOOL const isVertical = self.isVertical;
+
+    CGRect frames[tabsCount];
     
     if (isVertical) {
         CGFloat const maxTabHeight = (height - totalSpacing) / (CGFloat)tabsCount;
         for (NSInteger index = 0; index < tabsCount; index += 1) {
-            frames[index] = (CGRect){{0.0, ((_TBFloorValueWithScale(maxTabHeight, displayScale) + _TBFloorValueWithScale(spacing, displayScale)) * (CGFloat)index)}, {width, _TBFloorValueWithScale(maxTabHeight, displayScale)}};
+            frames[index] = (CGRect){
+                {0.0, ((_TBPixelAccurateValue(maxTabHeight, displayScale, true) + _TBPixelAccurateValue(spacing, displayScale, true)) * (CGFloat)index)},
+                {width, _TBPixelAccurateValue(maxTabHeight, displayScale, true)}
+            };
         }
     } else {
         CGFloat const maxTabWidth = (width - totalSpacing) / (CGFloat)tabsCount;
         for (NSInteger index = 0; index < tabsCount; index += 1) {
-            frames[index] = (CGRect){{((_TBFloorValueWithScale(maxTabWidth, displayScale) + _TBFloorValueWithScale(spacing, displayScale)) * (CGFloat)index), 0.0}, {_TBFloorValueWithScale(maxTabWidth, displayScale), height}};
+            frames[index] = (CGRect){
+                {((_TBPixelAccurateValue(maxTabWidth, displayScale, true) + _TBPixelAccurateValue(spacing, displayScale, true)) * (CGFloat)index), 0.0},
+                {_TBPixelAccurateValue(maxTabWidth, displayScale, true), height}
+            };
         }
     }
     
     NSUInteger undistributedPixelsCount = (NSUInteger)ceil(MAX(0.0, (isVertical ? height - CGRectGetMaxY(frames[tabsCount - 1]) : width -CGRectGetMaxX(frames[tabsCount - 1]))) / pixelSize);
     
     if (undistributedPixelsCount > 0) {
+
         NSUInteger const distributionRowsCount = (NSUInteger)ceil((CGFloat)undistributedPixelsCount / (CGFloat)tabsCount);
         _TBStackViewPixelDistribution distributionRows[distributionRowsCount];
+
         for (NSUInteger row = 0; row < distributionRowsCount; row += 1) {
             NSUInteger const undistributedPixelsCountInRow = MIN(undistributedPixelsCount, tabsCount);
             NSUInteger const amountOfEvenNumbers = _TBAmountOfEvenNumbersInRange(NSMakeRange(1, tabsCount));
@@ -162,15 +156,20 @@ typedef struct _TBStackViewPixelDistribution {
             }
             undistributedPixelsCount -= undistributedPixelsCountInRow;
         }
+
         CGPoint offset = CGPointZero;
         NSUInteger distributedPixelsCount[distributionRowsCount];
+
         for (NSUInteger row = 0; row < distributionRowsCount; row += 1) {
             distributedPixelsCount[row] = 0;
         }
+
         for (NSInteger index = 0; index < tabsCount; index += 1) {
+
             CGRect frame = frames[index];
             CGRect newFrame = CGRectZero;
             CGFloat axisOffset = 0.0;
+
             for (NSUInteger row = 0; row < distributionRowsCount; row += 1) {
                 _TBStackViewPixelDistribution const distributionRow = distributionRows[row];
                 if (distributionRow.pixelsCount > distributedPixelsCount[row]) {
@@ -179,23 +178,27 @@ typedef struct _TBStackViewPixelDistribution {
                             axisOffset += pixelSize;
                             distributedPixelsCount[row] += 1;
                             break;
+
                         case _TBStackViewPixelDistributionRuleEven:
                             if ((index + 1) % 2 == 0) {
                                 axisOffset += pixelSize;
                                 distributedPixelsCount[row] += 1;
                             }
                             break;
+
                         case _TBStackViewPixelDistributionRuleOdd:
                             if ((index + 1) % 2 != 0) {
                                 axisOffset += pixelSize;
                                 distributedPixelsCount[row] += 1;
                             }
                             break;
+
                         default:
                             break;
                     }
                 }
             }
+
             if (axisOffset > 0.0) {
                 CGSize newSize = frame.size;
                 CGPoint newOffset = offset;
@@ -209,6 +212,7 @@ typedef struct _TBStackViewPixelDistribution {
                 newFrame = (CGRect){{frame.origin.x + offset.x, frame.origin.y + offset.y}, newSize};
                 offset = newOffset;
             }
+
             if (offset.x > 0.0 || offset.y > 0.0) {
                 if (CGRectEqualToRect(newFrame, CGRectZero)) {
                     // Shift only next frames due size changes of previous ones since they're already corrected
@@ -256,12 +260,11 @@ typedef struct _TBStackViewPixelDistribution {
     [super insertSubview:view belowSubview:siblingSubview];
 }
 
-#pragma mark - Private
+#pragma mark Private Methods
 
 #pragma mark Setup
 
 - (void)_commonInit {
-    
     _spacing = 4.0;
     _needsLayout = false;
 }
@@ -296,6 +299,10 @@ typedef struct _TBStackViewPixelDistribution {
 }
 
 - (void)setSpacing:(CGFloat)spacing {
+
+    if (_spacing == spacing) {
+        return;
+    }
     
     _spacing = spacing;
     

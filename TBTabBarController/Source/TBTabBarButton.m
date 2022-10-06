@@ -2,7 +2,7 @@
 //  TBTabBarButton.m
 //  TBTabBarController
 //
-//  Copyright (c) 2019-2020 Timur Ganiev
+//  Copyright (c) 2019-2023 Timur Ganiev
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -23,10 +23,9 @@
 //  SOFTWARE.
 
 #import "TBTabBarButton.h"
-
 #import "TBTabBarItem.h"
 #import "_TBUtils.h"
-#import "UIView+_TBTabBarController.h"
+#import "UIView+Extensions.h"
 
 static const CGFloat _TBTabBarButtonNotificationIndicatorSize = 5.0;
 static const CGFloat _TBTabBarButtonNotificationIndicatorPresentationAnimationDuration = 0.25;
@@ -51,7 +50,7 @@ typedef NS_ENUM(NSUInteger, _TBTabBarButtonNotificationIndicatorViewAnimationSta
     BOOL _laysOutHorizontally;
     BOOL _needsLayout;
 
-    _TBTabBarButtonNotificationIndicatorViewAnimationState _notificationIndicatorViewAnimationState; // This ivar is used for logic that ensures that indicator view wasn't removed from the button when it's not necesarry
+    _TBTabBarButtonNotificationIndicatorViewAnimationState _notificationIndicatorViewAnimationState; // This ivar is used for logic that ensures that indicator view wasn't removed from the button when it's not necessary
     
     UIImage *_normalImage;
     UIImage *_highlightedImage;
@@ -62,8 +61,6 @@ typedef NS_ENUM(NSUInteger, _TBTabBarButtonNotificationIndicatorViewAnimationSta
 
 @synthesize imageView = _imageView;
 @synthesize notificationIndicatorView = _notificationIndicatorView;
-
-#pragma mark - Public
 
 #pragma mark Lifecycle
 
@@ -78,7 +75,7 @@ typedef NS_ENUM(NSUInteger, _TBTabBarButtonNotificationIndicatorViewAnimationSta
     return self;
 }
 
-#pragma mark Interface
+#pragma mark Public Methods
 
 - (void)setImage:(UIImage *)image forState:(UIControlState)state {
     
@@ -221,7 +218,7 @@ typedef NS_ENUM(NSUInteger, _TBTabBarButtonNotificationIndicatorViewAnimationSta
     }
 }
 
-#pragma mark - Private
+#pragma mark Private Methods
 
 #pragma mark Setup
 
@@ -435,9 +432,7 @@ typedef NS_ENUM(NSUInteger, _TBTabBarButtonNotificationIndicatorViewAnimationSta
 
 @implementation TBTabBarButton (Subclassing)
 
-#pragma mark - Public
-
-#pragma mark Interface
+#pragma mark Public Methods
 
 - (CGRect)imageViewFrameForBounds:(CGRect)bounds {
     
@@ -450,7 +445,10 @@ typedef NS_ENUM(NSUInteger, _TBTabBarButtonNotificationIndicatorViewAnimationSta
     [imageView sizeToFit];
     
     CGRect imageViewFrame = imageView.frame;
-    imageViewFrame = _TBFloorRectWithScale((CGRect){(CGPoint){(width - CGRectGetWidth(imageViewFrame)) / 2.0, (height - CGRectGetHeight(imageViewFrame)) / 2.0}, imageViewFrame.size}, displayScale);
+    imageViewFrame = _TBPixelAccurateRect((CGRect){
+        (CGPoint){(width - CGRectGetWidth(imageViewFrame)) / 2.0, (height - CGRectGetHeight(imageViewFrame)) / 2.0},
+        imageViewFrame.size
+    }, displayScale, true);
     
     return imageViewFrame;
 }
@@ -470,17 +468,25 @@ typedef NS_ENUM(NSUInteger, _TBTabBarButtonNotificationIndicatorViewAnimationSta
     CGFloat const multiplier = isNotificationIndicatorVisible ? 1.0 : 0.0;
     
     if (_laysOutHorizontally) {
-        indicatorOrigin = (CGPoint){(width - indicatorSize.width) - ((insets.left + insets.right) * multiplier), (height - indicatorSize.height + insets.top - insets.bottom) / 2.0};
+        indicatorOrigin = (CGPoint){
+            (width - indicatorSize.width) - ((insets.left + insets.right) * multiplier),
+            (height - indicatorSize.height + insets.top - insets.bottom) / 2.0
+        };
     } else {
-        indicatorOrigin = (CGPoint){(width - indicatorSize.width + insets.left - insets.right) / 2.0, (height - indicatorSize.height) - ((insets.top + insets.bottom) * multiplier)};
+        indicatorOrigin = (CGPoint){
+            (width - indicatorSize.width + insets.left - insets.right) / 2.0,
+            (height - indicatorSize.height) - ((insets.top + insets.bottom) * multiplier)
+        };
     }
     
-    return _TBFloorRectWithScale((CGRect){indicatorOrigin, (CGSize)indicatorSize}, displayScale);
+    return _TBPixelAccurateRect((CGRect){indicatorOrigin, indicatorSize}, displayScale, true);
 }
 
 - (NSTimeInterval)notificationIndicatorAnimationDuration:(BOOL)presenting {
     
-    return presenting ? _TBTabBarButtonNotificationIndicatorPresentationAnimationDuration : _TBTabBarButtonNotificationIndicatorDismissalAnimationDuration;
+    return presenting ?
+        _TBTabBarButtonNotificationIndicatorPresentationAnimationDuration :
+        _TBTabBarButtonNotificationIndicatorDismissalAnimationDuration;
 }
 
 @end

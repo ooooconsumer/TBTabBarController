@@ -2,7 +2,7 @@
 //  _TBTabBarControllerTransitionContext.h
 //  TBTabBarController
 //
-//  Copyright (c) 2019-2020 Timur Ganiev
+//  Copyright (c) 2019-2023 Timur Ganiev
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -30,15 +30,14 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface _TBTabBarControllerTransitionContext : NSObject
 
-@property (assign, nonatomic, readonly) BOOL backwards;
-@property (assign, nonatomic, readonly) BOOL isShowing;
-@property (assign, nonatomic, readonly) BOOL isHiding;
-
 @property (assign, nonatomic, readonly) TBTabBarControllerTabBarPosition initialPosition;
-
 @property (assign, nonatomic, readonly) TBTabBarControllerTabBarPosition targetPosition;
 
 @property (weak, nonatomic, readonly, nullable) TBTabBar *manipulatedTabBar;
+
+@property (assign, nonatomic, readonly) BOOL backwards;
+@property (assign, nonatomic, readonly) BOOL isShowing;
+@property (assign, nonatomic, readonly) BOOL isHiding;
 
 - (instancetype)init NS_UNAVAILABLE;
 

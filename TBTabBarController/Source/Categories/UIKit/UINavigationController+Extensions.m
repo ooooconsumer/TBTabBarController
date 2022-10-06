@@ -1,8 +1,8 @@
 //
-//  UINavigationController+_TBTabBarController.m
+//  UINavigationController+Extensions.m
 //  TBTabBarController
 //
-//  Copyright (c) 2019-2020 Timur Ganiev
+//  Copyright (c) 2019-2023 Timur Ganiev
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -23,8 +23,7 @@
 //  SOFTWARE.
 
 
-#import "UINavigationController+_TBTabBarController.h"
-
+#import "UINavigationController+Extensions.h"
 #import "TBTabBarController.h"
 #import "TBTabBarController+Private.h"
 #import "_TBUtils.h"
@@ -40,13 +39,11 @@
 
 @end
 
-@implementation UINavigationController (_TBTabBarController)
+@implementation UINavigationController (Extensions)
 
 static char *tb_nestedInTBTabBarControllerKey;
 static char *tb_interactivePopGestureRecognizerRegisteredKey;
 static char *tb_privateDelegateKey;
-
-#pragma mark - Public
 
 #pragma mark Lifecycle
 
@@ -79,7 +76,8 @@ static char *tb_privateDelegateKey;
     return previousViewController;
 }
 
-- (NSArray<__kindof UIViewController *> *)tb_popToViewController:(UIViewController *)viewController animated:(BOOL)animated {
+- (NSArray<__kindof UIViewController *> *)tb_popToViewController:(UIViewController *)viewController
+                                                        animated:(BOOL)animated {
     
     UIViewController *previousViewController = self.topViewController;
     
@@ -191,7 +189,7 @@ static char *tb_privateDelegateKey;
     }
 }
 
-#pragma mark - Private
+#pragma mark Private Methods
 
 #pragma mark Gestures
 
@@ -221,7 +219,9 @@ static char *tb_privateDelegateKey;
 
 #pragma mark Helpers
 
-- (void)tb_popViewController:(UIViewController *)previousViewController destinationViewController:(UIViewController *)destinationViewController animated:(BOOL)animated {
+- (void)tb_popViewController:(UIViewController *)previousViewController
+   destinationViewController:(UIViewController *)destinationViewController
+                    animated:(BOOL)animated {
     
     id<UIViewControllerTransitionCoordinator> const transitionCoordinator = self.transitionCoordinator;
     
@@ -321,17 +321,26 @@ static char *tb_privateDelegateKey;
 
 - (void)tb_setNestedInTBTabBarController:(BOOL)tb_nestedInTBTabBarController {
     
-    objc_setAssociatedObject(self, &tb_nestedInTBTabBarControllerKey, @(tb_nestedInTBTabBarController), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    objc_setAssociatedObject(self,
+                             &tb_nestedInTBTabBarControllerKey,
+                             @(tb_nestedInTBTabBarController),
+                             OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
 - (void)tb_setInteractivePopGestureRecognizerRegistered:(BOOL)tb_interactivePopGestureRecognizerRegistered {
     
-    objc_setAssociatedObject(self, &tb_interactivePopGestureRecognizerRegisteredKey, @(tb_interactivePopGestureRecognizerRegistered), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    objc_setAssociatedObject(self,
+                             &tb_interactivePopGestureRecognizerRegisteredKey,
+                             @(tb_interactivePopGestureRecognizerRegistered),
+                             OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
 - (void)tb_setPrivateDelegate:(id<TBNavigationControllerExtensionDelegate>)tb_privateDelegate {
     
-    objc_setAssociatedObject(self, &tb_privateDelegateKey, tb_privateDelegate, OBJC_ASSOCIATION_ASSIGN);
+    objc_setAssociatedObject(self,
+                             &tb_privateDelegateKey,
+                             tb_privateDelegate,
+                             OBJC_ASSOCIATION_ASSIGN);
 }
 
 @end

@@ -1,8 +1,8 @@
 //
-//  UIView+_TBTabBarController.h
+//  UIView+Extensions.h
 //  TBTabBarController
 //
-//  Copyright (c) 2019-2020 Timur Ganiev
+//  Copyright (c) 2019-2023 Timur Ganiev
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -26,7 +26,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface UIView (_TBTabBarController)
+@interface UIView (Extensions)
 
 /**
  * @abstract A display scale.
@@ -43,7 +43,12 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  * @abstract Retrieves a subview at the given location, if any.
  */
-- (nullable __kindof UIView *)tb_subviewAtLocation:(CGPoint)location withCondition:(nullable BOOL (^)(__kindof UIView *subview))condition subviewIndex:(NSUInteger *)subviewIndex skipIndexes:(BOOL)skipIndexes touchSize:(CGFloat)touchSize verticalLayout:(BOOL)verticalLayout;
+- (nullable __kindof UIView *)tb_subviewAtLocation:(CGPoint)location
+                                     withCondition:(nullable BOOL (^)(__kindof UIView *subview))condition
+                                      subviewIndex:(NSUInteger *)subviewIndex
+                                       skipIndexes:(BOOL)skipIndexes
+                                         touchSize:(CGFloat)touchSize
+                                    verticalLayout:(BOOL)verticalLayout;
 
 @end
 

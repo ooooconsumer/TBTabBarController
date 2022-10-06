@@ -2,7 +2,7 @@
 //  TBTabBarItemsDifference.m
 //  TBTabBarController
 //
-//  Copyright (c) 2019-2020 Timur Ganiev
+//  Copyright (c) 2019-2023 Timur Ganiev
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -23,17 +23,11 @@
 //  SOFTWARE.
 
 #import "TBTabBarItemsDifference.h"
-
 #import "TBTabBarItemChange.h"
 #import "_TBUtils.h"
-
-#if !TB_AT_LEAST_IOS13
-#import "_TBDiffing.h"
-#endif
+#import "NSArray+Extensions.h"
 
 @implementation TBTabBarItemsDifference
-
-#pragma mark - Public
 
 #pragma mark Lifecycle
 
@@ -68,16 +62,15 @@
     } else if (other.count == 0) {
         return [[TBTabBarItemsDifference alloc] initWithChanges:[self _changesFrom:array insertion:true]];
     }
-    
-#if TB_AT_LEAST_IOS13
+
     if (@available(iOS 13.0, *)) {
         return [[TBTabBarItemsDifference alloc] initWithCollectionDifference:[array differenceFromArray:other]];
     } else {
-        return nil;
+        NSArray<TBTabBarItemChange *> *removals = [[self _changesFrom:other insertion:false] reversed];
+        NSArray<TBTabBarItemChange *> *insertions = [self _changesFrom:array insertion:true];
+        NSArray<TBTabBarItemChange *> *changes = [removals arrayByAddingObjectsFromArray:insertions];
+        return [[TBTabBarItemsDifference alloc] initWithChanges:changes];
     }
-#else
-    return [[TBTabBarItemsDifference alloc] initWithChanges:_TBDiffingCalculateChanges(other, array)];
-#endif
 }
 
 #pragma mark Overrides
@@ -104,9 +97,7 @@
     return [_changes countByEnumeratingWithState:state objects:buffer count:len];
 }
 
-#pragma mark - Private
-
-#pragma mark Helpers
+#pragma mark Private Methods
 
 + (NSArray<TBTabBarItemChange *> *)_changesFrom:(NSArray<TBTabBarItem *> *)items insertion:(BOOL)insertion {
     

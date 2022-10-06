@@ -2,7 +2,7 @@
 //  TBTabBarItem.m
 //  TBTabBarController
 //
-//  Copyright (c) 2019-2020 Timur Ganiev
+//  Copyright (c) 2019-2023 Timur Ganiev
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -26,7 +26,7 @@
 
 #import "TBTabBarButton.h"
 #import "_TBUtils.h"
-#import "_TBImageCache.h"
+#import "UIApplication+Extensions.h"
 
 static NSString *const _TBTabBarItemNotificationIndicatorImageName = @"circle";
 
@@ -104,20 +104,12 @@ static NSString *const _TBTabBarItemNotificationIndicatorImageName = @"circle";
     return copy;
 }
 
-#pragma mark - Private
+#pragma mark Private Methods
 
 #pragma mark Helpers
 
-- (UIImage *)_cachedNotificationIndicator {
-    
-    UIImage *separatorImage = [[_TBImageCache cache] cachedImageWithName:@"notificationIndicator"];
-    
-    if (separatorImage == nil) {
-        separatorImage = _TBDrawFilledCircleWithSize((CGSize){5.0, 5.0}, [UIScreen mainScreen].nativeScale);
-        [[_TBImageCache cache] cacheImage:separatorImage withName:@"notificationIndicator"];
-    }
-    
-    return separatorImage;
+- (UIImage *)makeNotificationIndicatorImage {
+    return _TBDrawFilledCircleWithSize((CGSize){5.0, 5.0}, [UIScreen mainScreen].nativeScale);
 }
 
 #pragma mark Getters
@@ -125,7 +117,7 @@ static NSString *const _TBTabBarItemNotificationIndicatorImageName = @"circle";
 - (UIImage *)notificationIndicator {
     
     if (_notificationIndicator == nil) {
-        _notificationIndicator = [self _cachedNotificationIndicator];
+        _notificationIndicator = [self makeNotificationIndicatorImage];
     }
     
     return _notificationIndicator;
@@ -153,7 +145,7 @@ static NSString *const _TBTabBarItemNotificationIndicatorImageName = @"circle";
     if (notificationIndicator != nil) {
         _notificationIndicator = notificationIndicator;
     } else {
-        _notificationIndicator = [self _cachedNotificationIndicator];
+        _notificationIndicator = [self makeNotificationIndicatorImage];
     }
     
     [self didChangeValueForKey:key];
@@ -169,7 +161,11 @@ static NSString *const _TBTabBarItemNotificationIndicatorImageName = @"circle";
 
 - (BOOL)isEqualToItem:(TBTabBarItem *)item {
     
-    return self.title == item.title && self.image == item.image && self.selectedImage == item.selectedImage && self.enabled == item.enabled && self.showsNotificationIndicator == item.showsNotificationIndicator;
+    return self.title == item.title &&
+        self.image == item.image &&
+        self.selectedImage == item.selectedImage &&
+        self.enabled == item.enabled &&
+        self.showsNotificationIndicator == item.showsNotificationIndicator;
 }
 
 @end

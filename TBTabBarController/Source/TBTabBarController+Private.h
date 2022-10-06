@@ -2,7 +2,7 @@
 //  TBTabBarController+Private.h
 //  TBTabBarController
 //
-//  Copyright (c) 2019-2020 Timur Ganiev
+//  Copyright (c) 2019-2023 Timur Ganiev
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -23,20 +23,17 @@
 //  SOFTWARE.
 
 #import <UIKit/UIKit.h>
-
 #import <TBTabBarController/TBTabBarController.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
 @interface TBTabBarController (Private)
 
-- (void)_setNeedsLayoutView NS_REQUIRES_SUPER;
+- (void)_specifyPreferredTabBarPositionForHorizontalSizeClass:(UIUserInterfaceSizeClass)horizontalSizeClass size:(CGSize)size NS_SWIFT_NAME(specifyPreferredTabBarPosition(for:size:));
 
-- (void)_specifyPreferredTabBarPositionForHorizontalSizeClass:(UIUserInterfaceSizeClass)horizontalSizeClass size:(CGSize)size NS_SWIFT_NAME(_specifyPreferredTabBarPosition(for:size:));
+- (void)_changeItem:(TBTabBarItem *)item toItem:(TBTabBarItem *)newItem NS_SWIFT_NAME(changeItem(to:));
 
-- (void)_changeItem:(TBTabBarItem *)item toItem:(TBTabBarItem *)newItem;
-
-- (__kindof UIViewController *_Nullable)_visibleViewController;
+- (__kindof UIViewController *_Nullable)_visibleViewController NS_SWIFT_NAME(visibleViewController);
 
 @end
 

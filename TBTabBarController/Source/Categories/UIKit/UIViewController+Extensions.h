@@ -1,8 +1,8 @@
 //
-//  _TBImageCache.h
-//  TBTabBarController
+//  UIViewController+Extensions.h
+//  _TBTabBarController
 //
-//  Copyright (c) 2019-2020 Timur Ganiev
+//  Copyright (c) 2019-2023 Timur Ganiev
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -26,13 +26,14 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface _TBImageCache : NSObject
+@interface UIViewController (Extensions)
 
-@property (class, strong, nonatomic, readonly) _TBImageCache *cache;
+- (void)tb_addContainerViewController:(UIViewController *)containerViewController;
 
-- (nullable UIImage *)cachedImageWithName:(NSString *)imageName;
+- (void)tb_addContainerViewController:(UIViewController *)containerViewController
+                              atIndex:(NSUInteger)index;
 
-- (void)cacheImage:(UIImage *)image withName:(NSString *)imageName;
+- (void)tb_removeContainerViewController:(UIViewController *)containerViewController;
 
 @end
 

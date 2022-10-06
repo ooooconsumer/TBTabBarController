@@ -2,7 +2,7 @@
 //  TBTabBarItemsDifference.h
 //  TBTabBarController
 //
-//  Copyright (c) 2019-2020 Timur Ganiev
+//  Copyright (c) 2019-2023 Timur Ganiev
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -32,9 +32,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 /**
  * @abstract A difference between two given arrays calculated using the Myers algorithm.
- * @discussion This is a backward compatibility for NSOrderedCollectionDifeerence that supports older iOS versions (< 13.0).
+ * @discussion This is a backward compatibility for NSOrderedCollectionDifference that supports older iOS versions (< 13.0).
  * Under the hood it uses the same algorithm that uses Swift to calculate the difference except it is written in C language.
- * For iOS 13.0 and up it uses NSOrderedCollectionDifeerence to calculate the difference.
+ * For iOS 13.0 and up it uses NSOrderedCollectionDifference to calculate the difference.
  */
 @interface TBTabBarItemsDifference : NSObject <NSFastEnumeration> {
     

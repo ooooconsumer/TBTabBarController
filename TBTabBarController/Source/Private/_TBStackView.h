@@ -2,7 +2,7 @@
 //  _TBStackView.h
 //  TBTabBarController
 //
-//  Copyright (c) 2019-2020 Timur Ganiev
+//  Copyright (c) 2019-2023 Timur Ganiev
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -35,9 +35,9 @@ typedef NS_ENUM(NSInteger, TBStackedTabsViewAxis) {
 
 - (instancetype)initWithAxis:(TBStackedTabsViewAxis)axis;
 
-@property (assign, nonatomic, readonly, getter = isVertical) BOOL vertical NS_SWIFT_NAME(isVertical);
-
 @property (assign, nonatomic) CGFloat spacing;
+
+@property (assign, nonatomic, readonly, getter = isVertical) BOOL vertical NS_SWIFT_NAME(isVertical);
 
 @end
 

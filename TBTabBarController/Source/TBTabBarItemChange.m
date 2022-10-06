@@ -2,7 +2,7 @@
 //  TBTabBarItemChange.m
 //  TBTabBarController
 //
-//  Copyright (c) 2019-2020 Timur Ganiev
+//  Copyright (c) 2019-2023 Timur Ganiev
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -26,11 +26,11 @@
 
 @implementation TBTabBarItemChange
 
-#pragma mark - Public
-
 #pragma mark Lifecycle
 
-- (instancetype)initWithItem:(TBTabBarItem *)item type:(TBTabBarItemChangeType)type index:(NSUInteger)index {
+- (instancetype)initWithItem:(TBTabBarItem *)item
+                        type:(TBTabBarItemChangeType)type
+                       index:(NSUInteger)index {
     
     self = [super init];
     
@@ -45,7 +45,9 @@
 
 - (instancetype)initWithCollectionChange:(NSOrderedCollectionChange *)collectionChange {
     
-    self = [self initWithItem:collectionChange.object type:collectionChange.changeType == NSCollectionChangeInsert ? TBTabBarItemChangeInsert : TBTabBarItemChangeRemove index:collectionChange.index];
+    self = [self initWithItem:collectionChange.object
+                         type:collectionChange.changeType == NSCollectionChangeInsert ? TBTabBarItemChangeInsert : TBTabBarItemChangeRemove
+                        index:collectionChange.index];
     
     return self;
 }

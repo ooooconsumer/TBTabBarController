@@ -2,7 +2,7 @@
 //  TBTabBarController.m
 //  TBTabBarController
 //
-//  Copyright (c) 2019-2020 Timur Ganiev
+//  Copyright (c) 2019-2023 Timur Ganiev
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -31,8 +31,8 @@
 #import "TBTabBar+Private.h"
 #import "TBTabBarButton.h"
 #import "_TBUtils.h"
-#import "UIViewController+_TBTabBarController.h"
-#import "UIView+_TBTabBarController.h"
+#import "UIViewController+Extensions.h"
+#import "UIView+Extensions.h"
 #import "_TBTabBarControllerTransitionContext.h"
 
 #import <objc/runtime.h>
@@ -56,7 +56,6 @@ static void *tbtbbrcntrlr_tabBarItemEnabledContext = &tbtbbrcntrlr_tabBarItemEna
 
 @property (strong, nonatomic, readwrite) TBTabBar *verticalTabBar;
 @property (strong, nonatomic, readwrite) TBTabBar *horizontalTabBar;
-
 @property (weak, nonatomic, readwrite) TBTabBar *visibleTabBar;
 
 @end
@@ -64,17 +63,15 @@ static void *tbtbbrcntrlr_tabBarItemEnabledContext = &tbtbbrcntrlr_tabBarItemEna
 static _TBTabBarControllerMethodOverrides tbtbbrcntrlr_methodOverridesFlag;
 
 @implementation TBTabBarController {
-    
-    BOOL tbtbbrcntrlr_needsLayout;
-    BOOL tbtbbrcntrlr_needsUpdateTabBarPosition;
-    BOOL tbtbbrcntrlr_selectedViewControllerNeedsLayout;
-    BOOL tbtbbrcntrlr_isTransitioning;
+
+    __weak UINavigationController *tbtbbrcntrlr_nestedNavigationController;
+    _TBTabBarControllerTransitionContext *tbtbbrcntrlr_transitionContext;
     
     CGFloat tbtbbrcntrlr_dummyBarInternalHeight;
     
-    __weak UINavigationController *tbtbbrcntrlr_nestedNavigationController;
-    
-    _TBTabBarControllerTransitionContext *tbtbbrcntrlr_transitionContext;
+    BOOL tbtbbrcntrlr_needsUpdateTabBarPosition;
+    BOOL tbtbbrcntrlr_selectedViewControllerNeedsLayout;
+    BOOL tbtbbrcntrlr_isTransitioning;
 }
 
 @synthesize dummyBar = _dummyBar;
@@ -95,7 +92,8 @@ static _TBTabBarControllerMethodOverrides tbtbbrcntrlr_methodOverridesFlag;
         if (_TBSubclassOverridesMethod([TBTabBarController class], self, @selector(preferredTabBarPositionForViewSize:))) {
             tbtbbrcntrlr_methodOverridesFlag |= _TBTabBarControllerMethodOverridePreferredTabBarPositionForViewSize;
         }
-        NSAssert(tbtbbrcntrlr_methodOverridesFlag <= _TBTabBarControllerMethodOverridePreferredTabBarPositionForViewSize, @"Subclasses should never override both of the methods of the Subclassing category");
+        NSAssert(tbtbbrcntrlr_methodOverridesFlag <= _TBTabBarControllerMethodOverridePreferredTabBarPositionForViewSize,
+                 @"Subclasses should never override both of the methods of the Subclassing category");
     }
 }
 
@@ -124,7 +122,8 @@ static _TBTabBarControllerMethodOverrides tbtbbrcntrlr_methodOverridesFlag;
 
 - (void)willPresentTabBar {
     
-    [self _specifyPreferredTabBarPositionForHorizontalSizeClass:self.traitCollection.horizontalSizeClass size:self.view.bounds.size];
+    [self _specifyPreferredTabBarPositionForHorizontalSizeClass:self.traitCollection.horizontalSizeClass
+                                                           size:self.view.bounds.size];
     
     _currentPosition = _preferredPosition;
     _preferredPosition = TBTabBarControllerTabBarPositionUndefined;
@@ -148,11 +147,13 @@ static _TBTabBarControllerMethodOverrides tbtbbrcntrlr_methodOverridesFlag;
                             *hiddenTabBar = self.verticalTabBar;
                         }
                         break;
+
                     case TBTabBarControllerTabBarPositionBottom:
                         if (hiddenTabBar != nil) {
                             *hiddenTabBar = self.horizontalTabBar;
                         }
                         break;
+
                     default:
                         break;
                 }
@@ -166,6 +167,7 @@ static _TBTabBarControllerMethodOverrides tbtbbrcntrlr_methodOverridesFlag;
                 *hiddenTabBar = self.horizontalTabBar;
             }
             break;
+
         case TBTabBarControllerTabBarPositionBottom:
             if (visibleTabBar != nil) {
                 *visibleTabBar = self.horizontalTabBar;
@@ -242,15 +244,9 @@ static _TBTabBarControllerMethodOverrides tbtbbrcntrlr_methodOverridesFlag;
 - (void)viewDidLayoutSubviews {
     
     [super viewDidLayoutSubviews];
-    
-#if TB_AT_LEAST_IOS13
-    if (!_didPresentTabBarOnce) {
+
+    if (@available(iOS 13.0, *)) { } else if (!_didPresentTabBarOnce) {
         [self tbtbbrcntrlr_presentTabBar];
-    }
-#endif
-    
-    if (!tbtbbrcntrlr_needsLayout) {
-        return;
     }
     
     CGRect const bounds = self.view.bounds;
@@ -283,6 +279,7 @@ static _TBTabBarControllerMethodOverrides tbtbbrcntrlr_methodOverridesFlag;
                         vTabBar.frame = vTabBarFrame;
                         dummyBar.frame = [self tbtbbrcntrlr_dummyBarFrameForBounds:bounds hidden:false];
                         break;
+
                     default:
                         break;
                 }
@@ -294,16 +291,19 @@ static _TBTabBarControllerMethodOverrides tbtbbrcntrlr_methodOverridesFlag;
                         vTabBar.frame = [self tbtbbrcntrlr_verticalTabBarFrameForBounds:bounds hidden:true];
                         dummyBar.frame = [self tbtbbrcntrlr_dummyBarFrameForBounds:bounds hidden:true];
                         break;
+
                     case TBTabBarControllerTabBarPositionLeading:
                     case TBTabBarControllerTabBarPositionBottom:
                         hTabBar.frame = [self tbtbbrcntrlr_horizontalTabBarFrameForBounds:bounds hidden:false];
                         vTabBar.frame = [self tbtbbrcntrlr_verticalTabBarFrameForBounds:bounds hidden:true];
                         dummyBar.frame = [self tbtbbrcntrlr_dummyBarFrameForBounds:bounds hidden:true];
                         break;
+
                     default:
                         break;
                 }
                 break;
+
             default:
                 break;
         }
@@ -328,8 +328,6 @@ static _TBTabBarControllerMethodOverrides tbtbbrcntrlr_methodOverridesFlag;
                 break;
         }
     }
-    
-    tbtbbrcntrlr_needsLayout = false;
 }
 
 #pragma mark UIContainerViewControllerProtectedMethods
@@ -360,7 +358,8 @@ static _TBTabBarControllerMethodOverrides tbtbbrcntrlr_methodOverridesFlag;
 
 #pragma mark UIContentContainer
 
-- (void)willTransitionToTraitCollection:(UITraitCollection *)newCollection withTransitionCoordinator:(id <UIViewControllerTransitionCoordinator>)coordinator {
+- (void)willTransitionToTraitCollection:(UITraitCollection *)newCollection
+              withTransitionCoordinator:(id <UIViewControllerTransitionCoordinator>)coordinator {
     
     [super willTransitionToTraitCollection:newCollection withTransitionCoordinator:coordinator];
     
@@ -372,13 +371,15 @@ static _TBTabBarControllerMethodOverrides tbtbbrcntrlr_methodOverridesFlag;
     }
 }
 
-- (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id <UIViewControllerTransitionCoordinator>)coordinator {
+- (void)viewWillTransitionToSize:(CGSize)size
+       withTransitionCoordinator:(id <UIViewControllerTransitionCoordinator>)coordinator {
     
     if (CGSizeEqualToSize(self.view.frame.size, size) == false) {
         
         __weak typeof(self) weakSelf = self;
         
-        [self _specifyPreferredTabBarPositionForHorizontalSizeClass:self.traitCollection.horizontalSizeClass size:size];
+        [self _specifyPreferredTabBarPositionForHorizontalSizeClass:self.traitCollection.horizontalSizeClass
+                                                               size:size];
         
         // Adjust the vertical tab bar height to make it look good during the transition
         [self tbtbbrcntrlr_adjustVerticalTabBarHeightIfNeeded];
@@ -418,7 +419,10 @@ static _TBTabBarControllerMethodOverrides tbtbbrcntrlr_methodOverridesFlag;
 
 #pragma mark NSKeyValueObserving
 
-- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary <NSKeyValueChangeKey, id> *)change context:(void *)context {
+- (void)observeValueForKeyPath:(NSString *)keyPath
+                      ofObject:(id)object
+                        change:(NSDictionary <NSKeyValueChangeKey, id> *)change
+                       context:(void *)context {
     
     TBTabBar *horizontalTabBar = self.horizontalTabBar;
     TBTabBar *verticalTabBar = self.verticalTabBar; 
@@ -504,10 +508,10 @@ static _TBTabBarControllerMethodOverrides tbtbbrcntrlr_methodOverridesFlag;
 
     [self tbtbbrcntrlr_moveToViewControllerAtIndex:index];
 
-    [tabBar _setSelectedIndex:index quitly:true];
+    [tabBar _setSelectedIndex:index quietly:true];
 
     if (otherTabBar.visibleItems.count > 0) {
-        [otherTabBar _setSelectedIndex:[otherTabBar.visibleItems indexOfObject:item] quitly:true];
+        [otherTabBar _setSelectedIndex:[otherTabBar.visibleItems indexOfObject:item] quietly:true];
     }
 
     if (_delegateFlags.didSelectViewController) {
@@ -549,7 +553,8 @@ static _TBTabBarControllerMethodOverrides tbtbbrcntrlr_methodOverridesFlag;
 - (void)tbtbbrcntrlr_beginUpdateTabBarPosition {
     
     if (_preferredPosition == _currentPosition || _preferredPosition == TBTabBarControllerTabBarPositionUndefined) {
-        [self _specifyPreferredTabBarPositionForHorizontalSizeClass:self.traitCollection.horizontalSizeClass size:self.view.bounds.size];
+        [self _specifyPreferredTabBarPositionForHorizontalSizeClass:self.traitCollection.horizontalSizeClass
+                                                               size:self.view.bounds.size];
     }
     
     tbtbbrcntrlr_needsUpdateTabBarPosition = true;
@@ -559,7 +564,8 @@ static _TBTabBarControllerMethodOverrides tbtbbrcntrlr_methodOverridesFlag;
     
     if (_preferredPosition != TBTabBarControllerTabBarPositionHidden) {
         if (tbtbbrcntrlr_nestedNavigationController != nil) {
-            // When there is no transition between the view controllers we can user the currently visible view controller to look up whether we should hide the tab bar or not.
+            // When there is no transition between the view controllers we can user the currently
+            // visible view controller to look up whether we should hide the tab bar or not.
             BOOL const shouldHideTabBar = tbtbbrcntrlr_transitionContext != nil ? _visibleViewControllerWantsHideTabBar : [self _visibleViewController].tb_hidesTabBarWhenPushed;
             if (shouldHideTabBar) {
                 _preferredPosition = TBTabBarControllerTabBarPositionHidden;
@@ -578,6 +584,7 @@ static _TBTabBarControllerMethodOverrides tbtbbrcntrlr_methodOverridesFlag;
                     [delegate tabBarController:self willHideTabBar:visibleTabBar];
                 }
                 break;
+
             case TBTabBarControllerTabBarPositionLeading:
             case TBTabBarControllerTabBarPositionBottom:
                 if (hiddenTabBar != nil && _delegateFlags.willShowTabBar) {
@@ -587,6 +594,7 @@ static _TBTabBarControllerMethodOverrides tbtbbrcntrlr_methodOverridesFlag;
                     [delegate tabBarController:self willHideTabBar:visibleTabBar];
                 }
                 break;
+
             default:
                 break;
         }
@@ -596,7 +604,7 @@ static _TBTabBarControllerMethodOverrides tbtbbrcntrlr_methodOverridesFlag;
     
     [self tbtbbrcntrlr_updateAdditionalSafeAreaInsets:tbtbbrcntrlr_selectedViewControllerNeedsLayout];
     
-    [self _setNeedsLayoutView];
+    [self.view setNeedsLayout];
     [self.view layoutIfNeeded];
 }
 
@@ -618,6 +626,7 @@ static _TBTabBarControllerMethodOverrides tbtbbrcntrlr_methodOverridesFlag;
                     [delegate tabBarController:self didHideTabBar:visibleTabBar];
                 }
                 break;
+
             case TBTabBarControllerTabBarPositionLeading:
             case TBTabBarControllerTabBarPositionBottom:
                 if (hiddenTabBar != nil && _delegateFlags.didShowTabBar) {
@@ -627,6 +636,7 @@ static _TBTabBarControllerMethodOverrides tbtbbrcntrlr_methodOverridesFlag;
                     [delegate tabBarController:self didHideTabBar:visibleTabBar];
                 }
                 break;
+
             default:
                 break;
         }
@@ -638,7 +648,7 @@ static _TBTabBarControllerMethodOverrides tbtbbrcntrlr_methodOverridesFlag;
     
     tbtbbrcntrlr_needsUpdateTabBarPosition = false;
     
-    [self _setNeedsLayoutView];
+    [self.view setNeedsLayout];
     [self.view layoutIfNeeded];
 }
 
@@ -646,22 +656,31 @@ static _TBTabBarControllerMethodOverrides tbtbbrcntrlr_methodOverridesFlag;
 - (void)tbtbbrcntrlr_updateAdditionalSafeAreaInsets:(BOOL)shouldLayoutManually {
     
     UIViewController *selectedViewController = self.selectedViewController;
-    
-    if (_preferredPosition == TBTabBarControllerTabBarPositionLeading) {
-        selectedViewController.additionalSafeAreaInsets = UIEdgeInsetsMake(0.0, self.verticalTabBarWidth, 0.0, 0.0);
-    } else if (_preferredPosition == TBTabBarControllerTabBarPositionBottom) {
-        selectedViewController.additionalSafeAreaInsets = UIEdgeInsetsMake(0.0, 0.0, self.horizontalTabBarHeight, 0.0);
-    } else if (_preferredPosition == TBTabBarControllerTabBarPositionHidden) {
-        selectedViewController.additionalSafeAreaInsets = UIEdgeInsetsZero;
+    UIEdgeInsets additionalSafeAreaInsets = UIEdgeInsetsZero;
+
+    switch (_preferredPosition) {
+        case TBTabBarControllerTabBarPositionLeading:
+            additionalSafeAreaInsets = UIEdgeInsetsMake(0.0, self.verticalTabBarWidth, 0.0, 0.0);
+            break;
+
+        case TBTabBarControllerTabBarPositionBottom:
+            additionalSafeAreaInsets = UIEdgeInsetsMake(0.0, self.horizontalTabBarHeight, 0.0, 0.0);
+            break;
+
+        default:
+            break;
     }
     
+    selectedViewController.additionalSafeAreaInsets = additionalSafeAreaInsets;
+
     if (shouldLayoutManually) {
         [selectedViewController.view setNeedsLayout];
         [selectedViewController.view layoutIfNeeded];
     }
 }
 
-- (void)tbtbbrcntrlr_showTabBarIfNeeded:(nullable TBTabBar *)tabBarToShow tabBarToHide:(nullable TBTabBar *)tabBarToHide {
+- (void)tbtbbrcntrlr_showTabBarIfNeeded:(nullable TBTabBar *)tabBarToShow
+                           tabBarToHide:(nullable TBTabBar *)tabBarToHide {
     
     if (_preferredPosition == _currentPosition) {
         return;
@@ -686,7 +705,8 @@ static _TBTabBarControllerMethodOverrides tbtbbrcntrlr_methodOverridesFlag;
     }
 }
 
-- (void)tbtbbrcntrlr_hideTabBarIfNeeded:(nullable TBTabBar *)tabBarToHide tabBarToShow:(nullable TBTabBar *)tabBarToShow {
+- (void)tbtbbrcntrlr_hideTabBarIfNeeded:(nullable TBTabBar *)tabBarToHide
+                           tabBarToShow:(nullable TBTabBar *)tabBarToShow {
     
     if (_preferredPosition == _currentPosition) {
         return;
@@ -826,17 +846,18 @@ static _TBTabBarControllerMethodOverrides tbtbbrcntrlr_methodOverridesFlag;
     
     _selectedViewController = viewControllers[index];
     
-    [self tb_addContainerViewController:_selectedViewController atSubviewsIndex:0];
-    
-    [self tbtbbrcntrlr_captureNestedNavigationControllerIfExsists];
+    [self tb_addContainerViewController:_selectedViewController atIndex:0];
+    [self tbtbbrcntrlr_captureNestedNavigationControllerIfExists];
     
     switch (_currentPosition) {
         case TBTabBarControllerTabBarPositionLeading:
             tbtbbrcntrlr_nestedNavigationController.additionalSafeAreaInsets = UIEdgeInsetsMake(0.0, self.verticalTabBarWidth, 0.0, 0.0);
             break;
+
         case TBTabBarControllerTabBarPositionBottom:
             tbtbbrcntrlr_nestedNavigationController.additionalSafeAreaInsets = UIEdgeInsetsMake(0.0, 0.0, self.horizontalTabBarHeight, 0.0);
             break;
+
         default:
             break;
     }
@@ -906,7 +927,7 @@ static _TBTabBarControllerMethodOverrides tbtbbrcntrlr_methodOverridesFlag;
     tbtbbrcntrlr_nestedNavigationController = nil;
 }
 
-- (void)tbtbbrcntrlr_captureNestedNavigationControllerIfExsists {
+- (void)tbtbbrcntrlr_captureNestedNavigationControllerIfExists {
     
     // This solution was borrowed from TOTabBarController (https://github.com/TimOliver/TOTabBarController)
     
@@ -956,8 +977,8 @@ static _TBTabBarControllerMethodOverrides tbtbbrcntrlr_methodOverridesFlag;
             return;
         }
         [self tbtbbrcntrlr_moveToViewControllerAtIndex:index];
-        [self.horizontalTabBar _setSelectedIndex:index quitly:true];
-        [self.verticalTabBar _setSelectedIndex:index quitly:true];
+        [self.horizontalTabBar _setSelectedIndex:index quietly:true];
+        [self.verticalTabBar _setSelectedIndex:index quietly:true];
         if (_delegateFlags.didSelectViewController) {
             [self.delegate tabBarController:self didSelectViewController:_selectedViewController];
         }
@@ -1064,14 +1085,14 @@ static _TBTabBarControllerMethodOverrides tbtbbrcntrlr_methodOverridesFlag;
     
     _verticalTabBarWidth = verticalTabBarWidth;
     
-    [self _setNeedsLayoutView];
+    [self.view setNeedsLayout];
 }
 
 - (void)setHorizontalTabBarHeight:(CGFloat)horizontalTabBarHeight {
     
     _horizontalTabBarHeight = horizontalTabBarHeight;
     
-    [self _setNeedsLayoutView];
+    [self.view setNeedsLayout];
 }
 
 - (void)setDelegate:(id<TBTabBarControllerDelegate>)delegate {
@@ -1094,9 +1115,7 @@ static _TBTabBarControllerMethodOverrides tbtbbrcntrlr_methodOverridesFlag;
 
 @implementation TBTabBarController (Subclassing)
 
-#pragma mark - Public
-
-#pragma mark Interface
+#pragma mark Public Methods
 
 - (TBTabBarControllerTabBarPosition)preferredTabBarPositionForHorizontalSizeClass:(UIUserInterfaceSizeClass)sizeClass {
     
@@ -1128,7 +1147,7 @@ static char *_tabBarItemPropertyKey;
 static char *_tabBarControllerPropertyKey;
 static char *_tabBarControllerCategoryHidesTabBarWhenPushedKey;
 
-#pragma mark - Public
+#pragma mark Overrides
 
 + (void)load {
     
@@ -1138,7 +1157,7 @@ static char *_tabBarControllerCategoryHidesTabBarWhenPushedKey;
     });
 }
 
-#pragma mark - Private
+#pragma mark Private Methods
 
 #pragma mark Getters
 
@@ -1214,18 +1233,6 @@ static char *_tabBarControllerCategoryHidesTabBarWhenPushedKey;
 
 @implementation TBTabBarController (Private)
 
-#pragma mark - Public
-
-#pragma mark Interface
-
-- (void)_setNeedsLayoutView {
-    
-    if (!tbtbbrcntrlr_needsLayout) {
-        tbtbbrcntrlr_needsLayout = true;
-        [self.view setNeedsLayout];
-    }
-}
-
 - (void)_specifyPreferredTabBarPositionForHorizontalSizeClass:(UIUserInterfaceSizeClass)horizontalSizeClass size:(CGSize)size {
     
     [self tbtbbrcntrlr_specifyPreferredPositionIfUndefinedForHorizontalSizeClass:horizontalSizeClass];
@@ -1269,8 +1276,6 @@ static char *_tabBarControllerCategoryHidesTabBarWhenPushedKey;
 
 @implementation TBTabBarController (TBNavigationControllerExtensionDefaultDelegate)
 
-#pragma mark - Public
-
 #pragma mark _TBNavigationControllerDelegate
 
 - (void)tb_navigationController:(UINavigationController *)navigationController navigationBarDidChangeHeight:(CGFloat)height {
@@ -1281,7 +1286,7 @@ static char *_tabBarControllerCategoryHidesTabBarWhenPushedKey;
     
     tbtbbrcntrlr_dummyBarInternalHeight = height;
     
-    [self _setNeedsLayoutView];
+    [self.view setNeedsLayout];
 }
 
 - (void)tb_navigationController:(UINavigationController *)navigationController didBeginTransitionFrom:(UIViewController *)prevViewController to:(UIViewController *)destinationViewController backwards:(BOOL)backwards {

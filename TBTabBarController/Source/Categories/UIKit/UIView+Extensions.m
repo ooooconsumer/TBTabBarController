@@ -1,8 +1,8 @@
 //
-//  UIView+_TBTabBarController.m
+//  UIView+Extensions.m
 //  TBTabBarController
 //
-//  Copyright (c) 2019-2020 Timur Ganiev
+//  Copyright (c) 2019-2023 Timur Ganiev
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -22,15 +22,19 @@
 //  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 //  SOFTWARE.
 
-#import "UIView+_TBTabBarController.h"
+#import "UIView+Extensions.h"
+#import "UIApplication+Extensions.h"
 
-@implementation UIView (_TBTabBarController)
+@implementation UIView (Extensions)
 
-#pragma mark - Public
+#pragma mark Internal Methods
 
-#pragma mark Interface
-
-- (nullable __kindof UIView *)tb_subviewAtLocation:(CGPoint)location withCondition:(nullable BOOL (^)(__kindof UIView *subview))condition subviewIndex:(NSUInteger *)subviewIndex skipIndexes:(BOOL)skipIndexes touchSize:(CGFloat)touchSize verticalLayout:(BOOL)verticalLayout {
+- (nullable __kindof UIView *)tb_subviewAtLocation:(CGPoint)location
+                                     withCondition:(nullable BOOL (^)(__kindof UIView *subview))condition
+                                      subviewIndex:(NSUInteger *)subviewIndex
+                                       skipIndexes:(BOOL)skipIndexes
+                                         touchSize:(CGFloat)touchSize
+                                    verticalLayout:(BOOL)verticalLayout {
     
     if (verticalLayout) {
         location.x -= touchSize;
@@ -70,7 +74,7 @@
     return desiredView;
 }
 
-#pragma mark - Private
+#pragma mark Private Methods
 
 #pragma mark Getters
 
@@ -79,7 +83,7 @@
     if (self.window != nil) {
         return self.window.screen.nativeScale;
     } else {
-        return [UIScreen mainScreen].nativeScale;
+        return [UIApplication sharedApplication].currentScreen.nativeScale;
     }
 }
 

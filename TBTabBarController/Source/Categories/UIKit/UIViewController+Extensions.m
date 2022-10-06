@@ -1,8 +1,8 @@
 //
-//  UIViewController+_TBTabBarController.m
+//  UIViewController+Extensions.m
 //  TBTabBarController
 //
-//  Copyright (c) 2019-2020 Timur Ganiev
+//  Copyright (c) 2019-2023 Timur Ganiev
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -22,14 +22,12 @@
 //  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 //  SOFTWARE.
 
-#import "UIViewController+_TBTabBarController.h"
-#import "UINavigationController+_TBTabBarController.h"
+#import "UIViewController+Extensions.h"
+#import "UINavigationController+Extensions.h"
 
-@implementation UIViewController (_TBTabBarController)
+@implementation UIViewController (Extensions)
 
-#pragma mark - Public
-
-#pragma mark Interface
+#pragma mark Internal Methods
 
 - (void)tb_addContainerViewController:(UIViewController *)containerViewController {
     
@@ -41,7 +39,7 @@
     containerViewController.view.frame = self.view.bounds;
 }
 
-- (void)tb_addContainerViewController:(UIViewController *)containerViewController atSubviewsIndex:(NSUInteger)index {
+- (void)tb_addContainerViewController:(UIViewController *)containerViewController atIndex:(NSUInteger)index {
     
     [self addChildViewController:containerViewController];
     [self.view insertSubview:containerViewController.view atIndex:index];

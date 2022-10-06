@@ -2,7 +2,7 @@
 //  TBTabBar.m
 //  TBTabBarController
 //
-//  Copyright (c) 2019-2020 Timur Ganiev
+//  Copyright (c) 2019-2023 Timur Ganiev
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -31,11 +31,10 @@
 #import "TBTabBarButton.h"
 #import "_TBUtils.h"
 #import "_TBTabBarLongPressContext.h"
-#import "UIView+_TBTabBarController.h"
+#import "UIView+Extensions.h"
 #import "TBTabBarItemsDifference.h"
 #import "TBTabBarItemChange.h"
 #import "_TBStackView.h"
-#import "_TBImageCache.h"
 
 #import <objc/runtime.h>
 
@@ -172,16 +171,23 @@
     UIEdgeInsets const safeAreaInsets = self.safeAreaInsets;
     UIEdgeInsets const contentInsets = self.contentInsets;
     UIEdgeInsets const additionalContentInsets = _additionalContentInsets;
-    
-    CGRect const bounds = self.bounds;
-    
-    CGFloat const width = CGRectGetWidth(bounds);
-    CGFloat const height = CGRectGetHeight(bounds);
+
+    CGFloat const width = CGRectGetWidth(self.bounds);
+    CGFloat const height = CGRectGetHeight(self.bounds);
     CGFloat const displayScale = self.tb_displayScale;
     
     // Stack view
-    _TBStackView *stackView = self.stackView;
-    stackView.frame = _TBFloorRectWithScale((CGRect){(CGPoint){safeAreaInsets.left + contentInsets.left + additionalContentInsets.left, contentInsets.top + additionalContentInsets.top}, (CGSize){width - safeAreaInsets.left - safeAreaInsets.right - contentInsets.left - contentInsets.right - additionalContentInsets.left - additionalContentInsets.right, height - safeAreaInsets.bottom - contentInsets.top - contentInsets.bottom - additionalContentInsets.top - additionalContentInsets.bottom}}, displayScale);
+
+    self.stackView.frame = _TBPixelAccurateRect((CGRect){
+        (CGPoint){
+            safeAreaInsets.left + contentInsets.left + additionalContentInsets.left,
+            contentInsets.top + additionalContentInsets.top
+        },
+        (CGSize){
+            width - safeAreaInsets.left - safeAreaInsets.right - contentInsets.left - contentInsets.right - additionalContentInsets.left - additionalContentInsets.right,
+            height - safeAreaInsets.bottom - contentInsets.top - contentInsets.bottom - additionalContentInsets.top - additionalContentInsets.bottom
+        }
+    }, displayScale, true);
 }
 
 - (void)tintColorDidChange {
@@ -196,7 +202,9 @@
 
 - (TBSimpleBarSeparatorPosition)separatorPosition {
     
-    return self.isVertical ? self.tb_isLeftToRight ? TBSimpleBarSeparatorPositionRight : TBSimpleBarSeparatorPositionLeft : TBSimpleBarSeparatorPositionTop;
+    return self.isVertical ?
+        (self.tb_isLeftToRight ? TBSimpleBarSeparatorPositionRight : TBSimpleBarSeparatorPositionLeft) :
+        TBSimpleBarSeparatorPositionTop;
 }
 
 #pragma mark - Private
@@ -248,11 +256,8 @@
 - (void)tbtbbr_handleLongPressGestureRecognizer:(UILongPressGestureRecognizer *)gestureRecognizer {
     
     UIGestureRecognizerState const state = gestureRecognizer.state;
-    
     CGPoint const location = [gestureRecognizer locationInView:self.stackView];
-    
     NSUInteger tabIndex;
-    
     NSArray<TBTabBarButton *> *buttons = self.stackView.subviews;
     
     if (state == UIGestureRecognizerStateBegan) {
@@ -287,7 +292,7 @@
 #pragma mark Helpers
 
 - (void)tbtbbr_resetLongPressGestureRecognizerIfNeeded {
-    
+
     UILongPressGestureRecognizer *longPressGestureRecognizer = self.longPressGestureRecognizer;
     
     if (longPressGestureRecognizer.isEnabled) {
@@ -369,7 +374,7 @@
     
     NSUInteger const selectedIndex = self.selectedIndex;
     
-    [self.stackView.subviews enumerateObjectsUsingBlock:^(__kindof TBTabBarButton * _Nonnull button, NSUInteger index, BOOL * _Nonnull stop) {
+    [self.stackView.subviews enumerateObjectsUsingBlock:^(TBTabBarButton *button, NSUInteger index, BOOL *stop) {
         if (index != selectedIndex) {
             button.tintColor = defaultTintColor;
         }
@@ -454,13 +459,9 @@
 
 @end
 
-#pragma mark -
+#pragma mark Subclassing
 
 @implementation TBTabBar (Subclassing)
-
-#pragma mark - Public
-
-#pragma mark Interface
 
 - (void)updateItems {
     
@@ -571,13 +572,9 @@
 
 @end
 
-#pragma mark -
+#pragma mark Private Methods
 
 @implementation TBTabBar (Private)
-
-#pragma mark - Public
-
-#pragma mark Interface
 
 - (void)_setItems:(NSArray<__kindof TBTabBarItem *> *)items {
     
@@ -602,13 +599,13 @@
     }
 }
 
-- (void)_setSelectedIndex:(NSUInteger)selectedIndex quitly:(BOOL)quitly {
+- (void)_setSelectedIndex:(NSUInteger)selectedIndex quietly:(BOOL)quietly {
     
     NSUInteger const index = MIN(MAX(0, _itemsCount - 1), selectedIndex);
     
     __kindof TBTabBarItem *itemToSelect = self.visibleItems[index];
     
-    if (quitly == false && _delegateFlags.shouldSelectItemAtIndex && ![self.delegate tabBar:self shouldSelectItem:itemToSelect atIndex:index]) {
+    if (quietly == false && _delegateFlags.shouldSelectItemAtIndex && ![self.delegate tabBar:self shouldSelectItem:itemToSelect atIndex:index]) {
         return;
     }
     
@@ -626,7 +623,7 @@
     buttonToSelect.selected = true;
     buttonToSelect.tintColor = self.selectedTintColor;
 
-    if (quitly == false && _delegateFlags.didSelectItemAtIndex) {
+    if (quietly == false && _delegateFlags.didSelectItemAtIndex) {
         [self.delegate tabBar:self didSelectItem:self.visibleItems[index] atIndex:index];
     }
 }

@@ -1,8 +1,8 @@
 //
-//  _TBTriangularMatrix.h
+//  UINavigationController+Extensions.m
 //  TBTabBarController
 //
-//  Copyright (c) 2019-2020 Timur Ganiev
+//  Copyright (c) 2019-2023 Timur Ganiev
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -22,19 +22,13 @@
 //  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 //  SOFTWARE.
 
-#ifndef _TBTriangularMatrix_h
-#define _TBTriangularMatrix_h
+#import <UIKit/UIKit.h>
+#import <TBTabBarController/TBTabBarController.h>
 
-typedef short int *_TBTriangularMatrix;
+NS_ASSUME_NONNULL_BEGIN
 
-_TBTriangularMatrix _TBTriangularMatrixWithLargestIndex(int largestIndex);
+@interface UINavigationController (Extensions)
 
-int _TBTriangularMatrixGetValueAtIndex(_TBTriangularMatrix matrix, int index);
+@end
 
-void _TBTriangularMatrixSetValue(_TBTriangularMatrix matrix, int value, int index);
-
-inline static int _TBTriangularMatrixTransform(int index);
-
-void _TBTriangularMatrixRelease(_TBTriangularMatrix matrix);
-
-#endif /* _TBTriangularMatrix_h */
+NS_ASSUME_NONNULL_END
