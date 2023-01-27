@@ -3,16 +3,14 @@
 //  SwiftExample
 //
 //  Created by Timur Ganiev on 09.12.2020.
-//  Copyright © 2020 Timur Ganiev. All rights reserved.
+//  Copyright © 2020-2023 Timur Ganiev. All rights reserved.
 //
 
 import UIKit
 import TBTabBarController
 
-class TabBarController: TBTabBarController {
-    
-    // MARK: - Public
-    
+final class TabBarController: TBTabBarController {
+
     // MARK: Overrides
 
     override func viewDidLoad() {
@@ -25,7 +23,9 @@ class TabBarController: TBTabBarController {
         horizontalTabBar.contentView = UIVisualEffectView(effect: UIBlurEffect(style: .prominent))
     }
     
-    override func preferredTabBarPosition(forViewSize size: CGSize) -> TBTabBarControllerTabBarPosition {
+    override func preferredTabBarPosition(
+        forViewSize size: CGSize
+    ) -> TBTabBarControllerTabBarPosition {
         
         // Show the vertical tab bar whenever the device orientation is landscape
         

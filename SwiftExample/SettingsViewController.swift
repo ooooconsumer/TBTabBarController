@@ -3,15 +3,18 @@
 //  SwiftExample
 //
 //  Created by Timur Ganiev on 09.12.2020.
-//  Copyright © 2020 Timur Ganiev. All rights reserved.
+//  Copyright © 2020-2023 Timur Ganiev. All rights reserved.
 //
 
 import UIKit
 import TBTabBarController
 
-class SettingsViewController: UITableViewController {
+final class SettingsViewController: UITableViewController {
 
-    // MARK: - Public
+    // MARK: Private Properties
+
+    private var items: [ToggleItem] = []
+    private var isUpdatingTabBarPosition = false
     
     // MARK: Lifecycle
     
@@ -23,75 +26,96 @@ class SettingsViewController: UITableViewController {
         }
     }
     
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
+    @available(*, unavailable)
+    required init?(coder: NSCoder) { nil }
     
     // MARK: Overrides
 
     override func viewDidLoad() {
-        
         super.viewDidLoad()
-        
-        title = "Settings"
-        
-        let hidesTabBarOnPushSettingCell = ToggleTableViewCell(with: "Hides tab bar on push", enabled: tb_hidesTabBarWhenPushed)
-        hidesTabBarOnPushSettingCell.addTarget(target: self, action: #selector(_setHideTabBarOnPush(sender:)))
-        
-        let showsNotificationIndicatorCell = ToggleTableViewCell(with: "Shows notification indicator", enabled: (navigationController?.tb_tabBarItem.showsNotificationIndicator)!)
-        showsNotificationIndicatorCell.addTarget(target: self, action: #selector(_setShowsNotificationIndicator))
-        
-        _cells = [hidesTabBarOnPushSettingCell, showsNotificationIndicatorCell]
+        setup()
     }
 
     // MARK: UITableViewDataSource
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        
-        return _cells.count
+        return items.count
     }
     
-    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        
-        return _cells[indexPath.row]
+    override func tableView(
+        _ tableView: UITableView,
+        cellForRowAt indexPath: IndexPath
+    ) -> UITableViewCell {
+
+        guard
+            let cell = tableView.dequeueReusableCell(
+                withIdentifier: NSStringFromClass(ToggleTableViewCell.self),
+                for: indexPath
+            ) as? ToggleTableViewCell
+        else {
+            return ToggleTableViewCell()
+        }
+
+        let item = items[indexPath.row]
+
+        cell.render(with: item) { [weak self] isToggled in
+            guard let self else { return }
+            switch item {
+            case .hideTabBarOnPush:
+                self.setHideTabBarOnPush(isToggled)
+
+            case .showNotificationIndicator:
+                self.setShowsNotificationIndicator(isToggled)
+            }
+        }
+
+        return cell
     }
-    
-    // MARK: UITableViewDelegate
-    
-    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        
-        tableView.deselectRow(at: indexPath, animated: true)
+}
+
+// MARK: Private Methods
+
+private extension SettingsViewController {
+
+    func setup() {
+
+        title = "Settings"
+
+        items = [
+            .hideTabBarOnPush(isOn: tb_hidesTabBarWhenPushed),
+            .showNotificationIndicator(isOn: navigationController?.tb_tabBarItem.showsNotificationIndicator ?? false)
+        ]
+
+        tableView.register(
+            ToggleTableViewCell.self,
+            forCellReuseIdentifier: NSStringFromClass(ToggleTableViewCell.self)
+        )
     }
 
-    // MARK: - Private
-    
-    fileprivate var _cells: [UITableViewCell]!
-    
-    fileprivate var _isUpdatingTabBarPosition = false
-    
-    // MARK: Actions
-    
-    @objc fileprivate func _setHideTabBarOnPush(sender: UISwitch) {
+    func setHideTabBarOnPush(_ shouldHideBarWhenPushed: Bool) {
         
-        if _isUpdatingTabBarPosition {
-            sender.setOn(!sender.isOn, animated: true)
+        if isUpdatingTabBarPosition {
+            items[0].isOn = shouldHideBarWhenPushed
+            tableView.reloadData()
             return
         }
         
-        _isUpdatingTabBarPosition.toggle()
-        
+        isUpdatingTabBarPosition.toggle()
         tb_hidesTabBarWhenPushed.toggle()
         
-        UIView.animate(withDuration: 0.35, delay: 0.0, options: UIView.AnimationOptions(rawValue: 7 << 16)) {
+        UIView.animate(
+            withDuration: 0.35,
+            delay: .zero,
+            options: UIView.AnimationOptions(rawValue: 7 << 16)
+        ) {
             self.navigationController?.tb_tabBarController?.beginUpdateTabBarPosition()
         } completion: { (finished) in
             self.navigationController?.tb_tabBarController?.endUpdateTabBarPosition()
-            self._isUpdatingTabBarPosition.toggle()
+            self.isUpdatingTabBarPosition.toggle()
         }
     }
 
-    @objc fileprivate func _setShowsNotificationIndicator() {
-        
-        navigationController?.tb_tabBarItem.showsNotificationIndicator.toggle()
+    func setShowsNotificationIndicator(_ shouldShowNotificationIndicator: Bool) {
+        navigationController?.tb_tabBarItem.showsNotificationIndicator = shouldShowNotificationIndicator
     }
 }

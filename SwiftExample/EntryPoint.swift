@@ -3,30 +3,23 @@
 //  SwiftExample
 //
 //  Created by Timur Ganiev on 09.12.2020.
-//  Copyright © 2020 Timur Ganiev. All rights reserved.
+//  Copyright © 2020-2023 Timur Ganiev. All rights reserved.
 //
 
 import UIKit
 
-class EntryPoint {
+final class EntryPoint {
+
+    // MARK: Lifecycle
+
+    @available(*, unavailable)
+    init() { }
     
-    // MARK: - Public
+    // MARK: Public Methods
     
-    weak private(set) var window: UIWindow?
-    
-    static let shared = EntryPoint()
-    
-    // MARK: Interface
-    
-    func setup(with window: UIWindow) {
+    static func start(with window: UIWindow) {
         
-        self.window = window
-        
-        var viewControllers = [UIViewController]()
-        
-        for index in 0..<5 {
-            viewControllers.append(_navigationController(with: _tabViewController(for: index)))
-        }
+        let viewControllers = (0 ..< 5).map { makeTab(forItemAt: $0) }
         
         let tabBarController = TabBarController()
         tabBarController.viewControllers = viewControllers
@@ -37,38 +30,31 @@ class EntryPoint {
         }
         
         window.rootViewController = tabBarController
-        
         window.makeKeyAndVisible()
     }
-    
-    // MARK: - Private
-    
-    // MARK: Builders
-    
-    fileprivate func _tabViewController(for index: Int) -> TabViewController {
-        
+}
+
+// MARK: Private Methods
+
+private extension EntryPoint {
+
+    static func makeTab(forItemAt index: Int) -> UIViewController {
+
         let tabViewController = TabViewController()
         tabViewController.title  = "View Controller #\(index)"
-        
-        return tabViewController
-    }
-    
-    fileprivate func _navigationController(with tabViewController: TabViewController) -> UINavigationController {
-        
+
         let navigationController = UINavigationController(rootViewController: tabViewController)
-        navigationController.tb_tabBarItem.image = _drawTabBarItemImage()
-        
+        navigationController.tb_tabBarItem.image = makeTabBarItemIconImage()
+
         return navigationController
     }
     
-    // MARK: Helpers
-    
-    fileprivate func _drawTabBarItemImage() -> UIImage {
+    static func makeTabBarItemIconImage() -> UIImage {
         
         let size = CGSize(width: 25.0, height: 25.0)
-        
         let renderer = UIGraphicsImageRenderer(size: size)
-        let image = renderer.image { (rendererContext) in
+
+        let image = renderer.image { rendererContext in
             let context = rendererContext.cgContext
             context.addEllipse(in: CGRect(origin: .zero, size: size))
             context.fillPath()

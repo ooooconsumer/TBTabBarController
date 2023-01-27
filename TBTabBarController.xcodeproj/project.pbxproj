@@ -282,16 +282,17 @@
 		814C6EF32580B80900D7C6DC /* SwiftExample */ = {
 			isa = PBXGroup;
 			children = (
-				814C6EF42580B80900D7C6DC /* AppDelegate.swift */,
-				814C6EF62580B80900D7C6DC /* SceneDelegate.swift */,
-				814C6F1D2580D16500D7C6DC /* EntryPoint.swift */,
-				814C6F112580B93900D7C6DC /* TabBarController.swift */,
-				814C6EF82580B80900D7C6DC /* TabViewController.swift */,
-				814C6F172580C74000D7C6DC /* SettingsViewController.swift */,
-				814C6F1A2580C84000D7C6DC /* ToggleTableViewCell.swift */,
+				814C6F022580B80B00D7C6DC /* Info.plist */,
 				814C6EFD2580B80B00D7C6DC /* Assets.xcassets */,
 				814C6EFF2580B80B00D7C6DC /* LaunchScreen.storyboard */,
-				814C6F022580B80B00D7C6DC /* Info.plist */,
+				814C6EF42580B80900D7C6DC /* AppDelegate.swift */,
+				814C6F1D2580D16500D7C6DC /* EntryPoint.swift */,
+				814C6EF62580B80900D7C6DC /* SceneDelegate.swift */,
+				814C6F172580C74000D7C6DC /* SettingsViewController.swift */,
+				814C6F112580B93900D7C6DC /* TabBarController.swift */,
+				814C6EF82580B80900D7C6DC /* TabViewController.swift */,
+				8102CDCC2982FFFB0073CBAB /* ToggleItem.swift */,
+				814C6F1A2580C84000D7C6DC /* ToggleTableViewCell.swift */,
 			);
 			path = SwiftExample;
 			sourceTree = "<group>";
@@ -554,6 +555,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				814C6EF92580B80900D7C6DC /* TabViewController.swift in Sources */,
+				8102CDCD2982FFFB0073CBAB /* ToggleItem.swift in Sources */,
 				814C6F1B2580C84000D7C6DC /* ToggleTableViewCell.swift in Sources */,
 				814C6F122580B93900D7C6DC /* TabBarController.swift in Sources */,
 				814C6EF52580B80900D7C6DC /* AppDelegate.swift in Sources */,

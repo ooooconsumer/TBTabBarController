@@ -3,26 +3,32 @@
 //  SwiftExample
 //
 //  Created by Timur Ganiev on 09.12.2020.
-//  Copyright © 2020 Timur Ganiev. All rights reserved.
+//  Copyright © 2020-2023 Timur Ganiev. All rights reserved.
 //
 
 import UIKit
 
 @available(iOS 13.0, *)
-class SceneDelegate: UIResponder, UIWindowSceneDelegate {
+final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     
-    // MARK: - Public
+    // MARK: Internal Properties
 
     var window: UIWindow?
     
     // MARK: UIWindowSceneDelegate
 
-    func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
+    func scene(
+        _ scene: UIScene,
+        willConnectTo session: UISceneSession,
+        options connectionOptions: UIScene.ConnectionOptions
+    ) {
 
-        guard let scene = (scene as? UIWindowScene) else { return }
+        guard let scene = (scene as? UIWindowScene) else {
+            return
+        }
         
         window = UIWindow(windowScene: scene)
-        EntryPoint.shared.setup(with: window!)
+        EntryPoint.start(with: window!)
     }
 }
 
