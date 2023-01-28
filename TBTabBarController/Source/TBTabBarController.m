@@ -34,6 +34,7 @@
 #import "UIViewController+Extensions.h"
 #import "UIView+Extensions.h"
 #import "_TBTabBarControllerTransitionContext.h"
+#import "NSArray+Extensions.h"
 
 #import <objc/runtime.h>
 
@@ -225,6 +226,58 @@ static _TBTabBarControllerMethodOverrides tbtbbrcntrlr_methodOverridesFlag;
     
     [self.horizontalTabBar _setItems:_items];
     [self.verticalTabBar _setItems:_items];
+
+    UIViewController *viewControllerToRemove = [self.viewControllers firstObject:^BOOL(__kindof UIViewController *_Nonnull viewController) {
+        return [viewController.tb_tabBarItem isEqualToItem:item];
+    }];
+
+    if (viewControllerToRemove == nil) {
+        return;
+    }
+
+    [self tbtbbrcntrlr_removeChildViewControllerIfExists];
+
+    NSMutableArray<UIViewController *> *viewControllers = [self.viewControllers mutableCopy];
+    [viewControllers removeObject:viewControllerToRemove];
+
+    self.viewControllers = viewControllers;
+
+    if (viewControllers.count == 0) {
+        return;
+    }
+
+    UIViewController *viewControllerToSelect;
+
+    if (_delegateFlags.shouldSelectItemAtIndex) {
+        for (UIViewController *viewController in viewControllers) {
+            if ([self.delegate tabBarController:self shouldSelectViewController:viewController]) {
+                viewControllerToSelect = viewController;
+                break;
+            }
+        }
+    } else {
+        viewControllerToSelect = viewControllers.firstObject;
+    }
+
+    if (viewControllerToSelect == nil) {
+        return;
+    }
+
+    NSUInteger const viewControllerIndexToSelect = [viewControllers indexOfObject:viewControllerToSelect];
+
+    [self tbtbbrcntrlr_moveToViewControllerAtIndex:viewControllerIndexToSelect];
+
+    NSUInteger const hTabBarItemIndexToSelect = [self.horizontalTabBar.visibleItems indexOfObject:viewControllerToSelect.tb_tabBarItem];
+
+    [self.horizontalTabBar _setSelectedIndex:hTabBarItemIndexToSelect quietly:true];
+
+    NSUInteger const vTabBarItemIndexToSelect = [self.verticalTabBar.visibleItems indexOfObject:viewControllerToSelect.tb_tabBarItem];
+
+    [self.verticalTabBar _setSelectedIndex:vTabBarItemIndexToSelect quietly:true];
+
+    if (_delegateFlags.didSelectViewController) {
+        [self.delegate tabBarController:self didSelectViewController:viewControllerToSelect];
+    }
 }
 
 #pragma mark Overrides

@@ -3,7 +3,7 @@
 //  TBTabBarController
 //
 //  Created by Timur Ganiev on 27.01.2023.
-//  Copyright © 2023 Timur Ganiev. All rights reserved.
+//  Copyright © 2019-2023 Timur Ganiev. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>

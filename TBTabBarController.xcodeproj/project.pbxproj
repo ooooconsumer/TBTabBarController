@@ -44,6 +44,8 @@
 		814C6F1E2580D16500D7C6DC /* EntryPoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 814C6F1D2580D16500D7C6DC /* EntryPoint.swift */; };
 		815C582E256A4DA200001E21 /* TBSimpleBar.h in Headers */ = {isa = PBXBuildFile; fileRef = 815C582C256A4DA200001E21 /* TBSimpleBar.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		815C582F256A4DA200001E21 /* TBSimpleBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 815C582D256A4DA200001E21 /* TBSimpleBar.m */; };
+		8185B60329850F0A00A97CA2 /* NSArray+Extensions.h in Headers */ = {isa = PBXBuildFile; fileRef = 8185B60129850F0A00A97CA2 /* NSArray+Extensions.h */; };
+		8185B60429850F0A00A97CA2 /* NSArray+Extensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 8185B60229850F0A00A97CA2 /* NSArray+Extensions.m */; };
 		81B2147024BAD90800DF7E2C /* TBTabBarController.h in Headers */ = {isa = PBXBuildFile; fileRef = 81B2146E24BAD90800DF7E2C /* TBTabBarController.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		81B2147124BAD90800DF7E2C /* TBTabBarController.m in Sources */ = {isa = PBXBuildFile; fileRef = 81B2146F24BAD90800DF7E2C /* TBTabBarController.m */; };
 		81B2147624BAD96C00DF7E2C /* TBTabBar.h in Headers */ = {isa = PBXBuildFile; fileRef = 81B2147424BAD96C00DF7E2C /* TBTabBar.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -157,6 +159,8 @@
 		814C6F1D2580D16500D7C6DC /* EntryPoint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EntryPoint.swift; sourceTree = "<group>"; };
 		815C582C256A4DA200001E21 /* TBSimpleBar.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TBSimpleBar.h; sourceTree = "<group>"; };
 		815C582D256A4DA200001E21 /* TBSimpleBar.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TBSimpleBar.m; sourceTree = "<group>"; };
+		8185B60129850F0A00A97CA2 /* NSArray+Extensions.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSArray+Extensions.h"; sourceTree = "<group>"; };
+		8185B60229850F0A00A97CA2 /* NSArray+Extensions.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSArray+Extensions.m"; sourceTree = "<group>"; };
 		81B2146E24BAD90800DF7E2C /* TBTabBarController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TBTabBarController.h; sourceTree = "<group>"; };
 		81B2146F24BAD90800DF7E2C /* TBTabBarController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TBTabBarController.m; sourceTree = "<group>"; };
 		81B2147224BAD94700DF7E2C /* TBTabBarController+Private.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "TBTabBarController+Private.h"; sourceTree = "<group>"; };
@@ -297,6 +301,15 @@
 			path = SwiftExample;
 			sourceTree = "<group>";
 		};
+		8185B60529850F0E00A97CA2 /* Foundation */ = {
+			isa = PBXGroup;
+			children = (
+				8185B60129850F0A00A97CA2 /* NSArray+Extensions.h */,
+				8185B60229850F0A00A97CA2 /* NSArray+Extensions.m */,
+			);
+			path = Foundation;
+			sourceTree = "<group>";
+		};
 		81B5B10A256ED57D00A9194E /* Source */ = {
 			isa = PBXGroup;
 			children = (
@@ -328,6 +341,7 @@
 			isa = PBXGroup;
 			children = (
 				8102CDCB2982F4EC0073CBAB /* UIKit */,
+				8185B60529850F0E00A97CA2 /* Foundation */,
 			);
 			path = Categories;
 			sourceTree = "<group>";
@@ -378,6 +392,7 @@
 				8102CDD02983932F0073CBAB /* UIApplication+Extensions.h in Headers */,
 				813570BC2558E9E100CC91B8 /* _TBStackView.h in Headers */,
 				81B2149424BAEBFA00DF7E2C /* UINavigationController+Extensions.h in Headers */,
+				8185B60329850F0A00A97CA2 /* NSArray+Extensions.h in Headers */,
 				81B2149024BADC2000DF7E2C /* UIViewController+Extensions.h in Headers */,
 				812AEA552551ABC4003AB231 /* UIView+Extensions.h in Headers */,
 			);
@@ -523,6 +538,7 @@
 				812AEA722552929B003AB231 /* TBTabBarItemsDifference.m in Sources */,
 				81BC8E332575208800222814 /* _TBTabBarControllerTransitionContext.m in Sources */,
 				81B2147F24BAD9C100DF7E2C /* TBTabBarButton.m in Sources */,
+				8185B60429850F0A00A97CA2 /* NSArray+Extensions.m in Sources */,
 				813570BD2558E9E100CC91B8 /* _TBStackView.m in Sources */,
 				812AEA562551ABC4003AB231 /* UIView+Extensions.m in Sources */,
 				81B2149124BADC2000DF7E2C /* UIViewController+Extensions.m in Sources */,

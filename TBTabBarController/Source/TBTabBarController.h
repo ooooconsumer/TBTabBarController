@@ -33,7 +33,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 typedef NS_ENUM(NSUInteger, TBTabBarControllerTabBarPosition) {
-    /// The tab bar position is undefined. Typically this used for @p `_preferredPosition` when there's no any tab bar position update. The current position also can be undifined until the tab bar will be presented
+    /// The tab bar position is undefined. Typically this used for @p `_preferredPosition` when there's no any tab bar position update. The current position also can be undefined until the tab bar will be presented
     TBTabBarControllerTabBarPositionUndefined,
     /// The tab bar is hidden
     TBTabBarControllerTabBarPositionHidden,
@@ -118,14 +118,7 @@ shouldSelectViewController:(__kindof UIViewController * _Nullable)viewController
 @interface TBTabBarController : UIViewController <TBTabBarDelegate> {
     
 @protected
-    
-    BOOL _shouldSelectViewController;
-    BOOL _didPresentTabBarOnce;
-    BOOL _visibleViewControllerWantsHideTabBar;
-    
-    TBTabBarControllerTabBarPosition _currentPosition;
-    TBTabBarControllerTabBarPosition _preferredPosition;
-        
+
     struct {
         BOOL shouldSelectItemAtIndex:1;
         BOOL didSelectItemAtIndex:1;
@@ -136,8 +129,15 @@ shouldSelectViewController:(__kindof UIViewController * _Nullable)viewController
         BOOL willHideTabBar:1;
         BOOL didHideTabBar:1;
     } _delegateFlags;
-        
+
     NSMutableArray <TBTabBarItem *> *_items;
+
+    TBTabBarControllerTabBarPosition _currentPosition;
+    TBTabBarControllerTabBarPosition _preferredPosition;
+    
+    BOOL _shouldSelectViewController;
+    BOOL _didPresentTabBarOnce;
+    BOOL _visibleViewControllerWantsHideTabBar;
 }
 
 @property (weak, nonatomic, nullable) id <TBTabBarControllerDelegate> delegate;
@@ -254,9 +254,12 @@ shouldSelectViewController:(__kindof UIViewController * _Nullable)viewController
                   hiddenTabBar:(TBTabBar *_Nullable *_Nullable)hiddenTabBar;
 /**
  * @abstract Begins the tab bar position update if needed. Animatable.
- * @discussion To perform any changes to the tab bar position (hiding, changing side, etc...)  you have to create a new subclass of @p `TBTabBarController` class.
- * Then, you have to override one of the methods from the @b `Subclassing` category and write your custom logic there.
- * There is another way, based on setting your own value to the @p `_preferredPosition` instance variable before calling this method, but it's not preferred (ba-dum-tss!).
+ * @discussion To perform any changes to the tab bar position (hiding, changing side, etc...)
+ * you have to create a new subclass of @p `TBTabBarController` class.
+ * Then, you have to override one of the methods from the @b `Subclassing` category and write
+ * your custom logic there.
+ * There is another way, based on setting your own value to the @p `_preferredPosition` instance
+ * variable before calling this method, but it's not preferred (ba-dum-tss!).
  * @note You should @B always call @em `endUpdateTabBarPosition` method after calling this one.
  * @code 
     [UIView animateWithDuration:0.3 animations:^{
@@ -275,8 +278,10 @@ shouldSelectViewController:(__kindof UIViewController * _Nullable)viewController
 - (void)endUpdateTabBarPosition;
 
 /**
- * @abstract Adds an item to the end of the items list and creates the button that will be placed in the tab bar within the next view layout cycle update. Animatable.
- * @discussion Sometimes you want to add a simple button in the middle of the tab bar that won't perform any default actions.
+ * @abstract Adds an item to the end of the items list and creates the button that will be placed
+ * in the tab bar within the next view layout cycle update. Animatable.
+ * @discussion Sometimes you want to add a simple button in the middle of the tab bar that
+ * won't perform any default actions.
  * You can use the delegate methods to observe button actions and restrict unnecessary selections.
  */
 - (void)addItem:(__kindof TBTabBarItem *)item;
@@ -289,8 +294,8 @@ shouldSelectViewController:(__kindof UIViewController * _Nullable)viewController
 
 /**
  * @abstract Removes an item from the items list at the specific index. Animatable.
- * @warning The current implementation does not handle removal of the view controller, if there is any.
- * @b Workaround: manually remove the view controller from the view controllers list and set the updated array to the @b `viewControllers` property.
+ * @note Additionally removes a view controller at the given index, if there is any, and then selects
+ * the next available view controller, if possible.
  */
 - (void)removeItemAtIndex:(NSUInteger)index NS_SWIFT_NAME(removeItem(at:));
 
@@ -352,15 +357,28 @@ shouldSelectViewController:(__kindof UIViewController * _Nullable)viewController
 
 @required
 
-- (void)tb_navigationController:(UINavigationController *)navigationController navigationBarDidChangeHeight:(CGFloat)height;
+- (void)tb_navigationController:(UINavigationController *)navigationController
+   navigationBarDidChangeHeight:(CGFloat)height;
 
-- (void)tb_navigationController:(UINavigationController *)navigationController didBeginTransitionFrom:(UIViewController *)prevViewController to:(UIViewController *)destinationViewController backwards:(BOOL)backwards;
+- (void)tb_navigationController:(UINavigationController *)navigationController
+         didBeginTransitionFrom:(UIViewController *)prevViewController
+                             to:(UIViewController *)destinationViewController
+                      backwards:(BOOL)backwards;
 
-- (void)tb_navigationController:(UINavigationController *)navigationController didUpdateInteractiveFrom:(UIViewController *)prevViewController to:(UIViewController *)destinationViewController percentComplete:(CGFloat)percentComplete;
+- (void)tb_navigationController:(UINavigationController *)navigationController
+       didUpdateInteractiveFrom:(UIViewController *)prevViewController
+                             to:(UIViewController *)destinationViewController
+                percentComplete:(CGFloat)percentComplete;
 
-- (void)tb_navigationController:(UINavigationController *)navigationController willEndTransitionFrom:(UIViewController *)prevViewController to:(UIViewController *)destinationViewController cancelled:(BOOL)cancelled;
+- (void)tb_navigationController:(UINavigationController *)navigationController
+          willEndTransitionFrom:(UIViewController *)prevViewController
+                             to:(UIViewController *)destinationViewController
+                      cancelled:(BOOL)cancelled;
 
-- (void)tb_navigationController:(UINavigationController *)navigationController didEndTransitionFrom:(UIViewController *)prevViewController to:(UIViewController *)destinationViewController cancelled:(BOOL)cancelled;
+- (void)tb_navigationController:(UINavigationController *)navigationController
+           didEndTransitionFrom:(UIViewController *)prevViewController
+                             to:(UIViewController *)destinationViewController
+                      cancelled:(BOOL)cancelled;
 
 @end
 
