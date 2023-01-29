@@ -1056,12 +1056,15 @@ static _TBTabBarControllerMethodOverrides tbtbbrcntrlr_methodOverridesFlag;
 
 - (TBTabBar *)horizontalTabBar {
     
-    Class const horizontalTabBarClass = [[self class] horizontalTabBarClass];
-    
-    NSAssert([horizontalTabBarClass isSubclassOfClass:[TBTabBar class]], @"Horizontal tab bar must be of type `%@`", NSStringFromClass([TBTabBar class]));
-    
     if (_horizontalTabBar == nil) {
-        _horizontalTabBar = [[TBTabBar alloc] initWithLayoutOrientation:TBTabBarLayoutOrientationHorizontal];
+
+        Class const class = [[self class] horizontalTabBarClass];
+
+        NSAssert([class isSubclassOfClass:[TBTabBar class]],
+                 @"Horizontal tab bar must be kind of `%@`",
+                 NSStringFromClass([TBTabBar class]));
+
+        _horizontalTabBar = [[class alloc] initWithLayoutOrientation:TBTabBarLayoutOrientationHorizontal];
         _horizontalTabBar.delegate = self;
     }
     
@@ -1070,12 +1073,15 @@ static _TBTabBarControllerMethodOverrides tbtbbrcntrlr_methodOverridesFlag;
 
 - (TBTabBar *)verticalTabBar {
     
-    Class const verticalTabBarClass = [[self class] verticalTabBarClass];
-    
-    NSAssert([verticalTabBarClass isSubclassOfClass:[TBTabBar class]], @"Vertical tab bar must be of type `%@`", NSStringFromClass([TBTabBar class]));
-    
     if (_verticalTabBar == nil) {
-        _verticalTabBar = [[TBTabBar alloc] initWithLayoutOrientation:TBTabBarLayoutOrientationVertical];
+
+        Class const class = [[self class] verticalTabBarClass];
+
+        NSAssert([class isSubclassOfClass:[TBTabBar class]],
+                 @"Vertical tab bar must be kind of `%@`",
+                 NSStringFromClass([TBTabBar class]));
+
+        _verticalTabBar = [[class alloc] initWithLayoutOrientation:TBTabBarLayoutOrientationVertical];
         _verticalTabBar.delegate = self;
     }
     
