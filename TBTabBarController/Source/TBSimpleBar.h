@@ -36,11 +36,11 @@ typedef NS_ENUM(NSUInteger, TBSimpleBarSeparatorPosition) {
 #pragma mark - Bar
 
 @interface TBSimpleBar : UIView {
-    
+
 @protected
-    
+
     UIEdgeInsets _additionalContentInsets;
-    
+
     UIImageView *_separatorImageView;
 }
 

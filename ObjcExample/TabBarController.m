@@ -24,11 +24,11 @@
     self.horizontalTabBar.contentView = [[UIVisualEffectView alloc] initWithEffect:[UIBlurEffect effectWithStyle:UIBlurEffectStyleProminent]];
 }
 
-- (TBTabBarControllerTabBarPosition)preferredTabBarPositionForViewSize:(CGSize)size {
+- (TBTabBarControllerTabBarPlacement)preferredTabBarPlacementForViewSize:(CGSize)size {
     
     // Show the vertical tab bar whenever the device orientation is landscape
     
-    return size.width >= size.height ? TBTabBarControllerTabBarPositionLeading : TBTabBarControllerTabBarPositionBottom;
+    return size.width >= size.height ? TBTabBarControllerTabBarPlacementLeading : TBTabBarControllerTabBarPlacementBottom;
 }
 
 @end

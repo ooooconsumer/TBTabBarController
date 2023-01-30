@@ -32,10 +32,10 @@
 
 @interface UINavigationController ()
 
+@property (weak, nonatomic, setter = tb_setPrivateDelegate:) id<TBNavigationControllerExtensionDelegate> tb_delegate;
+
 @property (assign, nonatomic, getter = tb_isNestedInTBTabBarController, setter = tb_setNestedInTBTabBarController:) BOOL tb_nestedInTBTabBarController;
 @property (assign, nonatomic, getter = tb_isInteractivePopGestureRecognizerRegistered, setter = tb_setInteractivePopGestureRecognizerRegistered:) BOOL tb_interactivePopGestureRecognizerRegistered;
-
-@property (weak, nonatomic, setter = tb_setPrivateDelegate:) id<TBNavigationControllerExtensionDelegate> tb_delegate;
 
 @end
 
@@ -51,11 +51,29 @@ static char *tb_privateDelegateKey;
     
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        _TBSwizzleMethod([self class], @selector(popViewControllerAnimated:), @selector(tb_popViewControllerAnimated:));
-        _TBSwizzleMethod([self class], @selector(popToViewController:animated:), @selector(tb_popToViewController:animated:));
-        _TBSwizzleMethod([self class], @selector(popToRootViewControllerAnimated:), @selector(tb_popToRootViewControllerAnimated:));
-        _TBSwizzleMethod([self class], @selector(pushViewController:animated:), @selector(tb_pushViewController:animated:));
-        _TBSwizzleMethod([self class], @selector(didMoveToParentViewController:), @selector(tb_didMoveToParentViewController:));
+        _TBSwizzleMethod([self class],
+                         @selector(popViewControllerAnimated:),
+                         @selector(tb_popViewControllerAnimated:));
+
+        _TBSwizzleMethod([self class],
+                         @selector(popToViewController:animated:),
+                         @selector(tb_popToViewController:animated:));
+
+        _TBSwizzleMethod([self class],
+                         @selector(popToRootViewControllerAnimated:),
+                         @selector(tb_popToRootViewControllerAnimated:));
+
+        _TBSwizzleMethod([self class],
+                         @selector(pushViewController:animated:),
+                         @selector(tb_pushViewController:animated:));
+
+        _TBSwizzleMethod([self class],
+                         @selector(didMoveToParentViewController:),
+                         @selector(tb_didMoveToParentViewController:));
+
+        _TBSwizzleMethod([self class],
+                         @selector(viewDidLayoutSubviews),
+                         @selector(tb_viewDidLayoutSubviews));
     });
 }
 
@@ -71,7 +89,9 @@ static char *tb_privateDelegateKey;
     
     [previousViewController setValue:nil forKey:NSStringFromSelector(@selector(tb_tabBarController))];
     
-    [self tb_popViewController:previousViewController destinationViewController:self.topViewController animated:animated];
+    [self tb_popViewController:previousViewController
+     destinationViewController:self.topViewController
+                      animated:animated];
  
     return previousViewController;
 }
@@ -128,7 +148,10 @@ static char *tb_privateDelegateKey;
         [self tb_registerInteractivePopGestureRecognizer:self.interactivePopGestureRecognizer];
     }
     
-    [self.tb_delegate tb_navigationController:self didBeginTransitionFrom:prevViewController to:viewController backwards:false];
+    [self.tb_delegate tb_navigationController:self
+                       didBeginTransitionFrom:prevViewController
+                                           to:viewController
+                                    backwards:false];
 
     id<UIViewControllerTransitionCoordinator> const transitionCoordinator = self.transitionCoordinator;
     
@@ -141,33 +164,51 @@ static char *tb_privateDelegateKey;
                 return;
             }
             typeof(self) strongSelf = weakSelf;
-            [strongSelf.tb_delegate tb_navigationController:strongSelf willEndTransitionFrom:prevViewController to:viewController cancelled:context.isCancelled];
+            [strongSelf.tb_delegate tb_navigationController:strongSelf
+                                      willEndTransitionFrom:prevViewController
+                                                         to:viewController
+                                                  cancelled:context.isCancelled];
         } completion:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
             if (weakSelf == nil) {
                 return;
             }
             typeof(self) strongSelf = weakSelf;
-            [strongSelf.tb_delegate tb_navigationController:strongSelf didEndTransitionFrom:prevViewController to:viewController cancelled:context.isCancelled];
+            [strongSelf.tb_delegate tb_navigationController:strongSelf
+                                       didEndTransitionFrom:prevViewController
+                                                         to:viewController
+                                                  cancelled:context.isCancelled];
         }];
         
     } else {
         
         if (animated) {
             [UIView animateWithDuration:0.35 delay:0.0 options:7 << 16 animations:^{
-                [self.tb_delegate tb_navigationController:self willEndTransitionFrom:prevViewController to:viewController cancelled:false];
+                [self.tb_delegate tb_navigationController:self
+                                    willEndTransitionFrom:prevViewController
+                                                       to:viewController
+                                                cancelled:false];
             } completion:^(BOOL finished) {
-                [self.tb_delegate tb_navigationController:self didEndTransitionFrom:prevViewController to:viewController cancelled:false];
+                [self.tb_delegate tb_navigationController:self
+                                     didEndTransitionFrom:prevViewController
+                                                       to:viewController
+                                                cancelled:false];
             }];
         } else {
-            [self.tb_delegate tb_navigationController:self willEndTransitionFrom:prevViewController to:viewController cancelled:false];
-            [self.tb_delegate tb_navigationController:self didEndTransitionFrom:prevViewController to:viewController cancelled:false];
+            [self.tb_delegate tb_navigationController:self
+                                willEndTransitionFrom:prevViewController
+                                                   to:viewController
+                                            cancelled:false];
+            [self.tb_delegate tb_navigationController:self
+                                 didEndTransitionFrom:prevViewController
+                                                   to:viewController
+                                            cancelled:false];
         }
     }
 }
 
-- (void)viewDidLayoutSubviews {
+- (void)tb_viewDidLayoutSubviews {
     
-    [super viewDidLayoutSubviews];
+    [self tb_viewDidLayoutSubviews];
     
     if (self.tb_nestedInTBTabBarController) {
         [self tb_update];
@@ -214,7 +255,10 @@ static char *tb_privateDelegateKey;
     
     CGFloat const completed = MAX(0.0, MIN(1.0, translation / CGRectGetWidth(self.view.frame)));
 
-    [self.tb_delegate tb_navigationController:self didUpdateInteractiveFrom:[self.transitionCoordinator viewControllerForKey:UITransitionContextFromViewControllerKey] to:self.topViewController percentComplete:completed];
+    [self.tb_delegate tb_navigationController:self
+                     didUpdateInteractiveFrom:[self.transitionCoordinator viewControllerForKey:UITransitionContextFromViewControllerKey]
+                                           to:self.topViewController
+                              percentComplete:completed];
 }
 
 #pragma mark Helpers
@@ -240,14 +284,31 @@ static char *tb_privateDelegateKey;
                 typeof(self) strongSelf = weakSelf;
                 BOOL const isCancelled = context.isCancelled;
                 if (animated) {
-                    [UIView animateWithDuration:transitionCoordinator.transitionDuration delay:0.0 usingSpringWithDamping:1.0 initialSpringVelocity:transitionCoordinator.completionVelocity options:transitionCoordinator.completionCurve << 16 animations:^{
-                        [strongSelf.tb_delegate tb_navigationController:strongSelf willEndTransitionFrom:previousViewController to:destinationViewController cancelled:isCancelled];
+                    [UIView animateWithDuration:transitionCoordinator.transitionDuration
+                                          delay:0.0
+                         usingSpringWithDamping:1.0
+                          initialSpringVelocity:transitionCoordinator.completionVelocity
+                                        options:transitionCoordinator.completionCurve << 16
+                                     animations:^{
+                        [strongSelf.tb_delegate tb_navigationController:strongSelf
+                                                  willEndTransitionFrom:previousViewController
+                                                                     to:destinationViewController
+                                                              cancelled:isCancelled];
                     } completion:^(BOOL finished) {
-                        [strongSelf.tb_delegate tb_navigationController:strongSelf didEndTransitionFrom:previousViewController to:destinationViewController cancelled:isCancelled];
+                        [strongSelf.tb_delegate tb_navigationController:strongSelf
+                                                   didEndTransitionFrom:previousViewController
+                                                                     to:destinationViewController
+                                                              cancelled:isCancelled];
                     }];
                 } else {
-                    [strongSelf.tb_delegate tb_navigationController:strongSelf willEndTransitionFrom:previousViewController to:destinationViewController cancelled:isCancelled];
-                    [strongSelf.tb_delegate tb_navigationController:strongSelf didEndTransitionFrom:previousViewController to:destinationViewController cancelled:isCancelled];
+                    [strongSelf.tb_delegate tb_navigationController:strongSelf
+                                              willEndTransitionFrom:previousViewController
+                                                                 to:destinationViewController
+                                                          cancelled:isCancelled];
+                    [strongSelf.tb_delegate tb_navigationController:strongSelf
+                                               didEndTransitionFrom:previousViewController
+                                                                 to:destinationViewController
+                                                          cancelled:isCancelled];
                 }
             }];
             
@@ -260,13 +321,19 @@ static char *tb_privateDelegateKey;
                     return;
                 }
                 typeof(self) strongSelf = weakSelf;
-                [strongSelf.tb_delegate tb_navigationController:strongSelf willEndTransitionFrom:previousViewController to:destinationViewController cancelled:context.isCancelled];
+                [strongSelf.tb_delegate tb_navigationController:strongSelf
+                                          willEndTransitionFrom:previousViewController
+                                                             to:destinationViewController
+                                                      cancelled:context.isCancelled];
             } completion:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
                 if (weakSelf == nil) {
                     return;
                 }
                 typeof(self) strongSelf = weakSelf;
-                [strongSelf.tb_delegate tb_navigationController:strongSelf didEndTransitionFrom:previousViewController to:destinationViewController cancelled:context.isCancelled];
+                [strongSelf.tb_delegate tb_navigationController:strongSelf
+                                           didEndTransitionFrom:previousViewController
+                                                             to:destinationViewController
+                                                      cancelled:context.isCancelled];
             }];
             
         }
@@ -275,13 +342,25 @@ static char *tb_privateDelegateKey;
         
         if (animated) {
             [UIView animateWithDuration:0.35 delay:0.0 usingSpringWithDamping:1.0 initialSpringVelocity:1.0 options:7 << 16 animations:^{
-                [self.tb_delegate tb_navigationController:self willEndTransitionFrom:previousViewController to:destinationViewController cancelled:false];
+                [self.tb_delegate tb_navigationController:self
+                                    willEndTransitionFrom:previousViewController
+                                                       to:destinationViewController
+                                                cancelled:false];
             } completion:^(BOOL finished) {
-                [self.tb_delegate tb_navigationController:self didEndTransitionFrom:previousViewController to:destinationViewController cancelled:false];
+                [self.tb_delegate tb_navigationController:self
+                                     didEndTransitionFrom:previousViewController
+                                                       to:destinationViewController
+                                                cancelled:false];
             }];
         } else {
-            [self.tb_delegate tb_navigationController:self willEndTransitionFrom:previousViewController to:destinationViewController cancelled:false];
-            [self.tb_delegate tb_navigationController:self didEndTransitionFrom:previousViewController to:destinationViewController cancelled:false];
+            [self.tb_delegate tb_navigationController:self
+                                willEndTransitionFrom:previousViewController
+                                                   to:destinationViewController
+                                            cancelled:false];
+            [self.tb_delegate tb_navigationController:self
+                                 didEndTransitionFrom:previousViewController
+                                                   to:destinationViewController
+                                            cancelled:false];
         }
     }
 }
@@ -297,7 +376,8 @@ static char *tb_privateDelegateKey;
         }
     }
     
-    [self.tb_delegate tb_navigationController:self navigationBarDidChangeHeight:value + self.view.safeAreaInsets.top];
+    [self.tb_delegate tb_navigationController:self
+                 navigationBarDidChangeHeight:value + self.view.safeAreaInsets.top];
 }
 
 #pragma mark Getters

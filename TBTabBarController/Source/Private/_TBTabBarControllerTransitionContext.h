@@ -30,8 +30,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface _TBTabBarControllerTransitionContext : NSObject
 
-@property (assign, nonatomic, readonly) TBTabBarControllerTabBarPosition initialPosition;
-@property (assign, nonatomic, readonly) TBTabBarControllerTabBarPosition targetPosition;
+@property (assign, nonatomic, readonly) TBTabBarControllerTabBarPlacement initialPlacement;
+@property (assign, nonatomic, readonly) TBTabBarControllerTabBarPlacement targetPlacement;
 
 @property (weak, nonatomic, readonly, nullable) TBTabBar *manipulatedTabBar;
 
@@ -43,9 +43,14 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (instancetype)new NS_UNAVAILABLE;
 
-+ (_TBTabBarControllerTransitionContext *)contextWithInitialPosition:(TBTabBarControllerTabBarPosition)initialPosition targetPosition:(TBTabBarControllerTabBarPosition)targetPosition backwards:(BOOL)backwards;
++ (_TBTabBarControllerTransitionContext *)contextWithInitialPlacement:(TBTabBarControllerTabBarPlacement)initialPlacement
+                                                      targetPlacement:(TBTabBarControllerTabBarPlacement)targetPlacement
+                                                           backwards:(BOOL)backwards;
 
-+ (_TBTabBarControllerTransitionContext *)contextWithManipulatedTabBar:(TBTabBar *)tabBar initialPosition:(TBTabBarControllerTabBarPosition)initialPosition targetPosition:(TBTabBarControllerTabBarPosition)targetPosition backwards:(BOOL)backwards;
++ (_TBTabBarControllerTransitionContext *)contextWithManipulatedTabBar:(TBTabBar *)tabBar
+                                                       initialPlacement:(TBTabBarControllerTabBarPlacement)initialPlacement
+                                                        targetPlacement:(TBTabBarControllerTabBarPlacement)targetPlacement
+                                                             backwards:(BOOL)backwards;
 
 @end
 

@@ -30,30 +30,44 @@
 
 #pragma mark Lifecycle
 
-- (instancetype)initWithManipulatedTabBar:(nullable TBTabBar *)tabBar initialPosition:(TBTabBarControllerTabBarPosition)initialPosition targetPosition:(TBTabBarControllerTabBarPosition)targetPosition backwards:(BOOL)backwards {
+- (instancetype)initWithManipulatedTabBar:(nullable TBTabBar *)tabBar
+                          initialPlacement:(TBTabBarControllerTabBarPlacement)initialPlacement
+                           targetPlacement:(TBTabBarControllerTabBarPlacement)targetPlacement
+                                backwards:(BOOL)backwards {
     
     self = [super init];
     
     if (self) {
         _manipulatedTabBar = tabBar;
-        _initialPosition = initialPosition;
-        _targetPosition = targetPosition;
-        _isShowing = initialPosition == TBTabBarControllerTabBarPositionHidden && targetPosition > TBTabBarControllerTabBarPositionHidden;
-        _isHiding = initialPosition > TBTabBarControllerTabBarPositionHidden && targetPosition == TBTabBarControllerTabBarPositionHidden;
+        _initialPlacement = initialPlacement;
+        _targetPlacement = targetPlacement;
+        _isShowing = initialPlacement == TBTabBarControllerTabBarPlacementHidden && targetPlacement > TBTabBarControllerTabBarPlacementHidden;
+        _isHiding = initialPlacement > TBTabBarControllerTabBarPlacementHidden && targetPlacement == TBTabBarControllerTabBarPlacementHidden;
         _backwards = backwards;
     }
     
     return self;
 }
 
-+ (_TBTabBarControllerTransitionContext *)contextWithInitialPosition:(TBTabBarControllerTabBarPosition)initialPosition targetPosition:(TBTabBarControllerTabBarPosition)targetPosition backwards:(BOOL)backwards {
++ (_TBTabBarControllerTransitionContext *)contextWithInitialPlacement:(TBTabBarControllerTabBarPlacement)initialPlacement
+                                                      targetPlacement:(TBTabBarControllerTabBarPlacement)targetPlacement
+                                                           backwards:(BOOL)backwards {
     
-    return [[_TBTabBarControllerTransitionContext alloc] initWithManipulatedTabBar:nil initialPosition:initialPosition targetPosition:targetPosition backwards:backwards];
+    return [[_TBTabBarControllerTransitionContext alloc] initWithManipulatedTabBar:nil
+                                                                   initialPlacement:initialPlacement
+                                                                    targetPlacement:targetPlacement
+                                                                         backwards:backwards];
 }
 
-+ (_TBTabBarControllerTransitionContext *)contextWithManipulatedTabBar:(TBTabBar *)tabBar initialPosition:(TBTabBarControllerTabBarPosition)initialPosition targetPosition:(TBTabBarControllerTabBarPosition)targetPosition backwards:(BOOL)backwards {
++ (_TBTabBarControllerTransitionContext *)contextWithManipulatedTabBar:(TBTabBar *)tabBar
+                                                       initialPlacement:(TBTabBarControllerTabBarPlacement)initialPlacement
+                                                        targetPlacement:(TBTabBarControllerTabBarPlacement)targetPlacement
+                                                             backwards:(BOOL)backwards {
     
-    return [[_TBTabBarControllerTransitionContext alloc] initWithManipulatedTabBar:tabBar initialPosition:initialPosition targetPosition:targetPosition backwards:backwards];
+    return [[_TBTabBarControllerTransitionContext alloc] initWithManipulatedTabBar:tabBar
+                                                                   initialPlacement:initialPlacement
+                                                                    targetPlacement:targetPlacement
+                                                                         backwards:backwards];
 }
 
 @end

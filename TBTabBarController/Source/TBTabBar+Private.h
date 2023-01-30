@@ -23,20 +23,21 @@
 //  SOFTWARE.
 
 #import <Foundation/Foundation.h>
+#import <TBTabBarController/TBTabBarController.h>
 
 @class TBTabBarItem, TBTabBarItemsDifference;
 
 NS_ASSUME_NONNULL_BEGIN
 
-#pragma mark - Private
-
 @interface TBTabBar (Private)
+
+@property (assign, nonatomic, readonly) TBTabBarControllerTabBarPlacement currentPlacement;
 
 - (void)_setItems:(NSArray <__kindof TBTabBarItem *> *)items;
 
 - (void)_setSelectedIndex:(NSUInteger)selectedIndex quietly:(BOOL)quietly;
 
-- (__kindof TBTabBarButton *)_buttonWithItem:(__kindof TBTabBarItem *)item NS_SWIFT_NAME(_button(with:));
+- (__kindof TBTabBarButton *)_makeButtonWithItem:(__kindof TBTabBarItem *)item NS_SWIFT_NAME(makeButton(withItem:));
 
 - (NSArray<__kindof TBTabBarButton *> *)_buttons;
 
@@ -57,6 +58,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)_setAdditionalContentInsets:(UIEdgeInsets)additionalContentInsets;
 
 - (void)_setVisible:(BOOL)visible;
+
+- (void)_prepareForTransitionToPlacement:(TBTabBarControllerTabBarPlacement)preferredTabBarPlacement;
 
 @end
 

@@ -14,7 +14,7 @@ final class SettingsViewController: UITableViewController {
     // MARK: Private Properties
 
     private var items: [ToggleItem] = []
-    private var isUpdatingTabBarPosition = false
+    private var isUpdatingTabBarPlacement = false
     
     // MARK: Lifecycle
     
@@ -82,8 +82,12 @@ private extension SettingsViewController {
         title = "Settings"
 
         items = [
-            .hideTabBarOnPush(isOn: tb_hidesTabBarWhenPushed),
-            .showNotificationIndicator(isOn: navigationController?.tb_tabBarItem.showsNotificationIndicator ?? false)
+            .hideTabBarOnPush(
+                isOn: tb_hidesTabBarWhenPushed
+            ),
+            .showNotificationIndicator(
+                isOn: navigationController?.tb_tabBarItem.showsNotificationIndicator ?? false
+            )
         ]
 
         tableView.register(
@@ -94,13 +98,13 @@ private extension SettingsViewController {
 
     func setHideTabBarOnPush(_ shouldHideBarWhenPushed: Bool) {
         
-        if isUpdatingTabBarPosition {
+        if isUpdatingTabBarPlacement {
             items[0].isOn = shouldHideBarWhenPushed
             tableView.reloadData()
             return
         }
         
-        isUpdatingTabBarPosition.toggle()
+        isUpdatingTabBarPlacement.toggle()
         tb_hidesTabBarWhenPushed.toggle()
         
         UIView.animate(
@@ -108,10 +112,10 @@ private extension SettingsViewController {
             delay: .zero,
             options: UIView.AnimationOptions(rawValue: 7 << 16)
         ) {
-            self.navigationController?.tb_tabBarController?.beginUpdateTabBarPosition()
-        } completion: { (finished) in
-            self.navigationController?.tb_tabBarController?.endUpdateTabBarPosition()
-            self.isUpdatingTabBarPosition.toggle()
+            self.navigationController?.tb_tabBarController?.beginTabBarTransition()
+        } completion: { _ in
+            self.navigationController?.tb_tabBarController?.endTabBarTransition()
+            self.isUpdatingTabBarPlacement.toggle()
         }
     }
 

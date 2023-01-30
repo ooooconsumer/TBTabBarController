@@ -14,11 +14,11 @@
 
 - (nullable UIWindowScene *)retrieveActiveWindowSceneFromHierarchy API_AVAILABLE(ios(13.0)) {
 
-    if (self.openSessions.count == 1) {
-        UISceneSession *session = self.openSessions.anyObject;
-        return [session.scene isKindOfClass:[UIWindowScene class]] ?
-            (UIWindowScene *)session.scene :
-            nil;
+    if (!self.supportsMultipleScenes) {
+        return (UIWindowScene *)self.connectedScenes.anyObject;
+    } else if (self.connectedScenes.count == 1) {
+        UIScene *scene = self.connectedScenes.anyObject;
+        return [scene isKindOfClass:[UIWindowScene class]] ? (UIWindowScene *)scene : nil;
     }
 
     for (UISceneSession *session in self.openSessions) {

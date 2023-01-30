@@ -26,16 +26,11 @@
 #import "_TBUtils.h"
 #import "UIView+Extensions.h"
 
-@implementation TBSimpleBar {
-    
-    BOOL tbsmplbr_needsLayout;
-}
+@implementation TBSimpleBar
 
 @synthesize contentView = _contentView;
 @synthesize separatorColor = tbsmplbr_separatorColor;
 @synthesize separatorImage = tbsmplbr_separatorImage;
-
-#pragma mark - Public
 
 #pragma mark Lifecycle
 
@@ -65,22 +60,9 @@
 
 #pragma mark Overrides
 
-- (void)setNeedsLayout {
-    
-    [super setNeedsLayout];
-    
-    [self tbsmplbr_setNeedsLayout];
-}
-
 - (void)layoutSubviews {
     
     [super layoutSubviews];
-    
-    if (tbsmplbr_needsLayout == false) {
-        return;
-    }
-    
-    tbsmplbr_needsLayout = false;
     
     CGRect const bounds = self.bounds;
     
@@ -91,7 +73,6 @@
     // Separator
     
     CGFloat const separatorSize = self.separatorSize;
-    
     CGRect frame = CGRectZero;
     
     switch (self.separatorPosition) {
@@ -126,7 +107,7 @@
     UIView *contentView = self.contentView;
     
     if (contentView != nil && contentView.superview != nil) {
-        contentView.frame = bounds;
+        contentView.frame = self.bounds;
     }
 }
 
@@ -169,15 +150,6 @@
     return _TBDrawFilledRectangleWithSize((CGSize){self.tb_displayScale, self.tb_displayScale});
 }
 
-#pragma mark Layout
-
-- (void)tbsmplbr_setNeedsLayout {
-    
-    if (!tbsmplbr_needsLayout) {
-        tbsmplbr_needsLayout = true;
-    }
-}
-
 #pragma mark Getters
 
 - (UIColor *)separatorColor {
@@ -194,7 +166,7 @@
 }
 
 - (UIImage *)separatorImage {
-    
+
     if (tbsmplbr_separatorImage == nil) {
         tbsmplbr_separatorImage = [self makeSeparatorImage];
     }
@@ -203,24 +175,6 @@
 }
 
 #pragma mark Setters
-
-- (void)setFrame:(CGRect)frame {
-    
-    if (CGRectEqualToRect(self.frame, frame) == false) {
-        [self tbsmplbr_setNeedsLayout];
-    }
-    
-    [super setFrame:frame];
-}
-
-- (void)setBounds:(CGRect)bounds {
-    
-    if (CGRectEqualToRect(self.bounds, bounds) == false) {
-        [self tbsmplbr_setNeedsLayout];
-    }
-    
-    [super setBounds:bounds];
-}
 
 - (void)setSeparatorSize:(CGFloat)separatorSize {
     
@@ -262,11 +216,11 @@
 }
 
 - (void)setContentView:(UIView *)contentView {
-    
+
+    [_contentView removeFromSuperview];
+
     if (contentView != nil) {
         [self insertSubview:contentView atIndex:0];
-    } else {
-        [_contentView removeFromSuperview];
     }
     
     _contentView = contentView;

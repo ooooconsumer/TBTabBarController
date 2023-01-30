@@ -29,11 +29,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface TBTabBarController (Private)
 
-- (void)_specifyPreferredTabBarPositionForHorizontalSizeClass:(UIUserInterfaceSizeClass)horizontalSizeClass size:(CGSize)size NS_SWIFT_NAME(specifyPreferredTabBarPosition(for:size:));
+- (void)_specifyPreferredTabBarPlacementForHorizontalSizeClass:(UIUserInterfaceSizeClass)horizontalSizeClass size:(CGSize)size NS_SWIFT_NAME(specifyPreferredTabBarPlacement(for:size:));
 
-- (void)_changeItem:(TBTabBarItem *)item toItem:(TBTabBarItem *)newItem NS_SWIFT_NAME(changeItem(to:));
+- (void)_changeItem:(TBTabBarItem *)item toItem:(TBTabBarItem *)newItem NS_SWIFT_NAME(changeItem(_:to:));
 
-- (__kindof UIViewController *_Nullable)_visibleViewController NS_SWIFT_NAME(visibleViewController);
+- (__kindof UIViewController *_Nullable)_visibleViewController NS_SWIFT_NAME(visibleViewController());
 
 @end
 

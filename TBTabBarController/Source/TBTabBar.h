@@ -24,13 +24,11 @@
 
 
 #import <UIKit/UIKit.h>
-
 #import <TBTabBarController/TBSimpleBar.h>
 #import <TBTabBarController/TBTabBarItemsDifference.h>
 #import <TBTabBarController/TBTabBarButton.h>
 
-@class TBTabBar, TBTabBarItem;
-@class _TBTabBarLongPressContext;
+@class TBTabBar, TBTabBarItem, _TBTabBarLongPressContext;
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -43,12 +41,16 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  * @abstract Notifies the delegate before selecting a new tab item.
  */
-- (BOOL)tabBar:(TBTabBar *)tabBar shouldSelectItem:(__kindof TBTabBarItem *)item atIndex:(NSUInteger)index;
+- (BOOL)tabBar:(TBTabBar *)tabBar
+shouldSelectItem:(__kindof TBTabBarItem *)item
+       atIndex:(NSUInteger)index;
 
 /**
  * @abstract Notifies the delegate that the tab bar controller did select new tab.
  */
-- (void)tabBar:(TBTabBar *)tabBar didSelectItem:(__kindof TBTabBarItem *)item atIndex:(NSUInteger)index;
+- (void)tabBar:(TBTabBar *)tabBar
+ didSelectItem:(__kindof TBTabBarItem *)item
+       atIndex:(NSUInteger)index;
 
 @end
 
@@ -63,21 +65,27 @@ NS_ASSUME_NONNULL_BEGIN
  * @param tabIndex An index of the visible tab.
  * @param location A location in the view.
  */
-- (void)tabBar:(TBTabBar *)tabBar longPressBeganOnTabAtIndex:(NSUInteger)tabIndex withLocation:(CGPoint)location;
+- (void)tabBar:(TBTabBar *)tabBar
+longPressBeganOnTabAtIndex:(NSUInteger)tabIndex
+  withLocation:(CGPoint)location;
 
 /**
  * @abstract Notifies the delegate that some changes occur to the touches.
  * @param tabIndex An index of the visible tab.
  * @param location A location in the view.
  */
-- (void)tabBar:(TBTabBar *)tabBar longPressChangedOnTabAtIndex:(NSUInteger)tabIndex withLocation:(CGPoint)location;
+- (void)tabBar:(TBTabBar *)tabBar
+longPressChangedOnTabAtIndex:(NSUInteger)tabIndex
+  withLocation:(CGPoint)location;
 
 /**
  * @abstract Notifies the delegate that the gesture recognizer has been ended or cancelled.
  * @param tabIndex An index of the visible tab.
  * @param location A location in the view.
  */
-- (void)tabBar:(TBTabBar *)tabBar longPressEndedOnTabAtIndex:(NSUInteger)tabIndex withLocation:(CGPoint)location;
+- (void)tabBar:(TBTabBar *)tabBar
+longPressEndedOnTabAtIndex:(NSUInteger)tabIndex
+  withLocation:(CGPoint)location;
 
 @end
 
@@ -91,26 +99,26 @@ typedef NS_ENUM(NSInteger, TBTabBarLayoutOrientation) {
 @interface TBTabBar : TBSimpleBar <UIGestureRecognizerDelegate> {
     
 @protected
-    
-    BOOL _shouldSelectItem;
-    
-    NSUInteger _itemsCount;
-    
+
     struct {
         BOOL shouldSelectItemAtIndex:1;
         BOOL didSelectItemAtIndex:1;
     } _delegateFlags;
-    
+
     struct {
         BOOL longPressBegan:1;
         BOOL longPressChanged:1;
         BOOL longPressEnded:1;
     } _longPressHandlerFlags;
-    
+
     NSMutableArray <__kindof TBTabBarItem *> *_visibleItems;
     NSMutableArray <__kindof TBTabBarItem *> *_hiddenItems;
-    
+
     _TBTabBarLongPressContext *_longPressContext;
+
+    NSUInteger _itemsCount;
+
+    BOOL _shouldSelectItem;
 }
 
 @property (weak, nonatomic, nullable) id <TBTabBarDelegate> delegate;
@@ -189,13 +197,13 @@ typedef NS_ENUM(NSInteger, TBTabBarLayoutOrientation) {
 /**
  * @abstract Selects an item if it is presented either in the visible items list or in the hidden items list.
  */
-- (void)selectItem:(__kindof TBTabBarItem *)item NS_SWIFT_NAME(select(item:));
+- (void)selectItem:(__kindof TBTabBarItem *)item NS_SWIFT_NAME(select(_:));
 
 /**
  * @abstract Return a button at the tab index, if any.
  * @discussion You can use this method to get buttons, since there is no public way to get all of them.
  */
-- (nullable TBTabBarButton *)buttonAtTabIndex:(NSUInteger)tabIndex NS_SWIFT_NAME(button(atTabIndex:));
+- (nullable TBTabBarButton *)buttonAtTabIndex:(NSUInteger)tabIndex NS_SWIFT_NAME(button(at:));
 
 @end
 
@@ -204,8 +212,9 @@ typedef NS_ENUM(NSInteger, TBTabBarLayoutOrientation) {
 @interface TBTabBar (Subclassing)
 
 /**
- * @abstract A method that handles item updates by calculating the difference between the new items and the old ones. Do not call this method directly.
+ * @abstract A method that handles item updates by calculating the difference between the new items and the old ones.
  * @discussion You can override this method to provide your own mechanism to handle item updates.
+ * @warning Do not call this method directly. Meant to be overridden.
  */
 - (void)updateItems;
 

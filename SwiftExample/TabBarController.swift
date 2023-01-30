@@ -23,9 +23,9 @@ final class TabBarController: TBTabBarController {
         horizontalTabBar.contentView = UIVisualEffectView(effect: UIBlurEffect(style: .prominent))
     }
     
-    override func preferredTabBarPosition(
+    override func preferredTabBarPlacement(
         forViewSize size: CGSize
-    ) -> TBTabBarControllerTabBarPosition {
+    ) -> TBTabBarControllerTabBarPlacement {
         
         // Show the vertical tab bar whenever the device orientation is landscape
         

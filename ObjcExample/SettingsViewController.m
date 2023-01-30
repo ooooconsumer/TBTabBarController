@@ -16,7 +16,7 @@
     
     NSArray<UITableViewCell *> *_cells;
     
-    BOOL _isUpdatingTabBarPosition;
+    BOOL _isUpdatingTabBarPlacement;
 }
 
 #pragma mark - Public
@@ -81,20 +81,20 @@
 
 - (void)_setHideTabBarOnPush:(UISwitch *)sender {
     
-    if (_isUpdatingTabBarPosition) {
+    if (_isUpdatingTabBarPlacement) {
         [sender setOn:!sender.isOn animated:true];
         return;
     }
     
-    _isUpdatingTabBarPosition = true;
+    _isUpdatingTabBarPlacement = true;
     
     self.tb_hidesTabBarWhenPushed = !self.tb_hidesTabBarWhenPushed;
     
     [UIView animateWithDuration:0.35 delay:0.0 options:7 << 16 animations:^{
-        [self.navigationController.tb_tabBarController beginUpdateTabBarPosition];
+        [self.navigationController.tb_tabBarController beginTabBarTransition];
     } completion:^(BOOL finished) {
-        [self.navigationController.tb_tabBarController endUpdateTabBarPosition];
-        self->_isUpdatingTabBarPosition = false;
+        [self.navigationController.tb_tabBarController endTabBarTransition];
+        self->_isUpdatingTabBarPlacement = false;
     }];
 }
 

@@ -340,8 +340,8 @@
 		81B5B111256ED59000A9194E /* Categories */ = {
 			isa = PBXGroup;
 			children = (
-				8102CDCB2982F4EC0073CBAB /* UIKit */,
 				8185B60529850F0E00A97CA2 /* Foundation */,
+				8102CDCB2982F4EC0073CBAB /* UIKit */,
 			);
 			path = Categories;
 			sourceTree = "<group>";

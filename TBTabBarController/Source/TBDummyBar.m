@@ -59,11 +59,9 @@
 - (void)layoutSubviews {
     
     [super layoutSubviews];
-    
-    CGRect const bounds = self.bounds;
-    
-    CGFloat const width = CGRectGetWidth(bounds);
-    CGFloat const height = CGRectGetHeight(bounds);
+
+    CGFloat const width = CGRectGetWidth(self.bounds);
+    CGFloat const height = CGRectGetHeight(self.bounds);
     CGFloat const displayScale = self.tb_displayScale;
 
     UIEdgeInsets const safeAreaInsets = self.safeAreaInsets;
@@ -73,17 +71,15 @@
     
     CGRect frame = subview.frame;
     frame.size = [subview sizeThatFits:(CGSize){width - safeAreaInsets.left - safeAreaInsets.right - contentInsets.left, height - contentInsets.top - contentInsets.bottom - safeAreaInsets.top}];
-    frame.origin = (CGPoint){safeAreaInsets.left + (((width - safeAreaInsets.left) - frame.size.width) / 2.0) , height + contentInsets.top - contentInsets.bottom - frame.size.height};
+    frame.origin = (CGPoint){
+        safeAreaInsets.left + (((width - safeAreaInsets.left) - frame.size.width) / 2.0),
+        height + contentInsets.top - contentInsets.bottom - frame.size.height
+    };
     
     subview.frame = _TBPixelAccurateRect(frame, displayScale, true);
 }
 
-- (TBSimpleBarSeparatorPosition)separatorPosition {
-    
-    return self.tb_isLeftToRight ? TBSimpleBarSeparatorPositionRight : TBSimpleBarSeparatorPositionLeft;
-}
-
-#pragma mark - Private
+#pragma mark Private Methods
 
 #pragma mark Setup
 
@@ -95,11 +91,11 @@
 #pragma mark Setters
 
 - (void)setSubview:(__kindof UIView *)subview {
-    
+
+    [self.subview removeFromSuperview];
+
     if (subview != nil) {
         [self addSubview:subview];
-    } else {
-        [_subview removeFromSuperview];
     }
     
     _subview = subview;

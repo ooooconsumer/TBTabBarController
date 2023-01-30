@@ -32,17 +32,19 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-typedef NS_ENUM(NSUInteger, TBTabBarControllerTabBarPosition) {
-    /// The tab bar position is undefined. Typically this used for @p `_preferredPosition` when there's no any tab bar position update. The current position also can be undefined until the tab bar will be presented
-    TBTabBarControllerTabBarPositionUndefined,
-    /// The tab bar is hidden
-    TBTabBarControllerTabBarPositionHidden,
-    /// When this value is used, the @em vertical tab bar will be presented on the bottom of the view
-    TBTabBarControllerTabBarPositionLeading,
-    /// Will be available soon
-    TBTabBarControllerTabBarPositionTrailing NS_UNAVAILABLE,
-    /// When this value is used, the @em horizontal tab bar will be presented on the bottom of the view
-    TBTabBarControllerTabBarPositionBottom,
+typedef NS_ENUM(NSUInteger, TBTabBarControllerTabBarPlacement) {
+    /// A tab bar position is undefined. Typically this used for @p `_preferredPlacement` when there's
+    /// no any tab bar position update. The current position also can be undefined until the tab bar
+    /// will be presented.
+    TBTabBarControllerTabBarPlacementUndefined,
+    /// A tab bar will be hidden.
+    TBTabBarControllerTabBarPlacementHidden,
+    /// A vertical tab bar attached to the leading side of the screen will be used.
+    TBTabBarControllerTabBarPlacementLeading,
+    /// A vertical tab bar attached to the trailing side of the screen will be used.
+    TBTabBarControllerTabBarPlacementTrailing,
+    /// A horizontal tab bar attached to the bottom side of the screen will be used.
+    TBTabBarControllerTabBarPlacementBottom,
 };
 
 #pragma mark - Delegate
@@ -58,13 +60,15 @@ typedef NS_ENUM(NSUInteger, TBTabBarControllerTabBarPosition) {
  * @abstract Notifies the delegate before selecting a new tab item.
  */
 - (BOOL)tabBarController:(TBTabBarController *)tabBarController
-        shouldSelectItem:(__kindof TBTabBarItem *)item atIndex:(NSUInteger)index;
+        shouldSelectItem:(__kindof TBTabBarItem *)item
+                 atIndex:(NSUInteger)index;
 
 /**
  * @abstract Notifies the delegate that the tab bar controller did select new tab.
  */
 - (void)tabBarController:(TBTabBarController *)tabBarController
-           didSelectItem:(__kindof TBTabBarItem *)item atIndex:(NSUInteger)index;
+           didSelectItem:(__kindof TBTabBarItem *)item
+                 atIndex:(NSUInteger)index;
 
 /**
  * @abstract Notifies the delegate before selecting a new view controller.
@@ -132,8 +136,8 @@ shouldSelectViewController:(__kindof UIViewController * _Nullable)viewController
 
     NSMutableArray <TBTabBarItem *> *_items;
 
-    TBTabBarControllerTabBarPosition _currentPosition;
-    TBTabBarControllerTabBarPosition _preferredPosition;
+    TBTabBarControllerTabBarPlacement _currentPlacement;
+    TBTabBarControllerTabBarPlacement _preferredPlacement;
     
     BOOL _shouldSelectViewController;
     BOOL _didPresentTabBarOnce;
@@ -235,7 +239,7 @@ shouldSelectViewController:(__kindof UIViewController * _Nullable)viewController
  * is used is depending on the context) and returns pointers to both visible tab bar
  * and the hidden one, if possible.
  * @discussion If there's no visible or hidden tab bar, it means that they are both hidden.
- * So, you have to call @b `_specifyPreferredTabBarPositionForHorizontalSizeClass:size:` method.
+ * So, you have to call @b `_specifyPreferredTabBarPlacementForHorizontalSizeClass:size:` method.
  * It will specify the preferred tab bar position, so you can call this method again to fetch
  * the hidden tab bar.
  * @code
@@ -258,24 +262,24 @@ shouldSelectViewController:(__kindof UIViewController * _Nullable)viewController
  * you have to create a new subclass of @p `TBTabBarController` class.
  * Then, you have to override one of the methods from the @b `Subclassing` category and write
  * your custom logic there.
- * There is another way, based on setting your own value to the @p `_preferredPosition` instance
+ * There is another way, based on setting your own value to the @p `_preferredPlacement` instance
  * variable before calling this method, but it's not preferred (ba-dum-tss!).
- * @note You should @B always call @em `endUpdateTabBarPosition` method after calling this one.
+ * @note You should @B always call @em `endTabBarTransition` method after calling this one.
  * @code 
     [UIView animateWithDuration:0.3 animations:^{
-        [self beginUpdateTabBarPosition];
+        [self beginTabBarTransition];
     } completion:^(BOOL finished) {
-        [self endUpdateTabBarPosition];
+        [self endTabBarTransition];
     }];
  */
-- (void)beginUpdateTabBarPosition;
+- (void)beginTabBarTransition;
 
 /**
  * @abstract Ends the tab bar position update.
  * @note Unbalanced calls may lead to unexpected behaviour.
- * @see Please, see @b `beginUpdateTabBarPosition` method descriptiption.
+ * @see Please, see @b `beginTabBarTransition` method description.
  */
-- (void)endUpdateTabBarPosition;
+- (void)endTabBarTransition;
 
 /**
  * @abstract Adds an item to the end of the items list and creates the button that will be placed
@@ -304,8 +308,10 @@ shouldSelectViewController:(__kindof UIViewController * _Nullable)viewController
 #pragma mark - Subclassing
 
 /**
- * @abstract A category that contains methods for controlling the positioning and appearence of the tab bar.
- * @warning You should never override @em `preferredTabBarPositionForHorizontalSizeClass:` and @em `preferredTabBarPositionForViewSize:` at once.
+ * @abstract A category that contains methods for controlling the positioning and appearance
+ * of the tab bar.
+ * @warning You should never override @em `preferredTabBarPlacementForHorizontalSizeClass:`
+ * and @em `preferredTabBarPlacementForViewSize:` at once.
  */
 @interface TBTabBarController (Subclassing)
 
@@ -314,7 +320,7 @@ shouldSelectViewController:(__kindof UIViewController * _Nullable)viewController
  * @param sizeClass A new horizontal size class.
  * @return A preferred tab bar position for the given view size.
  */
-- (TBTabBarControllerTabBarPosition)preferredTabBarPositionForHorizontalSizeClass:(UIUserInterfaceSizeClass)sizeClass;
+- (TBTabBarControllerTabBarPlacement)preferredTabBarPlacementForHorizontalSizeClass:(UIUserInterfaceSizeClass)sizeClass;
 
 /**
  * @discussion Called when the view is going to transition to the new size.
@@ -323,7 +329,7 @@ shouldSelectViewController:(__kindof UIViewController * _Nullable)viewController
  * @param size A new view size.
  * @return A preferred tab bar position for the given view size.
  */
-- (TBTabBarControllerTabBarPosition)preferredTabBarPositionForViewSize:(CGSize)size;
+- (TBTabBarControllerTabBarPlacement)preferredTabBarPlacementForViewSize:(CGSize)size;
 
 /**
  * @abstract A class for the horizontal tab bar. Default value is TBTabBar class.

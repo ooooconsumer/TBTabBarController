@@ -24,9 +24,7 @@
 
 
 #import "TBTabBar.h"
-
 #import "TBTabBar+Private.h"
-#import "TBTabBarController.h"
 #import "TBTabBarItem.h"
 #import "TBTabBarButton.h"
 #import "_TBUtils.h"
@@ -41,6 +39,7 @@
 @interface TBTabBar()
 
 @property (strong, nonatomic) _TBStackView *stackView;
+@property (assign, nonatomic) TBTabBarControllerTabBarPlacement currentPlacement;
 
 @end
 
@@ -200,14 +199,9 @@
     self.notificationIndicatorTintColor = tintColor;
 }
 
-- (TBSimpleBarSeparatorPosition)separatorPosition {
-    
-    return self.isVertical ?
-        (self.tb_isLeftToRight ? TBSimpleBarSeparatorPositionRight : TBSimpleBarSeparatorPositionLeft) :
-        TBSimpleBarSeparatorPositionTop;
-}
+#pragma mark Private Methods
 
-#pragma mark - Private
+#pragma mark Setup
 
 - (void)tbtbbr_commonInitWithLayoutOrientation:(TBTabBarLayoutOrientation)layoutOrientation {
     
@@ -218,8 +212,14 @@
     _shouldSelectItem = true;
     _maxNumberOfVisibleTabs = 5;
     _vertical = (_layoutOrientation == TBTabBarLayoutOrientationVertical);
-    
-    self.contentInsets = _vertical ? UIEdgeInsetsMake(2.0, 1.0, 2.0, 1.0) : UIEdgeInsetsMake(1.0, 2.0, 1.0, 2.0);
+
+    self.separatorPosition = _vertical ?
+        TBSimpleBarSeparatorPositionRight :
+        TBSimpleBarSeparatorPositionTop;
+
+    self.contentInsets = _vertical ?
+        UIEdgeInsetsMake(2.0, 1.0, 2.0, 1.0) :
+        UIEdgeInsetsMake(1.0, 2.0, 1.0, 2.0);
 }
 
 - (void)tbtbbr_setup {
@@ -531,10 +531,10 @@
                     buttonToInsert = removedButtons[removedButtonIndex];
                     [removedButtons removeObjectAtIndex:removedButtonIndex];
                 } else {
-                    buttonToInsert = [self _buttonWithItem:change.item];
+                    buttonToInsert = [self _makeButtonWithItem:change.item];
                 }
             } else {
-                buttonToInsert = [self _buttonWithItem:change.item];
+                buttonToInsert = [self _makeButtonWithItem:change.item];
             }
             [stackView insertSubview:buttonToInsert atIndex:change.index];
             [_visibleItems insertObject:change.item atIndex:change.index];
@@ -638,15 +638,24 @@
     [self.stackView.subviews[index] setImage:image forState:UIControlStateSelected];
 }
 
-- (__kindof TBTabBarButton *)_buttonWithItem:(__kindof TBTabBarItem *)item {
+- (__kindof TBTabBarButton *)_makeButtonWithItem:(__kindof TBTabBarItem *)item {
+
+    TBTabBarButtonLayoutOrientation orientation = self.isVertical ?
+        TBTabBarButtonLayoutOrientationHorizontal :
+        TBTabBarButtonLayoutOrientationVertical;
     
-    __kindof TBTabBarButton *button = [[item.buttonClass alloc] initWithTabBarItem:item layoutOrientation:self.isVertical ? TBTabBarButtonLayoutOrientationHorizontal : TBTabBarButtonLayoutOrientationVertical];
+    TBTabBarButton *button = [[item.buttonClass alloc] initWithTabBarItem:item layoutOrientation: orientation];
     button.notificationIndicatorView.tintColor = self.notificationIndicatorTintColor;
     button.tintColor = self.defaultTintColor;
     button.autoresizingMask = UIViewAutoresizingNone;
     
-    [button addTarget:self action:@selector(tbtbbr_willSelectButton:) forControlEvents:UIControlEventTouchDown];
-    [button addTarget:self action:@selector(tbtbbr_didSelectButton:) forControlEvents:UIControlEventTouchUpInside];
+    [button addTarget:self
+               action:@selector(tbtbbr_willSelectButton:)
+     forControlEvents:UIControlEventTouchDown];
+
+    [button addTarget:self
+               action:@selector(tbtbbr_didSelectButton:)
+     forControlEvents:UIControlEventTouchUpInside];
     
     return button;
 }
@@ -701,6 +710,43 @@
 - (void)_setVisible:(BOOL)visible {
     
     _visible = visible;
+}
+
+- (void)_prepareForTransitionToPlacement:(TBTabBarControllerTabBarPlacement)preferredTabBarPlacement {
+
+    if (self.isVertical) {
+        switch (preferredTabBarPlacement) {
+            case TBTabBarControllerTabBarPlacementLeading:
+            case TBTabBarControllerTabBarPlacementTrailing:
+                self.currentPlacement = preferredTabBarPlacement;
+
+            default:
+                break;
+        }
+    } else {
+        switch (preferredTabBarPlacement) {
+            case TBTabBarControllerTabBarPlacementBottom:
+                self.currentPlacement = preferredTabBarPlacement;
+
+            default:
+                break;
+        }
+    }
+
+    if (self.separatorPosition != TBSimpleBarSeparatorPositionHidden && self.isVertical) {
+        switch (self.currentPlacement) {
+            case TBTabBarControllerTabBarPlacementLeading:
+                self.separatorPosition = TBSimpleBarSeparatorPositionRight;
+                break;
+
+            case TBTabBarControllerTabBarPlacementTrailing:
+                self.separatorPosition = TBSimpleBarSeparatorPositionLeft;
+                break;
+
+            default:
+                break;
+        }
+    }
 }
 
 @end
