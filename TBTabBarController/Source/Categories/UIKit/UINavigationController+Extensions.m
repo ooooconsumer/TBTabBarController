@@ -2,7 +2,7 @@
 //  UINavigationController+Extensions.m
 //  TBTabBarController
 //
-//  Copyright (c) 2019-2023 Timur Ganiev
+//  Copyright © 2019-2023 Timur Ganiev. All rights reserved.
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -253,7 +253,7 @@ static char *tb_privateDelegateKey;
         return;
     }
     
-    CGFloat const completed = MAX(0.0, MIN(1.0, translation / CGRectGetWidth(self.view.frame)));
+    CGFloat const completed = MAX(0.0, MIN(1.0, translation / CGRectGetWidth(self.view.bounds)));
 
     [self.tb_delegate tb_navigationController:self
                      didUpdateInteractiveFrom:[self.transitionCoordinator viewControllerForKey:UITransitionContextFromViewControllerKey]

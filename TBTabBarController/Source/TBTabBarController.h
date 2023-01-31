@@ -2,7 +2,7 @@
 //  TBTabBarController.h
 //  TBTabBarController
 //
-//  Copyright (c) 2019-2023 Timur Ganiev
+//  Copyright © 2019-2023 Timur Ganiev. All rights reserved.
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -33,8 +33,8 @@
 NS_ASSUME_NONNULL_BEGIN
 
 typedef NS_ENUM(NSUInteger, TBTabBarControllerTabBarPlacement) {
-    /// A tab bar position is undefined. Typically this used for @p `_preferredPlacement` when there's
-    /// no any tab bar position update. The current position also can be undefined until the tab bar
+    /// A tab bar placement is undefined. Typically this used for @p `_preferredPlacement` when there's
+    /// no any tab bar placement update. The current placement also can be undefined until the tab bar
     /// will be presented.
     TBTabBarControllerTabBarPlacementUndefined,
     /// A tab bar will be hidden.
@@ -80,7 +80,8 @@ shouldSelectViewController:(__kindof UIViewController * _Nullable)viewController
 
 /**
  * @abstract Notifies the delegate that the tab bar controller did select new tab.
- * @discussion If you want to do something with the selected view controller before the user will actually select it you can use the method above.
+ * @discussion If you want to do something with the selected view controller before the user will
+ * actually select it you can use the method above.
  */
 - (void)tabBarController:(TBTabBarController *)tabBarController
  didSelectViewController:(__kindof UIViewController *)viewController;
@@ -104,6 +105,13 @@ shouldSelectViewController:(__kindof UIViewController * _Nullable)viewController
  * @abstract Notifies the delegate after the controller did hide a tab bar.
  */
 - (void)tabBarController:(TBTabBarController *)tabBarController didHideTabBar:(TBTabBar *)tabBar;
+
+/**
+ * @abstract Asks the delegate for an animation controller that is in charge of performing the animations for transitioning between tabs.
+ */
+- (nullable id<UIViewControllerAnimatedTransitioning>)tabBarController:(TBTabBarController *)tabBarController
+                    animationControllerForTransitionFromViewController:(nullable UIViewController *)fromViewController
+                                                      toViewController:(nullable UIViewController *)toViewController;
 
 @end
 
@@ -132,6 +140,7 @@ shouldSelectViewController:(__kindof UIViewController * _Nullable)viewController
         BOOL didShowTabBar:1;
         BOOL willHideTabBar:1;
         BOOL didHideTabBar:1;
+        BOOL animationControllerForTransition:1;
     } _delegateFlags;
 
     NSMutableArray <TBTabBarItem *> *_items;
@@ -190,7 +199,7 @@ shouldSelectViewController:(__kindof UIViewController * _Nullable)viewController
  * That method retrieves both the visible tab bar and the hidden one.
  * @note Before iOS 13 equals to nil when the trait collection is not initialazed yet.
  * It can be nil as well either when there is no visible tab bar, or
- * when the controller is updating the tab bar position.
+ * when the controller is updating the tab bar placement.
  */
 @property (weak, nonatomic, readonly, nullable) TBTabBar *visibleTabBar;
 
@@ -235,12 +244,12 @@ shouldSelectViewController:(__kindof UIViewController * _Nullable)viewController
 - (void)didPresentTabBar NS_REQUIRES_SUPER;
 
 /**
- * @abstract A method that relies on the current tab bar position (or the preferred one — which one
+ * @abstract A method that relies on the current tab bar placement (or the preferred one — which one
  * is used is depending on the context) and returns pointers to both visible tab bar
  * and the hidden one, if possible.
  * @discussion If there's no visible or hidden tab bar, it means that they are both hidden.
  * So, you have to call @b `_specifyPreferredTabBarPlacementForHorizontalSizeClass:size:` method.
- * It will specify the preferred tab bar position, so you can call this method again to fetch
+ * It will specify the preferred tab bar placement, so you can call this method again to fetch
  * the hidden tab bar.
  * @code
     TBTabBar *visibleTabBar, *hiddenTabBar;
@@ -257,8 +266,8 @@ shouldSelectViewController:(__kindof UIViewController * _Nullable)viewController
 - (void)currentlyVisibleTabBar:(TBTabBar *_Nullable *_Nullable)visibleTabBar
                   hiddenTabBar:(TBTabBar *_Nullable *_Nullable)hiddenTabBar;
 /**
- * @abstract Begins the tab bar position update if needed. Animatable.
- * @discussion To perform any changes to the tab bar position (hiding, changing side, etc...)
+ * @abstract Begins the tab bar placement update if needed. Animatable.
+ * @discussion To perform any changes to the tab bar placement (hiding, changing side, etc...)
  * you have to create a new subclass of @p `TBTabBarController` class.
  * Then, you have to override one of the methods from the @b `Subclassing` category and write
  * your custom logic there.
@@ -318,16 +327,16 @@ shouldSelectViewController:(__kindof UIViewController * _Nullable)viewController
 /**
  * @discussion Called when the view is going to transition to the new horizontal size class.
  * @param sizeClass A new horizontal size class.
- * @return A preferred tab bar position for the given view size.
+ * @return A preferred tab bar placement for the given view size.
  */
 - (TBTabBarControllerTabBarPlacement)preferredTabBarPlacementForHorizontalSizeClass:(UIUserInterfaceSizeClass)sizeClass;
 
 /**
  * @discussion Called when the view is going to transition to the new size.
- * You can call super to see what's the preferred position for the given size as well.
+ * You can call super to see what's the preferred placement for the given size as well.
  * By default, this method relies on the horizontal size class and not on the view size.
  * @param size A new view size.
- * @return A preferred tab bar position for the given view size.
+ * @return A preferred tab bar placement for the given view size.
  */
 - (TBTabBarControllerTabBarPlacement)preferredTabBarPlacementForViewSize:(CGSize)size;
 

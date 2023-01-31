@@ -1,8 +1,8 @@
 //
-//  _TBTabBarLongPressContext.h
+//  _TBTabBarControllerTransitionAnimator.m
 //  TBTabBarController
 //
-//  Copyright (c) 2019-2023 Timur Ganiev
+//  Copyright © 2019-2023 Timur Ganiev. All rights reserved.
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -22,17 +22,23 @@
 //  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 //  SOFTWARE.
 
-#import <Foundation/Foundation.h>
+#import "_TBTabBarControllerTransitionAnimator.h"
 
-NS_ASSUME_NONNULL_BEGIN
+@implementation _TBTabBarControllerTransitionAnimator
 
-@interface _TBTabBarLongPressContext : NSObject
+#pragma mark UIViewControllerAnimatedTransitioning
 
-@property (assign, nonatomic) NSUInteger tabIndex;
+- (void)animateTransition:(nonnull id<UIViewControllerContextTransitioning>)transitionContext {
 
-+ (_TBTabBarLongPressContext *)contextWithTabIndex:(NSUInteger)tabIndex;
+    UIViewController *destinationViewController = [transitionContext viewControllerForKey:UITransitionContextToViewControllerKey];
+
+    [transitionContext.containerView addSubview:destinationViewController.view];
+    [transitionContext completeTransition:!transitionContext.transitionWasCancelled];
+}
+
+- (NSTimeInterval)transitionDuration:(nullable id<UIViewControllerContextTransitioning>)transitionContext {
+
+    return 0.0;
+}
 
 @end
-
-NS_ASSUME_NONNULL_END
-

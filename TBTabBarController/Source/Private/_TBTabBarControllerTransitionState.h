@@ -1,5 +1,5 @@
 //
-//  TBTabBarItemsDifference.h
+//  _TBTabBarControllerTransitionState.h
 //  TBTabBarController
 //
 //  Copyright © 2019-2023 Timur Ganiev. All rights reserved.
@@ -24,39 +24,33 @@
 
 #import <Foundation/Foundation.h>
 
-#import <TBTabBarController/TBTabBarItemChange.h>
-
-@class TBTabBarItem;
+#import <TBTabBarController/TBTabBarController.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
-/**
- * @abstract A difference between two given arrays calculated using the Myers algorithm.
- * @discussion This is a backward compatibility for NSOrderedCollectionDifference that supports older iOS versions (< 13.0).
- * Under the hood it uses the same algorithm that uses Swift to calculate the difference except it is written in C language.
- * For iOS 13.0 and up it uses NSOrderedCollectionDifference to calculate the difference.
- */
-@interface TBTabBarItemsDifference : NSObject <NSFastEnumeration> {
-    
-@protected
-    NSArray<TBTabBarItemChange *> *_changes;
-}
+@interface _TBTabBarControllerTransitionState : NSObject
 
-@property (strong, nonatomic, readonly) NSArray<TBTabBarItemChange *> *insertions;
+@property (assign, nonatomic, readonly) TBTabBarControllerTabBarPlacement initialPlacement;
+@property (assign, nonatomic, readonly) TBTabBarControllerTabBarPlacement targetPlacement;
 
-@property (strong, nonatomic, readonly) NSArray<TBTabBarItemChange *> *removals;
+@property (weak, nonatomic, readonly, nullable) TBTabBar *manipulatedTabBar;
 
-@property (assign, nonatomic, readonly) BOOL hasChanges;
-
-- (instancetype)initWithChanges:(NSArray<TBTabBarItemChange *> *)changes;
-
-- (instancetype)initWithCollectionDifference:(NSOrderedCollectionDifference *)collectionDifference API_AVAILABLE(ios(13.0));
-
-+ (instancetype)differenceWithItems:(NSArray<TBTabBarItem *> *)array from:(NSArray<TBTabBarItem *> *)other;
+@property (assign, nonatomic, readonly) BOOL backwards;
+@property (assign, nonatomic, readonly) BOOL isShowing;
+@property (assign, nonatomic, readonly) BOOL isHiding;
 
 - (instancetype)init NS_UNAVAILABLE;
 
 + (instancetype)new NS_UNAVAILABLE;
+
++ (_TBTabBarControllerTransitionState *)stateWithInitialPlacement:(TBTabBarControllerTabBarPlacement)initialPlacement
+                                                  targetPlacement:(TBTabBarControllerTabBarPlacement)targetPlacement
+                                                        backwards:(BOOL)backwards;
+
++ (_TBTabBarControllerTransitionState *)stateWithManipulatedTabBar:(TBTabBar *)tabBar
+                                                  initialPlacement:(TBTabBarControllerTabBarPlacement)initialPlacement
+                                                   targetPlacement:(TBTabBarControllerTabBarPlacement)targetPlacement
+                                                         backwards:(BOOL)backwards;
 
 @end
 

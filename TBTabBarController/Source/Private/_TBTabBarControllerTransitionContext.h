@@ -2,7 +2,7 @@
 //  _TBTabBarControllerTransitionContext.h
 //  TBTabBarController
 //
-//  Copyright (c) 2019-2023 Timur Ganiev
+//  Copyright © 2019-2023 Timur Ganiev. All rights reserved.
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -22,35 +22,22 @@
 //  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 //  SOFTWARE.
 
-#import <Foundation/Foundation.h>
-
-#import <TBTabBarController/TBTabBarController.h>
+#import <UIKit/UIKit.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface _TBTabBarControllerTransitionContext : NSObject
+@interface _TBTabBarControllerTransitionContext : NSObject <UIViewControllerContextTransitioning>
 
-@property (assign, nonatomic, readonly) TBTabBarControllerTabBarPlacement initialPlacement;
-@property (assign, nonatomic, readonly) TBTabBarControllerTabBarPlacement targetPlacement;
+@property (copy, nonatomic) void (^completionBlock)(BOOL didComplete);
 
-@property (weak, nonatomic, readonly, nullable) TBTabBar *manipulatedTabBar;
-
-@property (assign, nonatomic, readonly) BOOL backwards;
-@property (assign, nonatomic, readonly) BOOL isShowing;
-@property (assign, nonatomic, readonly) BOOL isHiding;
-
-- (instancetype)init NS_UNAVAILABLE;
+@property (assign, nonatomic, getter = isAnimated) BOOL animated;
+@property (assign, nonatomic, getter = isInteractive) BOOL interactive;
 
 + (instancetype)new NS_UNAVAILABLE;
 
-+ (_TBTabBarControllerTransitionContext *)contextWithInitialPlacement:(TBTabBarControllerTabBarPlacement)initialPlacement
-                                                      targetPlacement:(TBTabBarControllerTabBarPlacement)targetPlacement
-                                                           backwards:(BOOL)backwards;
-
-+ (_TBTabBarControllerTransitionContext *)contextWithManipulatedTabBar:(TBTabBar *)tabBar
-                                                       initialPlacement:(TBTabBarControllerTabBarPlacement)initialPlacement
-                                                        targetPlacement:(TBTabBarControllerTabBarPlacement)targetPlacement
-                                                             backwards:(BOOL)backwards;
+- (instancetype)initWithSourceViewController:(nullable __kindof UIViewController *)sourceViewController
+                   destinationViewController:(nullable __kindof UIViewController *)destinationViewController
+                               containerView:(__kindof UIView *)containerView;
 
 @end
 

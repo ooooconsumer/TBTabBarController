@@ -1,5 +1,5 @@
 //
-//  TBTabBarController+Private.h
+//  _TBTabBarLongPressState.h
 //  TBTabBarController
 //
 //  Copyright © 2019-2023 Timur Ganiev. All rights reserved.
@@ -22,19 +22,17 @@
 //  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 //  SOFTWARE.
 
-#import <UIKit/UIKit.h>
-#import <TBTabBarController/TBTabBarController.h>
+#import <Foundation/Foundation.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface TBTabBarController (Private)
+@interface _TBTabBarLongPressState : NSObject
 
-- (void)_specifyPreferredTabBarPlacementForHorizontalSizeClass:(UIUserInterfaceSizeClass)horizontalSizeClass size:(CGSize)size NS_SWIFT_NAME(specifyPreferredTabBarPlacement(for:size:));
+@property (assign, nonatomic) NSUInteger tabIndex;
 
-- (void)_changeItem:(TBTabBarItem *)item toItem:(TBTabBarItem *)newItem NS_SWIFT_NAME(changeItem(_:to:));
-
-- (__kindof UIViewController *_Nullable)_visibleViewController NS_SWIFT_NAME(visibleViewController());
++ (_TBTabBarLongPressState *)stateWithTabIndex:(NSUInteger)tabIndex;
 
 @end
 
 NS_ASSUME_NONNULL_END
+

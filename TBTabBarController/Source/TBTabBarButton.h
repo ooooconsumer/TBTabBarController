@@ -2,7 +2,7 @@
 //  TBTabBarButton.h
 //  TBTabBarController
 //
-//  Copyright (c) 2019-2023 Timur Ganiev
+//  Copyright © 2019-2023 Timur Ganiev. All rights reserved.
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -61,7 +61,8 @@ typedef NS_ENUM(NSInteger, TBTabBarButtonLayoutOrientation) {
 @property (assign, nonatomic) CGSize notificationIndicatorSize UI_APPEARANCE_SELECTOR;
 
 /**
- * @abstract A notification indicator view insets. Default value is {0, 0, 0, 5} and {0, 0, 3, 0} for horizontal and vertical positions, respectively.
+ * @abstract A notification indicator view insets.
+ * Default value is {0, 0, 0, 5} and {0, 0, 3, 0} for horizontal and vertical positions, respectively.
  */
 @property (assign, nonatomic) UIEdgeInsets notificationIndicatorInsets UI_APPEARANCE_SELECTOR;
 

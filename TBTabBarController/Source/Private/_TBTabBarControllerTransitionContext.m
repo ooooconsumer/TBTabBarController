@@ -2,7 +2,7 @@
 //  _TBTabBarControllerTransitionContext.m
 //  TBTabBarController
 //
-//  Copyright (c) 2019-2023 Timur Ganiev
+//  Copyright © 2019-2023 Timur Ganiev. All rights reserved.
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -24,50 +24,108 @@
 
 #import "_TBTabBarControllerTransitionContext.h"
 
-@implementation _TBTabBarControllerTransitionContext
+@interface _TBTabBarControllerTransitionContext ()
 
-#pragma mark - Public
+@property (weak, nonatomic, nullable) __kindof UIViewController *sourceViewController;
+@property (weak, nonatomic, nullable) __kindof UIViewController *destinationViewController;
+
+@property (assign, nonatomic) CGAffineTransform targetTransform;
+
+@end
+
+@implementation _TBTabBarControllerTransitionContext {
+
+    __weak __kindof UIView *_containerView;
+}
 
 #pragma mark Lifecycle
 
-- (instancetype)initWithManipulatedTabBar:(nullable TBTabBar *)tabBar
-                          initialPlacement:(TBTabBarControllerTabBarPlacement)initialPlacement
-                           targetPlacement:(TBTabBarControllerTabBarPlacement)targetPlacement
-                                backwards:(BOOL)backwards {
-    
+- (instancetype)initWithSourceViewController:(__kindof UIViewController *)sourceViewController
+                   destinationViewController:(__kindof UIViewController *)destinationViewController
+                               containerView:(__kindof UIView *)containerView {
+
     self = [super init];
-    
+
     if (self) {
-        _manipulatedTabBar = tabBar;
-        _initialPlacement = initialPlacement;
-        _targetPlacement = targetPlacement;
-        _isShowing = initialPlacement == TBTabBarControllerTabBarPlacementHidden && targetPlacement > TBTabBarControllerTabBarPlacementHidden;
-        _isHiding = initialPlacement > TBTabBarControllerTabBarPlacementHidden && targetPlacement == TBTabBarControllerTabBarPlacementHidden;
-        _backwards = backwards;
+        self.sourceViewController = sourceViewController;
+        self.destinationViewController = destinationViewController;
+        self.targetTransform = CGAffineTransformIdentity;
+        _containerView = containerView;
     }
-    
+
     return self;
 }
 
-+ (_TBTabBarControllerTransitionContext *)contextWithInitialPlacement:(TBTabBarControllerTabBarPlacement)initialPlacement
-                                                      targetPlacement:(TBTabBarControllerTabBarPlacement)targetPlacement
-                                                           backwards:(BOOL)backwards {
-    
-    return [[_TBTabBarControllerTransitionContext alloc] initWithManipulatedTabBar:nil
-                                                                   initialPlacement:initialPlacement
-                                                                    targetPlacement:targetPlacement
-                                                                         backwards:backwards];
+#pragma mark UIViewControllerContextTransitioning
+
+- (UIView *)containerView {
+
+    return _containerView;
 }
 
-+ (_TBTabBarControllerTransitionContext *)contextWithManipulatedTabBar:(TBTabBar *)tabBar
-                                                       initialPlacement:(TBTabBarControllerTabBarPlacement)initialPlacement
-                                                        targetPlacement:(TBTabBarControllerTabBarPlacement)targetPlacement
-                                                             backwards:(BOOL)backwards {
-    
-    return [[_TBTabBarControllerTransitionContext alloc] initWithManipulatedTabBar:tabBar
-                                                                   initialPlacement:initialPlacement
-                                                                    targetPlacement:targetPlacement
-                                                                         backwards:backwards];
+- (BOOL)transitionWasCancelled {
+
+    return NO;
+}
+
+- (UIModalPresentationStyle)presentationStyle {
+
+    return UIModalPresentationCustom;
+}
+
+- (void)updateInteractiveTransition:(CGFloat)percentComplete {
+
+}
+
+- (void)finishInteractiveTransition {
+
+}
+
+- (void)cancelInteractiveTransition {
+
+}
+
+- (void)pauseInteractiveTransition {
+
+}
+
+- (void)completeTransition:(BOOL)didComplete {
+
+    if (self.completionBlock != nil) {
+        self.completionBlock(didComplete);
+    }
+}
+
+- (__kindof UIViewController *)viewControllerForKey:(UITransitionContextViewControllerKey)key {
+
+    if ([key isEqualToString:UITransitionContextFromViewControllerKey]) {
+        return self.sourceViewController;
+    } else if ([key isEqualToString:UITransitionContextToViewControllerKey]) {
+        return self.destinationViewController;
+    }
+
+    return nil;
+}
+
+- (__kindof UIView *)viewForKey:(UITransitionContextViewKey)key {
+
+    if ([key isEqualToString:UITransitionContextFromViewKey]) {
+        return self.sourceViewController.view;
+    } else if ([key isEqualToString:UITransitionContextToViewKey]) {
+        return self.destinationViewController.view;
+    }
+
+    return nil;
+}
+
+- (CGRect)initialFrameForViewController:(UIViewController *)viewController {
+
+    return self.containerView.bounds;
+}
+
+- (CGRect)finalFrameForViewController:(UIViewController *)viewController {
+
+    return self.containerView.bounds;
 }
 
 @end

@@ -2,7 +2,7 @@
 //  TBTabBar.m
 //  TBTabBarController
 //
-//  Copyright (c) 2019-2023 Timur Ganiev
+//  Copyright © 2019-2023 Timur Ganiev. All rights reserved.
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -28,7 +28,7 @@
 #import "TBTabBarItem.h"
 #import "TBTabBarButton.h"
 #import "_TBUtils.h"
-#import "_TBTabBarLongPressContext.h"
+#import "_TBTabBarLongPressState.h"
 #import "UIView+Extensions.h"
 #import "TBTabBarItemsDifference.h"
 #import "TBTabBarItemChange.h"
@@ -240,14 +240,18 @@
 - (void)tbtbbr_willSelectButton:(TBTabBarButton *)button {
     
     if (_delegateFlags.shouldSelectItemAtIndex) {
-        _shouldSelectItem = [self.delegate tabBar:self shouldSelectItem:button.tabBarItem atIndex:[self.stackView.subviews indexOfObject:button]];
+        _shouldSelectItem = [self.delegate tabBar:self
+                                 shouldSelectItem:button.tabBarItem
+                                          atIndex:[self.stackView.subviews indexOfObject:button]];
     }
 }
 
 - (void)tbtbbr_didSelectButton:(TBTabBarButton *)button {
     
     if (_shouldSelectItem && _delegateFlags.didSelectItemAtIndex) {
-        [self.delegate tabBar:self didSelectItem:button.tabBarItem atIndex:[self.stackView.subviews indexOfObject:button]];
+        [self.delegate tabBar:self
+                didSelectItem:button.tabBarItem
+                      atIndex:[self.stackView.subviews indexOfObject:button]];
     }
     
     _shouldSelectItem = true;
@@ -261,30 +265,54 @@
     NSArray<TBTabBarButton *> *buttons = self.stackView.subviews;
     
     if (state == UIGestureRecognizerStateBegan) {
-        // Get the button index
-        [self tb_subviewAtLocation:location withCondition:^BOOL(__kindof UIView * _Nonnull subview) {
-            return [buttons containsObject:subview];
-        } subviewIndex:&tabIndex skipIndexes:true touchSize:self.spaceBetweenTabs verticalLayout:self.isVertical];
+
+        [self tb_subviewAtLocation:location
+                     withCondition:^BOOL(__kindof UIView * _Nonnull subview) {
+                        return [buttons containsObject:subview];
+                    } subviewIndex:&tabIndex
+                       skipIndexes:true
+                         touchSize:self.spaceBetweenTabs
+                    verticalLayout:self.isVertical];
+
         if (tabIndex == NSNotFound) {
             return;
         }
-        _longPressContext = [_TBTabBarLongPressContext contextWithTabIndex:tabIndex];
+
+        _longPressState = [_TBTabBarLongPressState stateWithTabIndex:tabIndex];
+
         if (_longPressHandlerFlags.longPressBegan) {
             [self.longPressHandler tabBar:self longPressBeganOnTabAtIndex:tabIndex withLocation:location];
         }
-    } else {
-        if (_longPressContext == nil) {
-            return;
-        }
-        if (state == UIGestureRecognizerStateChanged) {
-            if (_longPressHandlerFlags.longPressChanged) {
-                [self.longPressHandler tabBar:self longPressChangedOnTabAtIndex:_longPressContext.tabIndex withLocation:location];
-            }
-        } else if (state == UIGestureRecognizerStateEnded || state == UIGestureRecognizerStateCancelled || state == UIGestureRecognizerStateFailed) {
-            if (_longPressHandlerFlags.longPressEnded) {
-                [self.longPressHandler tabBar:self longPressEndedOnTabAtIndex:_longPressContext.tabIndex withLocation:location];
-            }
-            _longPressContext = nil;
+
+    } else if (_longPressState != nil) {
+
+        switch (state) {
+            case UIGestureRecognizerStateChanged:
+
+                if (_longPressHandlerFlags.longPressChanged) {
+                    [self.longPressHandler tabBar:self
+                     longPressChangedOnTabAtIndex:_longPressState.tabIndex
+                                     withLocation:location];
+                }
+
+                break;
+
+            case UIGestureRecognizerStateEnded:
+            case UIGestureRecognizerStateCancelled:
+            case UIGestureRecognizerStateFailed:
+
+                if (_longPressHandlerFlags.longPressEnded) {
+                    [self.longPressHandler tabBar:self
+                       longPressEndedOnTabAtIndex:_longPressState.tabIndex
+                                     withLocation:location];
+                }
+
+                _longPressState = nil;
+
+                break;
+
+            default:
+                break;
         }
     }
 }
@@ -388,8 +416,12 @@
     } else {
         _selectedTintColor = self.tintColor;
     }
+
+    if (self.selectedIndex >= self.stackView.subviews.count) {
+        return;
+    }
     
-    TBTabBarButton *buttonToSelect = _stackView.subviews[self.selectedIndex];
+    TBTabBarButton *buttonToSelect = self.stackView.subviews[self.selectedIndex];
     buttonToSelect.selected = true;
     buttonToSelect.tintColor = self.selectedTintColor;
 }
@@ -471,7 +503,7 @@
     
     NSArray<TBTabBarItem *> *items = self.items;
     
-    if (items != nil) {
+    if (items != nil && items.count > 0) {
         // Visible items
         NSArray *const newVisibleItems = [items objectsAtIndexes:visibleItemIndexes];
         TBTabBarItemsDifference *const visibleItemsDifference = [TBTabBarItemsDifference differenceWithItems:newVisibleItems from:_visibleItems];
@@ -564,10 +596,12 @@
 }
 
 - (NSIndexSet *)visibleItemIndexes {
-    
+
     NSUInteger const maxNumberOfVisibleTabs = self.maxNumberOfVisibleTabs;
-    
-    return [NSIndexSet indexSetWithIndexesInRange: NSMakeRange(0, maxNumberOfVisibleTabs == 0 ? _itemsCount : MIN(_itemsCount, maxNumberOfVisibleTabs))];
+
+    NSRange const range = NSMakeRange(0, maxNumberOfVisibleTabs == 0 ? _itemsCount : MIN(_itemsCount, maxNumberOfVisibleTabs));
+
+    return [NSIndexSet indexSetWithIndexesInRange:range];
 }
 
 @end
@@ -578,7 +612,9 @@
 
 - (void)_setItems:(NSArray<__kindof TBTabBarItem *> *)items {
     
-    BOOL const shouldNotifyDelegate =  _items != nil && items != nil ? ![_items isEqualToArray:items] : true;
+    BOOL const shouldNotifyDelegate =  (_items != nil && items != nil) ?
+        ![_items isEqualToArray:items] :
+        true;
     
     _items = items;
     

@@ -2,7 +2,7 @@
 //  TBTabBar.h
 //  TBTabBarController
 //
-//  Copyright (c) 2019-2023 Timur Ganiev
+//  Copyright © 2019-2023 Timur Ganiev. All rights reserved.
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -28,7 +28,7 @@
 #import <TBTabBarController/TBTabBarItemsDifference.h>
 #import <TBTabBarController/TBTabBarButton.h>
 
-@class TBTabBar, TBTabBarItem, _TBTabBarLongPressContext;
+@class TBTabBar, TBTabBarItem, _TBTabBarLongPressState;
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -114,7 +114,7 @@ typedef NS_ENUM(NSInteger, TBTabBarLayoutOrientation) {
     NSMutableArray <__kindof TBTabBarItem *> *_visibleItems;
     NSMutableArray <__kindof TBTabBarItem *> *_hiddenItems;
 
-    _TBTabBarLongPressContext *_longPressContext;
+    _TBTabBarLongPressState *_longPressState;
 
     NSUInteger _itemsCount;
 

@@ -3,7 +3,7 @@
 //  SwiftExample
 //
 //  Created by Timur Ganiev on 26.01.2023.
-//  Copyright © 2023 Timur Ganiev. All rights reserved.
+//  Copyright © 2020-2023 Timur Ganiev. All rights reserved.
 //
 
 import Foundation

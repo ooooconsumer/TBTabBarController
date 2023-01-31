@@ -46,6 +46,10 @@
 		815C582F256A4DA200001E21 /* TBSimpleBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 815C582D256A4DA200001E21 /* TBSimpleBar.m */; };
 		8185B60329850F0A00A97CA2 /* NSArray+Extensions.h in Headers */ = {isa = PBXBuildFile; fileRef = 8185B60129850F0A00A97CA2 /* NSArray+Extensions.h */; };
 		8185B60429850F0A00A97CA2 /* NSArray+Extensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 8185B60229850F0A00A97CA2 /* NSArray+Extensions.m */; };
+		818F46F929882FD2008F2E41 /* _TBTabBarControllerTransitionContext.h in Headers */ = {isa = PBXBuildFile; fileRef = 818F46F729882FD2008F2E41 /* _TBTabBarControllerTransitionContext.h */; };
+		818F46FA29882FD2008F2E41 /* _TBTabBarControllerTransitionContext.m in Sources */ = {isa = PBXBuildFile; fileRef = 818F46F829882FD2008F2E41 /* _TBTabBarControllerTransitionContext.m */; };
+		818F46FD2988F2A8008F2E41 /* _TBTabBarControllerTransitionAnimator.h in Headers */ = {isa = PBXBuildFile; fileRef = 818F46FB2988F2A8008F2E41 /* _TBTabBarControllerTransitionAnimator.h */; };
+		818F46FE2988F2A8008F2E41 /* _TBTabBarControllerTransitionAnimator.m in Sources */ = {isa = PBXBuildFile; fileRef = 818F46FC2988F2A8008F2E41 /* _TBTabBarControllerTransitionAnimator.m */; };
 		81B2147024BAD90800DF7E2C /* TBTabBarController.h in Headers */ = {isa = PBXBuildFile; fileRef = 81B2146E24BAD90800DF7E2C /* TBTabBarController.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		81B2147124BAD90800DF7E2C /* TBTabBarController.m in Sources */ = {isa = PBXBuildFile; fileRef = 81B2146F24BAD90800DF7E2C /* TBTabBarController.m */; };
 		81B2147624BAD96C00DF7E2C /* TBTabBar.h in Headers */ = {isa = PBXBuildFile; fileRef = 81B2147424BAD96C00DF7E2C /* TBTabBar.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -57,17 +61,15 @@
 		81B2148124BAD9F500DF7E2C /* TBTabBar+Private.h in Headers */ = {isa = PBXBuildFile; fileRef = 81B2148024BAD9F500DF7E2C /* TBTabBar+Private.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		81B2148424BADA1500DF7E2C /* TBDummyBar.h in Headers */ = {isa = PBXBuildFile; fileRef = 81B2148224BADA1500DF7E2C /* TBDummyBar.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		81B2148524BADA1500DF7E2C /* TBDummyBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 81B2148324BADA1500DF7E2C /* TBDummyBar.m */; };
-		81B2148824BADA5800DF7E2C /* _TBTabBarLongPressContext.h in Headers */ = {isa = PBXBuildFile; fileRef = 81B2148624BADA5800DF7E2C /* _TBTabBarLongPressContext.h */; settings = {ATTRIBUTES = (Private, ); }; };
-		81B2148924BADA5800DF7E2C /* _TBTabBarLongPressContext.m in Sources */ = {isa = PBXBuildFile; fileRef = 81B2148724BADA5800DF7E2C /* _TBTabBarLongPressContext.m */; };
+		81B2148824BADA5800DF7E2C /* _TBTabBarLongPressState.h in Headers */ = {isa = PBXBuildFile; fileRef = 81B2148624BADA5800DF7E2C /* _TBTabBarLongPressState.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		81B2148924BADA5800DF7E2C /* _TBTabBarLongPressState.m in Sources */ = {isa = PBXBuildFile; fileRef = 81B2148724BADA5800DF7E2C /* _TBTabBarLongPressState.m */; };
 		81B2148C24BADBDC00DF7E2C /* _TBUtils.h in Headers */ = {isa = PBXBuildFile; fileRef = 81B2148A24BADBDC00DF7E2C /* _TBUtils.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		81B2148D24BADBDC00DF7E2C /* _TBUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 81B2148B24BADBDC00DF7E2C /* _TBUtils.m */; };
-		81B2149024BADC2000DF7E2C /* UIViewController+Extensions.h in Headers */ = {isa = PBXBuildFile; fileRef = 81B2148E24BADC2000DF7E2C /* UIViewController+Extensions.h */; settings = {ATTRIBUTES = (Private, ); }; };
-		81B2149124BADC2000DF7E2C /* UIViewController+Extensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 81B2148F24BADC2000DF7E2C /* UIViewController+Extensions.m */; };
 		81B2149424BAEBFA00DF7E2C /* UINavigationController+Extensions.h in Headers */ = {isa = PBXBuildFile; fileRef = 81B2149224BAEBFA00DF7E2C /* UINavigationController+Extensions.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		81B2149524BAEBFA00DF7E2C /* UINavigationController+Extensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 81B2149324BAEBFA00DF7E2C /* UINavigationController+Extensions.m */; };
 		81BC8E252574E15E00222814 /* TBTabBarController+Private.h in Headers */ = {isa = PBXBuildFile; fileRef = 81B2147224BAD94700DF7E2C /* TBTabBarController+Private.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		81BC8E322575208800222814 /* _TBTabBarControllerTransitionContext.h in Headers */ = {isa = PBXBuildFile; fileRef = 81BC8E302575208800222814 /* _TBTabBarControllerTransitionContext.h */; settings = {ATTRIBUTES = (Private, ); }; };
-		81BC8E332575208800222814 /* _TBTabBarControllerTransitionContext.m in Sources */ = {isa = PBXBuildFile; fileRef = 81BC8E312575208800222814 /* _TBTabBarControllerTransitionContext.m */; };
+		81BC8E322575208800222814 /* _TBTabBarControllerTransitionState.h in Headers */ = {isa = PBXBuildFile; fileRef = 81BC8E302575208800222814 /* _TBTabBarControllerTransitionState.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		81BC8E332575208800222814 /* _TBTabBarControllerTransitionState.m in Sources */ = {isa = PBXBuildFile; fileRef = 81BC8E312575208800222814 /* _TBTabBarControllerTransitionState.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -161,6 +163,10 @@
 		815C582D256A4DA200001E21 /* TBSimpleBar.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TBSimpleBar.m; sourceTree = "<group>"; };
 		8185B60129850F0A00A97CA2 /* NSArray+Extensions.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSArray+Extensions.h"; sourceTree = "<group>"; };
 		8185B60229850F0A00A97CA2 /* NSArray+Extensions.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSArray+Extensions.m"; sourceTree = "<group>"; };
+		818F46F729882FD2008F2E41 /* _TBTabBarControllerTransitionContext.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = _TBTabBarControllerTransitionContext.h; sourceTree = "<group>"; };
+		818F46F829882FD2008F2E41 /* _TBTabBarControllerTransitionContext.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = _TBTabBarControllerTransitionContext.m; sourceTree = "<group>"; };
+		818F46FB2988F2A8008F2E41 /* _TBTabBarControllerTransitionAnimator.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = _TBTabBarControllerTransitionAnimator.h; sourceTree = "<group>"; };
+		818F46FC2988F2A8008F2E41 /* _TBTabBarControllerTransitionAnimator.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = _TBTabBarControllerTransitionAnimator.m; sourceTree = "<group>"; };
 		81B2146E24BAD90800DF7E2C /* TBTabBarController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TBTabBarController.h; sourceTree = "<group>"; };
 		81B2146F24BAD90800DF7E2C /* TBTabBarController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TBTabBarController.m; sourceTree = "<group>"; };
 		81B2147224BAD94700DF7E2C /* TBTabBarController+Private.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "TBTabBarController+Private.h"; sourceTree = "<group>"; };
@@ -173,16 +179,14 @@
 		81B2148024BAD9F500DF7E2C /* TBTabBar+Private.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "TBTabBar+Private.h"; sourceTree = "<group>"; };
 		81B2148224BADA1500DF7E2C /* TBDummyBar.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TBDummyBar.h; sourceTree = "<group>"; };
 		81B2148324BADA1500DF7E2C /* TBDummyBar.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TBDummyBar.m; sourceTree = "<group>"; };
-		81B2148624BADA5800DF7E2C /* _TBTabBarLongPressContext.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = _TBTabBarLongPressContext.h; sourceTree = "<group>"; };
-		81B2148724BADA5800DF7E2C /* _TBTabBarLongPressContext.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = _TBTabBarLongPressContext.m; sourceTree = "<group>"; };
+		81B2148624BADA5800DF7E2C /* _TBTabBarLongPressState.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = _TBTabBarLongPressState.h; sourceTree = "<group>"; };
+		81B2148724BADA5800DF7E2C /* _TBTabBarLongPressState.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = _TBTabBarLongPressState.m; sourceTree = "<group>"; };
 		81B2148A24BADBDC00DF7E2C /* _TBUtils.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = _TBUtils.h; sourceTree = "<group>"; };
 		81B2148B24BADBDC00DF7E2C /* _TBUtils.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = _TBUtils.m; sourceTree = "<group>"; };
-		81B2148E24BADC2000DF7E2C /* UIViewController+Extensions.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIViewController+Extensions.h"; sourceTree = "<group>"; };
-		81B2148F24BADC2000DF7E2C /* UIViewController+Extensions.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIViewController+Extensions.m"; sourceTree = "<group>"; };
 		81B2149224BAEBFA00DF7E2C /* UINavigationController+Extensions.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UINavigationController+Extensions.h"; sourceTree = "<group>"; };
 		81B2149324BAEBFA00DF7E2C /* UINavigationController+Extensions.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UINavigationController+Extensions.m"; sourceTree = "<group>"; };
-		81BC8E302575208800222814 /* _TBTabBarControllerTransitionContext.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = _TBTabBarControllerTransitionContext.h; sourceTree = "<group>"; };
-		81BC8E312575208800222814 /* _TBTabBarControllerTransitionContext.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = _TBTabBarControllerTransitionContext.m; sourceTree = "<group>"; };
+		81BC8E302575208800222814 /* _TBTabBarControllerTransitionState.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = _TBTabBarControllerTransitionState.h; sourceTree = "<group>"; };
+		81BC8E312575208800222814 /* _TBTabBarControllerTransitionState.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = _TBTabBarControllerTransitionState.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -219,8 +223,6 @@
 				81B2149324BAEBFA00DF7E2C /* UINavigationController+Extensions.m */,
 				812AEA532551ABC4003AB231 /* UIView+Extensions.h */,
 				812AEA542551ABC4003AB231 /* UIView+Extensions.m */,
-				81B2148E24BADC2000DF7E2C /* UIViewController+Extensions.h */,
-				81B2148F24BADC2000DF7E2C /* UIViewController+Extensions.m */,
 				8102CDCE2983932F0073CBAB /* UIApplication+Extensions.h */,
 				8102CDCF2983932F0073CBAB /* UIApplication+Extensions.m */,
 			);
@@ -351,10 +353,14 @@
 			children = (
 				813570BA2558E9E100CC91B8 /* _TBStackView.h */,
 				813570BB2558E9E100CC91B8 /* _TBStackView.m */,
-				81BC8E302575208800222814 /* _TBTabBarControllerTransitionContext.h */,
-				81BC8E312575208800222814 /* _TBTabBarControllerTransitionContext.m */,
-				81B2148624BADA5800DF7E2C /* _TBTabBarLongPressContext.h */,
-				81B2148724BADA5800DF7E2C /* _TBTabBarLongPressContext.m */,
+				818F46FB2988F2A8008F2E41 /* _TBTabBarControllerTransitionAnimator.h */,
+				818F46FC2988F2A8008F2E41 /* _TBTabBarControllerTransitionAnimator.m */,
+				818F46F729882FD2008F2E41 /* _TBTabBarControllerTransitionContext.h */,
+				818F46F829882FD2008F2E41 /* _TBTabBarControllerTransitionContext.m */,
+				81BC8E302575208800222814 /* _TBTabBarControllerTransitionState.h */,
+				81BC8E312575208800222814 /* _TBTabBarControllerTransitionState.m */,
+				81B2148624BADA5800DF7E2C /* _TBTabBarLongPressState.h */,
+				81B2148724BADA5800DF7E2C /* _TBTabBarLongPressState.m */,
 				81B2148A24BADBDC00DF7E2C /* _TBUtils.h */,
 				81B2148B24BADBDC00DF7E2C /* _TBUtils.m */,
 			);
@@ -379,6 +385,8 @@
 				81B2147024BAD90800DF7E2C /* TBTabBarController.h in Headers */,
 				81B2147624BAD96C00DF7E2C /* TBTabBar.h in Headers */,
 				81B2148424BADA1500DF7E2C /* TBDummyBar.h in Headers */,
+				818F46FD2988F2A8008F2E41 /* _TBTabBarControllerTransitionAnimator.h in Headers */,
+				818F46F929882FD2008F2E41 /* _TBTabBarControllerTransitionContext.h in Headers */,
 				81B2147E24BAD9C100DF7E2C /* TBTabBarButton.h in Headers */,
 				81B2148124BAD9F500DF7E2C /* TBTabBar+Private.h in Headers */,
 				812AEA712552929B003AB231 /* TBTabBarItemsDifference.h in Headers */,
@@ -386,14 +394,13 @@
 				812AEA77255292DF003AB231 /* TBTabBarItemChange.h in Headers */,
 				815C582E256A4DA200001E21 /* TBSimpleBar.h in Headers */,
 				814B128924BAD64E0063A09D /* TBTabBarControllerFramework.h in Headers */,
-				81BC8E322575208800222814 /* _TBTabBarControllerTransitionContext.h in Headers */,
-				81B2148824BADA5800DF7E2C /* _TBTabBarLongPressContext.h in Headers */,
+				81BC8E322575208800222814 /* _TBTabBarControllerTransitionState.h in Headers */,
+				81B2148824BADA5800DF7E2C /* _TBTabBarLongPressState.h in Headers */,
 				81B2148C24BADBDC00DF7E2C /* _TBUtils.h in Headers */,
 				8102CDD02983932F0073CBAB /* UIApplication+Extensions.h in Headers */,
 				813570BC2558E9E100CC91B8 /* _TBStackView.h in Headers */,
 				81B2149424BAEBFA00DF7E2C /* UINavigationController+Extensions.h in Headers */,
 				8185B60329850F0A00A97CA2 /* NSArray+Extensions.h in Headers */,
-				81B2149024BADC2000DF7E2C /* UIViewController+Extensions.h in Headers */,
 				812AEA552551ABC4003AB231 /* UIView+Extensions.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -536,15 +543,16 @@
 				81B2147124BAD90800DF7E2C /* TBTabBarController.m in Sources */,
 				81B2148524BADA1500DF7E2C /* TBDummyBar.m in Sources */,
 				812AEA722552929B003AB231 /* TBTabBarItemsDifference.m in Sources */,
-				81BC8E332575208800222814 /* _TBTabBarControllerTransitionContext.m in Sources */,
+				818F46FE2988F2A8008F2E41 /* _TBTabBarControllerTransitionAnimator.m in Sources */,
+				81BC8E332575208800222814 /* _TBTabBarControllerTransitionState.m in Sources */,
 				81B2147F24BAD9C100DF7E2C /* TBTabBarButton.m in Sources */,
 				8185B60429850F0A00A97CA2 /* NSArray+Extensions.m in Sources */,
 				813570BD2558E9E100CC91B8 /* _TBStackView.m in Sources */,
 				812AEA562551ABC4003AB231 /* UIView+Extensions.m in Sources */,
-				81B2149124BADC2000DF7E2C /* UIViewController+Extensions.m in Sources */,
-				81B2148924BADA5800DF7E2C /* _TBTabBarLongPressContext.m in Sources */,
+				81B2148924BADA5800DF7E2C /* _TBTabBarLongPressState.m in Sources */,
 				81B2149524BAEBFA00DF7E2C /* UINavigationController+Extensions.m in Sources */,
 				815C582F256A4DA200001E21 /* TBSimpleBar.m in Sources */,
+				818F46FA29882FD2008F2E41 /* _TBTabBarControllerTransitionContext.m in Sources */,
 				81B2147724BAD96C00DF7E2C /* TBTabBar.m in Sources */,
 				812AEA78255292DF003AB231 /* TBTabBarItemChange.m in Sources */,
 				81B2147B24BAD99400DF7E2C /* TBTabBarItem.m in Sources */,

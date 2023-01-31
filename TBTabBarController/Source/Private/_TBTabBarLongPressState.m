@@ -1,8 +1,8 @@
 //
-//  UIViewController+Extensions.h
-//  _TBTabBarController
+//  _TBTabBarLongPressContext.m
+//  TBTabBarController
 //
-//  Copyright (c) 2019-2023 Timur Ganiev
+//  Copyright © 2019-2023 Timur Ganiev. All rights reserved.
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -22,19 +22,21 @@
 //  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 //  SOFTWARE.
 
-#import <UIKit/UIKit.h>
 
-NS_ASSUME_NONNULL_BEGIN
+#import "_TBTabBarLongPressState.h"
 
-@interface UIViewController (Extensions)
+@implementation _TBTabBarLongPressState
 
-- (void)tb_addContainerViewController:(UIViewController *)containerViewController;
+#pragma mark - Public
 
-- (void)tb_addContainerViewController:(UIViewController *)containerViewController
-                              atIndex:(NSUInteger)index;
+#pragma mark Lifecycle
 
-- (void)tb_removeContainerViewController:(UIViewController *)containerViewController;
++ (_TBTabBarLongPressState *)stateWithTabIndex:(NSUInteger)tabIndex {
+    
+    _TBTabBarLongPressState *context = [[_TBTabBarLongPressState alloc] init];
+    context.tabIndex = tabIndex;
+    
+    return context;
+}
 
 @end
-
-NS_ASSUME_NONNULL_END
