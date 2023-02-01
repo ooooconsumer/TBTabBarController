@@ -40,16 +40,6 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @property (assign, nonatomic, readonly) BOOL tb_isLeftToRight;
 
-/**
- * @abstract Retrieves a subview at the given location, if any.
- */
-- (nullable __kindof UIView *)tb_subviewAtLocation:(CGPoint)location
-                                     withCondition:(nullable BOOL (^)(__kindof UIView *subview))condition
-                                      subviewIndex:(NSUInteger *)subviewIndex
-                                       skipIndexes:(BOOL)skipIndexes
-                                         touchSize:(CGFloat)touchSize
-                                    verticalLayout:(BOOL)verticalLayout;
-
 @end
 
 NS_ASSUME_NONNULL_END

@@ -27,53 +27,6 @@
 
 @implementation UIView (Extensions)
 
-#pragma mark Internal Methods
-
-- (nullable __kindof UIView *)tb_subviewAtLocation:(CGPoint)location
-                                     withCondition:(nullable BOOL (^)(__kindof UIView *subview))condition
-                                      subviewIndex:(NSUInteger *)subviewIndex
-                                       skipIndexes:(BOOL)skipIndexes
-                                         touchSize:(CGFloat)touchSize
-                                    verticalLayout:(BOOL)verticalLayout {
-    
-    if (verticalLayout) {
-        location.x -= touchSize;
-    } else {
-        location.y -= touchSize;
-    }
-    
-    __kindof UIView *desiredView = nil;
-    
-    CGFloat const size = touchSize + touchSize;
-    CGRect const frame = (CGRect){location, CGSizeMake(size , size)};
-    
-    NSUInteger index = 0;
-    
-    for (__kindof UIView *view in self.subviews) {
-        if (condition != nil) {
-            if (condition(view) == false) {
-                if (skipIndexes == false) {
-                    index += 1;
-                }
-                continue;
-            }
-        }
-        if (CGRectIntersectsRect(frame, view.frame)) {
-            desiredView = view;
-            break;
-        }
-        index += 1;
-    }
-    
-    if (desiredView != nil) {
-        *subviewIndex = index;
-    } else {
-        *subviewIndex = NSNotFound;
-    }
-    
-    return desiredView;
-}
-
 #pragma mark Private Methods
 
 #pragma mark Getters

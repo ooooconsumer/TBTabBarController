@@ -28,7 +28,6 @@
 #import "TBTabBarItem.h"
 #import "TBTabBarButton.h"
 #import "_TBUtils.h"
-#import "_TBTabBarLongPressState.h"
 #import "UIView+Extensions.h"
 #import "TBTabBarItemsDifference.h"
 #import "TBTabBarItemChange.h"
@@ -50,7 +49,6 @@
 
 @synthesize defaultTintColor = _defaultTintColor;
 @synthesize notificationIndicatorTintColor = _notificationIndicatorTintColor;
-@synthesize longPressGestureRecognizer = _longPressGestureRecognizer;
 
 #pragma mark - Public
 
@@ -231,8 +229,6 @@
     }
     // Stack view
     [self addSubview:self.stackView];
-    // Gesture recognizers
-    [self addGestureRecognizer:self.longPressGestureRecognizer];
 }
 
 #pragma mark Actions
@@ -255,78 +251,6 @@
     }
     
     _shouldSelectItem = true;
-}
-
-- (void)tbtbbr_handleLongPressGestureRecognizer:(UILongPressGestureRecognizer *)gestureRecognizer {
-    
-    UIGestureRecognizerState const state = gestureRecognizer.state;
-    CGPoint const location = [gestureRecognizer locationInView:self.stackView];
-    NSUInteger tabIndex;
-    NSArray<TBTabBarButton *> *buttons = self.stackView.subviews;
-    
-    if (state == UIGestureRecognizerStateBegan) {
-
-        [self tb_subviewAtLocation:location
-                     withCondition:^BOOL(__kindof UIView * _Nonnull subview) {
-                        return [buttons containsObject:subview];
-                    } subviewIndex:&tabIndex
-                       skipIndexes:true
-                         touchSize:self.spaceBetweenTabs
-                    verticalLayout:self.isVertical];
-
-        if (tabIndex == NSNotFound) {
-            return;
-        }
-
-        _longPressState = [_TBTabBarLongPressState stateWithTabIndex:tabIndex];
-
-        if (_longPressHandlerFlags.longPressBegan) {
-            [self.longPressHandler tabBar:self longPressBeganOnTabAtIndex:tabIndex withLocation:location];
-        }
-
-    } else if (_longPressState != nil) {
-
-        switch (state) {
-            case UIGestureRecognizerStateChanged:
-
-                if (_longPressHandlerFlags.longPressChanged) {
-                    [self.longPressHandler tabBar:self
-                     longPressChangedOnTabAtIndex:_longPressState.tabIndex
-                                     withLocation:location];
-                }
-
-                break;
-
-            case UIGestureRecognizerStateEnded:
-            case UIGestureRecognizerStateCancelled:
-            case UIGestureRecognizerStateFailed:
-
-                if (_longPressHandlerFlags.longPressEnded) {
-                    [self.longPressHandler tabBar:self
-                       longPressEndedOnTabAtIndex:_longPressState.tabIndex
-                                     withLocation:location];
-                }
-
-                _longPressState = nil;
-
-                break;
-
-            default:
-                break;
-        }
-    }
-}
-
-#pragma mark Helpers
-
-- (void)tbtbbr_resetLongPressGestureRecognizerIfNeeded {
-
-    UILongPressGestureRecognizer *longPressGestureRecognizer = self.longPressGestureRecognizer;
-    
-    if (longPressGestureRecognizer.isEnabled) {
-        longPressGestureRecognizer.enabled = false;
-        longPressGestureRecognizer.enabled = true;
-    }
 }
 
 #pragma mark Getters
@@ -372,17 +296,6 @@
 - (CGFloat)spaceBetweenTabs {
     
     return self.stackView.spacing;
-}
-
-- (UILongPressGestureRecognizer *)longPressGestureRecognizer {
-    
-    if (_longPressGestureRecognizer == nil) {
-        _longPressGestureRecognizer = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(tbtbbr_handleLongPressGestureRecognizer:)];
-        _longPressGestureRecognizer.delegate = self;
-        _longPressGestureRecognizer.cancelsTouchesInView = false;
-    }
-    
-    return _longPressGestureRecognizer;
 }
 
 #pragma mark Setters
@@ -478,15 +391,6 @@
     
     _delegateFlags.shouldSelectItemAtIndex = [delegate respondsToSelector:@selector(tabBar:shouldSelectItem:atIndex:)];
     _delegateFlags.didSelectItemAtIndex = [delegate respondsToSelector:@selector(tabBar:didSelectItem:atIndex:)];
-}
-
-- (void)setLongPressHandler:(id <TBTabBarLongPressHandleDelegate>)longPressHandler {
-    
-    _longPressHandler = longPressHandler;
-    
-    _longPressHandlerFlags.longPressBegan = [longPressHandler respondsToSelector:@selector(tabBar:longPressBeganOnTabAtIndex:withLocation:)];
-    _longPressHandlerFlags.longPressChanged = [longPressHandler respondsToSelector:@selector(tabBar:longPressChangedOnTabAtIndex:withLocation:)];
-    _longPressHandlerFlags.longPressEnded = [longPressHandler respondsToSelector:@selector(tabBar:longPressEndedOnTabAtIndex:withLocation:)];
 }
 
 @end

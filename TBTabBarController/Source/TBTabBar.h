@@ -28,7 +28,7 @@
 #import <TBTabBarController/TBTabBarItemsDifference.h>
 #import <TBTabBarController/TBTabBarButton.h>
 
-@class TBTabBar, TBTabBarItem, _TBTabBarLongPressState;
+@class TBTabBar, TBTabBarItem;
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -54,41 +54,6 @@ shouldSelectItem:(__kindof TBTabBarItem *)item
 
 @end
 
-#pragma mark - Long press delegate
-
-@protocol TBTabBarLongPressHandleDelegate <NSObject>
-
-@optional
-
-/**
- * @abstract Notifies the delegate that the gesture recognizer has just started.
- * @param tabIndex An index of the visible tab.
- * @param location A location in the view.
- */
-- (void)tabBar:(TBTabBar *)tabBar
-longPressBeganOnTabAtIndex:(NSUInteger)tabIndex
-  withLocation:(CGPoint)location;
-
-/**
- * @abstract Notifies the delegate that some changes occur to the touches.
- * @param tabIndex An index of the visible tab.
- * @param location A location in the view.
- */
-- (void)tabBar:(TBTabBar *)tabBar
-longPressChangedOnTabAtIndex:(NSUInteger)tabIndex
-  withLocation:(CGPoint)location;
-
-/**
- * @abstract Notifies the delegate that the gesture recognizer has been ended or cancelled.
- * @param tabIndex An index of the visible tab.
- * @param location A location in the view.
- */
-- (void)tabBar:(TBTabBar *)tabBar
-longPressEndedOnTabAtIndex:(NSUInteger)tabIndex
-  withLocation:(CGPoint)location;
-
-@end
-
 #pragma mark - Tab bar
 
 typedef NS_ENUM(NSInteger, TBTabBarLayoutOrientation) {
@@ -105,16 +70,8 @@ typedef NS_ENUM(NSInteger, TBTabBarLayoutOrientation) {
         BOOL didSelectItemAtIndex:1;
     } _delegateFlags;
 
-    struct {
-        BOOL longPressBegan:1;
-        BOOL longPressChanged:1;
-        BOOL longPressEnded:1;
-    } _longPressHandlerFlags;
-
     NSMutableArray <__kindof TBTabBarItem *> *_visibleItems;
     NSMutableArray <__kindof TBTabBarItem *> *_hiddenItems;
-
-    _TBTabBarLongPressState *_longPressState;
 
     NSUInteger _itemsCount;
 
@@ -122,8 +79,6 @@ typedef NS_ENUM(NSInteger, TBTabBarLayoutOrientation) {
 }
 
 @property (weak, nonatomic, nullable) id <TBTabBarDelegate> delegate;
-
-@property (weak, nonatomic, nullable) id <TBTabBarLongPressHandleDelegate> longPressHandler;
 
 /**
  * @abstract The items to be displayed. Shown in order.
@@ -139,13 +94,6 @@ typedef NS_ENUM(NSInteger, TBTabBarLayoutOrientation) {
  * @abstract The currently hidden items.
  */
 @property (strong, nonatomic, readonly) NSArray <__kindof TBTabBarItem *> *hiddenItems;
-
-/**
- * @abstract A gesture recognizer that handles  long presses on the visible tabs.
- * @discussion You can observe its changes by conforming to @b `TBTabBarLongPressHandleDelegate` protocol and overriding some of the methods.
- * Future implementations will use this recognizer to present a customization controller.
- */
-@property (strong, nonatomic, readonly) UILongPressGestureRecognizer *longPressGestureRecognizer;
 
 /**
  * @abstract Returns YES whenever layout orientation is vertical.
