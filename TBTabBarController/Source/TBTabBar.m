@@ -221,6 +221,7 @@
 }
 
 - (void)tbtbbr_setup {
+
     // View
     if (@available(iOS 13.0, *)) {
         self.backgroundColor = [UIColor systemBackgroundColor];
@@ -568,6 +569,19 @@
     }
 }
 
+- (void)_deselect {
+
+    NSArray<TBTabBarButton *> *buttons = self.stackView.subviews;
+    NSUInteger const prevIndex = self.selectedIndex;
+
+    if (prevIndex != NSNotFound && buttons.count >= prevIndex + 1) {
+        buttons[prevIndex].tintColor = self.defaultTintColor;
+        buttons[prevIndex].selected = false;
+    }
+
+    _selectedIndex = NSNotFound;
+}
+
 - (void)_setNormalImage:(UIImage *)image forButtonAtIndex:(NSUInteger)index {
     
     [self.stackView.subviews[index] setImage:image forState:UIControlStateNormal];
@@ -632,6 +646,10 @@
 - (void)_setNotificationIndicatorHidden:(BOOL)hidden forButtonAtIndex:(NSUInteger)index {
     
     NSArray<TBTabBarButton *> *buttons = self.stackView.subviews;
+
+    if (buttons.count <= index) {
+        return;
+    }
     
     [buttons[index] setNotificationIndicatorHidden:hidden animated:self.isVisible];
 }

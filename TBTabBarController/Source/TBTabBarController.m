@@ -493,8 +493,15 @@ static _TBTabBarControllerMethodOverrides tbtbbrcntrlr_methodOverridesFlag;
 
     [tabBar _setSelectedIndex:index quietly:true];
 
-    if (otherTabBar.visibleItems.count > 0) {
-        [otherTabBar _setSelectedIndex:[otherTabBar.visibleItems indexOfObject:item] quietly:true];
+    if (otherTabBar.items.count > 0) {
+
+        NSUInteger const visibleItemIndexToSelect = [otherTabBar.visibleItems indexOfObject:item];
+
+        if (visibleItemIndexToSelect != NSNotFound) {
+            [otherTabBar _setSelectedIndex:visibleItemIndexToSelect quietly:true];
+        } else {
+            [otherTabBar _deselect];
+        }
     }
 
     if (_delegateFlags.didSelectViewController) {

@@ -37,6 +37,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)_setSelectedIndex:(NSUInteger)selectedIndex quietly:(BOOL)quietly;
 
+- (void)_deselect;
+
 - (__kindof TBTabBarButton *)_makeButtonWithItem:(__kindof TBTabBarItem *)item NS_SWIFT_NAME(makeButton(withItem:));
 
 - (NSArray<__kindof TBTabBarButton *> *)_buttons;
