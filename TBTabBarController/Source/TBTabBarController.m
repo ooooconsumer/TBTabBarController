@@ -298,15 +298,6 @@ static _TBTabBarControllerMethodOverrides tbtbbrcntrlr_methodOverridesFlag;
     [self tbtbbrcntrlr_setup];
 }
 
-- (void)viewWillLayoutSubviews {
-
-    self.containerView.frame = self.view.bounds;
-
-    [super viewWillLayoutSubviews];
-
-    self.containerView.frame = self.view.bounds;
-}
-
 - (void)viewDidLayoutSubviews {
     
     [super viewDidLayoutSubviews];
@@ -566,7 +557,8 @@ static _TBTabBarControllerMethodOverrides tbtbbrcntrlr_methodOverridesFlag;
         if (tbtbbrcntrlr_nestedNavigationController != nil) {
             // When there is no transition between the view controllers we can user the currently
             // visible view controller to look up whether we should hide the tab bar or not.
-            BOOL const shouldHideTabBar = tbtbbrcntrlr_transitionState != nil ? _visibleViewControllerWantsHideTabBar :
+            BOOL const shouldHideTabBar = tbtbbrcntrlr_transitionState != nil ?
+                _visibleViewControllerWantsHideTabBar :
                 [self _visibleViewController].tb_hidesTabBarWhenPushed;
             if (shouldHideTabBar) {
                 _preferredPlacement = TBTabBarControllerTabBarPlacementHidden;
@@ -584,6 +576,7 @@ static _TBTabBarControllerMethodOverrides tbtbbrcntrlr_methodOverridesFlag;
                 if (visibleTabBar != nil && _delegateFlags.willHideTabBar) {
                     [delegate tabBarController:self willHideTabBar:visibleTabBar];
                 }
+                hiddenTabBar = nil; // This bar won't go visible anyway
                 break;
 
             case TBTabBarControllerTabBarPlacementLeading:
@@ -710,12 +703,15 @@ static _TBTabBarControllerMethodOverrides tbtbbrcntrlr_methodOverridesFlag;
                 [tabBarToShow _setAdditionalContentInsets:UIEdgeInsetsZero];
             }
         }
-        if (tabBarToHide != nil && !tabBarToHide.isVertical) {
-            [tabBarToHide _setAdditionalContentInsets:UIEdgeInsetsMake(0.0, self.verticalTabBarWidth, 0.0, 0.0)];
+        if (tabBarToHide != nil && tabBarToShow != nil && !tabBarToHide.isVertical) {
+            [tabBarToHide _setAdditionalContentInsets:UIEdgeInsetsMake(0.0,
+                                                                       self.verticalTabBarWidth,
+                                                                       0.0,
+                                                                       0.0)];
         }
     }
     
-    if (_preferredPlacement != TBTabBarControllerTabBarPlacementHidden) {
+    if (_preferredPlacement != TBTabBarControllerTabBarPlacementHidden && tabBarToShow != nil) {
         [self tbtbbrcntrlr_showTabBar:tabBarToShow];
     }
 }
