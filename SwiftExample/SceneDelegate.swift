@@ -10,11 +10,11 @@ import UIKit
 
 @available(iOS 13.0, *)
 final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
-    
+
     // MARK: Internal Properties
 
     var window: UIWindow?
-    
+
     // MARK: UIWindowSceneDelegate
 
     func scene(

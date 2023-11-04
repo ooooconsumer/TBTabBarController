@@ -39,70 +39,70 @@ typedef struct _TBStackViewPixelDistribution {
 } _TBStackViewPixelDistribution;
 
 @implementation _TBStackView {
-    
+
     BOOL _needsLayout;
 }
 
 #pragma mark Lifecycle
 
 - (instancetype)initWithAxis:(TBStackedTabsViewAxis)axis {
-    
+
     self = [super initWithFrame:CGRectZero];
-    
+
     if (self) {
         _vertical = axis == TBStackedTabsViewAxisVertical;
         [self _commonInit];
     }
-    
+
     return self;
 }
 
 - (instancetype)initWithFrame:(CGRect)frame {
-    
+
     self = [super initWithFrame:frame];
-    
+
     if (self) {
         _vertical = false;
         [self _commonInit];
     }
-    
+
     return self;
 }
 
 - (instancetype)init {
-    
+
     self = [super initWithFrame:CGRectZero];
-    
+
     if (self) {
         _vertical = false;
         [self _commonInit];
     }
-    
+
     return self;
 }
 
 #pragma mark Overrides
 
 - (void)setNeedsLayout {
-    
+
     [super setNeedsLayout];
-    
+
     [self _setNeedsLayout];
 }
 
 - (void)layoutSubviews {
-    
+
     [super layoutSubviews];
-    
+
     if (_needsLayout == false) {
         return;
     }
 
     _needsLayout = false;
-    
+
     NSArray<TBTabBarButton *> *subviews = self.subviews;
     NSUInteger const tabsCount = subviews.count;
-    
+
     if (tabsCount == 0) {
         return;
     }
@@ -116,7 +116,7 @@ typedef struct _TBStackViewPixelDistribution {
     BOOL const isVertical = self.isVertical;
 
     CGRect frames[tabsCount];
-    
+
     if (isVertical) {
         CGFloat const maxTabHeight = (height - totalSpacing) / (CGFloat)tabsCount;
         for (NSInteger index = 0; index < tabsCount; index += 1) {
@@ -134,9 +134,9 @@ typedef struct _TBStackViewPixelDistribution {
             };
         }
     }
-    
+
     NSUInteger undistributedPixelsCount = (NSUInteger)ceil(MAX(0.0, (isVertical ? height - CGRectGetMaxY(frames[tabsCount - 1]) : width -CGRectGetMaxX(frames[tabsCount - 1]))) / pixelSize);
-    
+
     if (undistributedPixelsCount > 0) {
 
         NSUInteger const distributionRowsCount = (NSUInteger)ceil((CGFloat)undistributedPixelsCount / (CGFloat)tabsCount);
@@ -223,7 +223,7 @@ typedef struct _TBStackViewPixelDistribution {
             }
         }
     }
-    
+
     NSInteger index = 0;
 
     for (TBTabBarButton *subview in subviews) {
@@ -233,30 +233,30 @@ typedef struct _TBStackViewPixelDistribution {
 }
 
 - (void)addSubview:(UIView *)view {
-    
+
     NSAssert([view isKindOfClass:[TBTabBarButton class]], @"Subview must be of type `%@`", NSStringFromClass([TBTabBarButton class]));
-    
+
     [super addSubview:view];
 }
 
 - (void)insertSubview:(UIView *)view atIndex:(NSInteger)index {
-    
+
     NSAssert([view isKindOfClass:[TBTabBarButton class]], @"Subview must be of type `%@`", NSStringFromClass([TBTabBarButton class]));
-    
+
     [super insertSubview:view atIndex:index];
 }
 
 - (void)insertSubview:(UIView *)view aboveSubview:(UIView *)siblingSubview {
-    
+
     NSAssert([view isKindOfClass:[TBTabBarButton class]], @"Subview must be of type `%@`", NSStringFromClass([TBTabBarButton class]));
-    
+
     [super insertSubview:view aboveSubview:siblingSubview];
 }
 
 - (void)insertSubview:(UIView *)view belowSubview:(UIView *)siblingSubview {
-    
+
     NSAssert([view isKindOfClass:[TBTabBarButton class]], @"Subview must be of type `%@`", NSStringFromClass([TBTabBarButton class]));
-    
+
     [super insertSubview:view belowSubview:siblingSubview];
 }
 
@@ -272,7 +272,7 @@ typedef struct _TBStackViewPixelDistribution {
 #pragma mark Layout
 
 - (void)_setNeedsLayout {
-    
+
     if (!_needsLayout) {
         _needsLayout = true;
     }
@@ -281,20 +281,20 @@ typedef struct _TBStackViewPixelDistribution {
 #pragma mark Setters
 
 - (void)setFrame:(CGRect)frame {
-    
+
     if (CGRectEqualToRect(self.frame, frame) == false) {
         [self _setNeedsLayout];
     }
-    
+
     [super setFrame:frame];
 }
 
 - (void)setBounds:(CGRect)bounds {
-    
+
     if (CGRectEqualToRect(self.bounds, bounds) == false) {
         [self _setNeedsLayout];
     }
-    
+
     [super setBounds:bounds];
 }
 
@@ -303,9 +303,9 @@ typedef struct _TBStackViewPixelDistribution {
     if (_spacing == spacing) {
         return;
     }
-    
+
     _spacing = spacing;
-    
+
     [self setNeedsLayout];
 }
 

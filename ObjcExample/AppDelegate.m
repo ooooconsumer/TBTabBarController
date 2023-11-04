@@ -15,12 +15,12 @@
 #pragma mark - UIApplicationDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-    
+
     if (@available(iOS 13.0, *)) { } else {
         self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
         [[EntryPoint shared] setupWithWindow:self.window];
     }
-    
+
     return true;
 }
 

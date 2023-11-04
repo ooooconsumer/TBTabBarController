@@ -15,9 +15,9 @@ final class SettingsViewController: UITableViewController {
 
     private var items: [ToggleItem] = []
     private var isUpdatingTabBarPlacement = false
-    
+
     // MARK: Lifecycle
-    
+
     init() {
         if #available(iOS 13.0, *) {
             super.init(style: .insetGrouped)
@@ -25,10 +25,10 @@ final class SettingsViewController: UITableViewController {
             super.init(style: .grouped)
         }
     }
-    
+
     @available(*, unavailable)
     required init?(coder: NSCoder) { nil }
-    
+
     // MARK: Overrides
 
     override func viewDidLoad() {
@@ -41,7 +41,7 @@ final class SettingsViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return items.count
     }
-    
+
     override func tableView(
         _ tableView: UITableView,
         cellForRowAt indexPath: IndexPath

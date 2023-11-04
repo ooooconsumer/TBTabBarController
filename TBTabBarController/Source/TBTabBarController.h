@@ -128,7 +128,7 @@ shouldSelectViewController:(__kindof UIViewController * _Nullable)viewController
  * but you can always override this behaviour.
  */
 @interface TBTabBarController : UIViewController <TBTabBarDelegate> {
-    
+
 @protected
 
     struct {
@@ -147,7 +147,7 @@ shouldSelectViewController:(__kindof UIViewController * _Nullable)viewController
 
     TBTabBarControllerTabBarPlacement _currentPlacement;
     TBTabBarControllerTabBarPlacement _preferredPlacement;
-    
+
     BOOL _shouldSelectViewController;
     BOOL _didPresentTabBarOnce;
     BOOL _visibleViewControllerWantsHideTabBar;
@@ -274,7 +274,7 @@ shouldSelectViewController:(__kindof UIViewController * _Nullable)viewController
  * There is another way, based on setting your own value to the @p `_preferredPlacement` instance
  * variable before calling this method, but it's not preferred (ba-dum-tss!).
  * @note You should @B always call @em `endTabBarTransition` method after calling this one.
- * @code 
+ * @code
     [UIView animateWithDuration:0.3 animations:^{
         [self beginTabBarTransition];
     } completion:^(BOOL finished) {

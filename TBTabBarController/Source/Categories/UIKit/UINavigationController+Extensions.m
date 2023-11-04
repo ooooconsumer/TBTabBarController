@@ -48,7 +48,7 @@ static char *tb_privateDelegateKey;
 #pragma mark Lifecycle
 
 + (void)load {
-    
+
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         _TBSwizzleMethod([self class],
@@ -80,81 +80,81 @@ static char *tb_privateDelegateKey;
 #pragma mark Overrides
 
 - (UIViewController *)tb_popViewControllerAnimated:(BOOL)animated {
-    
+
     UIViewController *previousViewController = [self tb_popViewControllerAnimated:animated];
-    
+
     if (!self.tb_isNestedInTBTabBarController) {
         return previousViewController;
     }
-    
+
     [previousViewController setValue:nil forKey:NSStringFromSelector(@selector(tb_tabBarController))];
-    
+
     [self tb_popViewController:previousViewController
      destinationViewController:self.topViewController
                       animated:animated];
- 
+
     return previousViewController;
 }
 
 - (NSArray<__kindof UIViewController *> *)tb_popToViewController:(UIViewController *)viewController
                                                         animated:(BOOL)animated {
-    
+
     UIViewController *previousViewController = self.topViewController;
-    
+
     NSArray<__kindof UIViewController *> *viewControllers = [self tb_popToViewController:viewController animated:animated];
-    
+
     if (!self.tb_isNestedInTBTabBarController) {
         return viewControllers;
     }
-    
+
     for (UIViewController *viewController in viewControllers) {
         [viewController setValue:nil forKey:NSStringFromSelector(@selector(tb_tabBarController))];
     }
-    
+
     [self tb_popViewController:previousViewController destinationViewController:viewController animated:animated];
-    
+
     return viewControllers;
 }
 
 - (NSArray<__kindof UIViewController *> *)tb_popToRootViewControllerAnimated:(BOOL)animated {
-    
+
     UIViewController *previousViewController = self.topViewController;
-    
+
     NSArray<__kindof UIViewController *> *viewControllers = [self tb_popToRootViewControllerAnimated:animated];
-    
+
     for (UIViewController *viewController in viewControllers) {
         [viewController setValue:nil forKey:NSStringFromSelector(@selector(tb_tabBarController))];
     }
-    
+
     [self tb_popViewController:previousViewController destinationViewController:self.topViewController animated:animated];
-    
+
     return viewControllers;
 }
 
 - (void)tb_pushViewController:(UIViewController *)viewController animated:(BOOL)animated {
-    
+
     if (!self.tb_isNestedInTBTabBarController) {
         [self tb_pushViewController:viewController animated:animated];
         return;
     }
-    
+
     UIViewController *prevViewController = self.topViewController; // Get the top view controller before it will be replaced with a new view controller
-    
+
     [viewController setValue:prevViewController.tb_tabBarController forKey:NSStringFromSelector(@selector(tb_tabBarController))];
-    
+
     [self tb_pushViewController:viewController animated:animated];
 
     if (self.tb_isInteractivePopGestureRecognizerRegistered == false && self.interactivePopGestureRecognizer != nil) {
         [self tb_registerInteractivePopGestureRecognizer:self.interactivePopGestureRecognizer];
     }
-    
+
     [self.tb_delegate tb_navigationController:self
                        didBeginTransitionFrom:prevViewController
                                            to:viewController
                                     backwards:false];
 
     id<UIViewControllerTransitionCoordinator> const transitionCoordinator = self.transitionCoordinator;
-    
+
     if (transitionCoordinator != nil) {
 
         __weak typeof(self) weakSelf = self;
@@ -207,18 +207,18 @@ static char *tb_privateDelegateKey;
 }
 
 - (void)tb_viewDidLayoutSubviews {
-    
+
     [self tb_viewDidLayoutSubviews];
-    
+
     if (self.tb_nestedInTBTabBarController) {
         [self tb_update];
     }
 }
 
 - (void)tb_didMoveToParentViewController:(UIViewController *)parent {
-    
+
     [self tb_didMoveToParentViewController:parent];
-    
+
     if (parent == nil && self.tb_isNestedInTBTabBarController) {
         [self.interactivePopGestureRecognizer removeTarget:self action:@selector(tb_handleInteractivePopGestureRecognizer:)];
         self.tb_nestedInTBTabBarController = false;
@@ -235,24 +235,24 @@ static char *tb_privateDelegateKey;
 #pragma mark Gestures
 
 - (void)tb_registerInteractivePopGestureRecognizer:(__kindof UIGestureRecognizer *)interactivePopGestureRecognizer {
-    
+
     [interactivePopGestureRecognizer addTarget:self action:@selector(tb_handleInteractivePopGestureRecognizer:)];
-    
+
     self.tb_interactivePopGestureRecognizerRegistered = true;
 }
 
 - (void)tb_handleInteractivePopGestureRecognizer:(UIPanGestureRecognizer *)interactivePopGestureRecognizer {
-    
+
     if (interactivePopGestureRecognizer.state == UIGestureRecognizerStateEnded) {
         return;
     }
-    
+
     CGFloat const translation = [interactivePopGestureRecognizer translationInView:self.view].x;
-    
+
     if (translation == 0.0) {
         return;
     }
-    
+
     CGFloat const completed = MAX(0.0, MIN(1.0, translation / CGRectGetWidth(self.view.bounds)));
 
     [self.tb_delegate tb_navigationController:self
@@ -266,11 +266,11 @@ static char *tb_privateDelegateKey;
 - (void)tb_popViewController:(UIViewController *)previousViewController
    destinationViewController:(UIViewController *)destinationViewController
                     animated:(BOOL)animated {
-    
+
     id<UIViewControllerTransitionCoordinator> const transitionCoordinator = self.transitionCoordinator;
-    
+
     [self.tb_delegate tb_navigationController:self didBeginTransitionFrom:previousViewController to:destinationViewController backwards:true];
-    
+
     if (transitionCoordinator != nil) {
         
         if (transitionCoordinator.isInteractive) {
@@ -366,16 +366,16 @@ static char *tb_privateDelegateKey;
 }
 
 - (void)tb_update {
-    
+
     CGFloat value = 0.0;
-    
+
     for (UIView *subview in self.navigationBar.subviews) {
         if ([NSStringFromClass([subview class]) containsString:@"ContentView"]) {
             value = CGRectGetMaxY(subview.frame);
             break;
         }
     }
-    
+
     [self.tb_delegate tb_navigationController:self
                  navigationBarDidChangeHeight:value + self.view.safeAreaInsets.top];
 }
@@ -383,24 +383,24 @@ static char *tb_privateDelegateKey;
 #pragma mark Getters
 
 - (BOOL)tb_isNestedInTBTabBarController {
-    
+
     return [(NSNumber *)objc_getAssociatedObject(self, &tb_nestedInTBTabBarControllerKey) boolValue];
 }
 
 - (BOOL)tb_isInteractivePopGestureRecognizerRegistered {
-    
+
     return [(NSNumber *)objc_getAssociatedObject(self, &tb_interactivePopGestureRecognizerRegisteredKey) boolValue];
 }
 
 - (id<TBNavigationControllerExtensionDelegate>)tb_delegate {
-    
+
     return objc_getAssociatedObject(self, &tb_privateDelegateKey);
 }
 
 #pragma mark Setters
 
 - (void)tb_setNestedInTBTabBarController:(BOOL)tb_nestedInTBTabBarController {
-    
+
     objc_setAssociatedObject(self,
                              &tb_nestedInTBTabBarControllerKey,
                              @(tb_nestedInTBTabBarController),
@@ -408,7 +408,7 @@ static char *tb_privateDelegateKey;
 }
 
 - (void)tb_setInteractivePopGestureRecognizerRegistered:(BOOL)tb_interactivePopGestureRecognizerRegistered {
-    
+
     objc_setAssociatedObject(self,
                              &tb_interactivePopGestureRecognizerRegisteredKey,
                              @(tb_interactivePopGestureRecognizerRegistered),
@@ -416,7 +416,7 @@ static char *tb_privateDelegateKey;
 }
 
 - (void)tb_setPrivateDelegate:(id<TBNavigationControllerExtensionDelegate>)tb_privateDelegate {
-    
+
     objc_setAssociatedObject(self,
                              &tb_privateDelegateKey,
                              tb_privateDelegate,

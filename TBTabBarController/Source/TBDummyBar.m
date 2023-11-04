@@ -33,31 +33,31 @@
 #pragma mark Lifecycle
 
 - (instancetype)init {
-    
+
     self = [super init];
-    
+
     if (self) {
         [self tbfknvbr_commonInit];
     }
-    
+
     return self;
 }
 
 - (instancetype)initWithFrame:(CGRect)frame {
-    
+
     self = [super initWithFrame:frame];
-    
+
     if (self) {
         [self tbfknvbr_commonInit];
     }
-    
+
     return self;
 }
 
 #pragma mark Overrides
 
 - (void)layoutSubviews {
-    
+
     [super layoutSubviews];
 
     CGFloat const width = CGRectGetWidth(self.bounds);
@@ -66,16 +66,16 @@
 
     UIEdgeInsets const safeAreaInsets = self.safeAreaInsets;
     UIEdgeInsets const contentInsets = self.contentInsets;
-    
+
     UIView *subview = self.subview;
-    
+
     CGRect frame = subview.frame;
     frame.size = [subview sizeThatFits:(CGSize){width - safeAreaInsets.left - safeAreaInsets.right - contentInsets.left, height - contentInsets.top - contentInsets.bottom - safeAreaInsets.top}];
     frame.origin = (CGPoint){
         safeAreaInsets.left + (((width - safeAreaInsets.left) - frame.size.width) / 2.0),
         height + contentInsets.top - contentInsets.bottom - frame.size.height
     };
-    
+
     subview.frame = _TBPixelAccurateRect(frame, displayScale, true);
 }
 
@@ -84,7 +84,7 @@
 #pragma mark Setup
 
 - (void)tbfknvbr_commonInit {
-    
+
     self.contentInsets = UIEdgeInsetsMake(0.0, 0.0, 6.0, 0.0);
 }
 
@@ -97,7 +97,7 @@
     if (subview != nil) {
         [self addSubview:subview];
     }
-    
+
     _subview = subview;
 }
 

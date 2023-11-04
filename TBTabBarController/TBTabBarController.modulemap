@@ -1,5 +1,5 @@
 //
-//  UIView+Extensions.h
+//  TBTabBarController.modulemap
 //  TBTabBarController
 //
 //  Copyright © 2019-2023 Timur Ganiev. All rights reserved.
@@ -22,28 +22,9 @@
 //  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 //  SOFTWARE.
 
-#import <UIKit/UIKit.h>
+framework module TBTabBarController {
+   umbrella header "TBTabBarControllerFramework.h"
 
-NS_ASSUME_NONNULL_BEGIN
-
-@interface UIView (Extensions)
-
-/**
- * @abstract A display scale.
- * @discussion Some iPhone models (or rather 5,5" Plus models and 12 Mini) have non-integer display scale value (≈@2.608x). 
- * This applies only for real devices and not to simulators. So, because of this, some lines, separators,
- * icons and other graphics that requires pixel-perfect design may be displaying wrong.
- * This computed property solves this problem by getting current screen's native scale instead of trait collection's display scale
- * which may be only integer value like @1x, @2x and so on.
- * @note If the current view does not have a window then it uses main screen's window native scale value.
- */
-@property (assign, nonatomic, readonly) CGFloat tb_displayScale;
-
-/**
- * @abstract Describes wheter is LTR or RTL layour direction.
- */
-@property (assign, nonatomic, readonly) BOOL tb_isLeftToRight;
-
-@end
-
-NS_ASSUME_NONNULL_END
+   export *
+   module * { export * }
+}

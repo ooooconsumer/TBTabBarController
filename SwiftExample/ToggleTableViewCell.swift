@@ -32,7 +32,7 @@ final class ToggleTableViewCell: UITableViewCell {
 // MARK: Internal Methods
 
 extension ToggleTableViewCell {
-    
+
     func render(with item: ToggleItem, toggleHandler: @escaping (Bool) -> Void) {
 
         if #available(iOS 14.0, *) {

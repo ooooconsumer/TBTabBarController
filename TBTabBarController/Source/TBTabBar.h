@@ -62,7 +62,7 @@ typedef NS_ENUM(NSInteger, TBTabBarLayoutOrientation) {
 };
 
 @interface TBTabBar : TBSimpleBar <UIGestureRecognizerDelegate> {
-    
+
 @protected
 
     struct {

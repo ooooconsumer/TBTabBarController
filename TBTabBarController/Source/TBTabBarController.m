@@ -70,7 +70,7 @@ static _TBTabBarControllerMethodOverrides tbtbbrcntrlr_methodOverridesFlag;
 
     __weak UINavigationController *tbtbbrcntrlr_nestedNavigationController;
     _TBTabBarControllerTransitionState *tbtbbrcntrlr_transitionState;
-    
+
     CGFloat tbtbbrcntrlr_dummyBarInternalHeight;
 
     BOOL tbtbbrcntrlr_needsLayout;
@@ -87,9 +87,9 @@ static _TBTabBarControllerMethodOverrides tbtbbrcntrlr_methodOverridesFlag;
 #pragma mark Lifecycle
 
 + (void)initialize {
-    
+
     [super initialize];
-    
+
     if (self != [TBTabBarController class]) {
         if (_TBSubclassOverridesMethod([TBTabBarController class], self, @selector(preferredTabBarPlacementForHorizontalSizeClass:))) {
             tbtbbrcntrlr_methodOverridesFlag |= _TBTabBarControllerMethodOverridePreferredTabBarPlacementForHorizontalSizeClass;
@@ -103,45 +103,45 @@ static _TBTabBarControllerMethodOverrides tbtbbrcntrlr_methodOverridesFlag;
 }
 
 - (instancetype)init {
-    
+
     self = [super initWithNibName:nil bundle:nil];
-    
+
     if (self) {
         [self tbtbbrcntrlr_commonInit];
     }
-    
+
     return self;
 }
 
 + (instancetype)new {
-    
+
     return [[TBTabBarController alloc] init];
 }
 
 - (void)dealloc {
-    
+
     [self tbtbbrcntrlr_removeItemObservers];
 }
 
 #pragma mark Public Methods
 
 - (void)willPresentTabBar {
-    
+
     [self _specifyPreferredTabBarPlacementForHorizontalSizeClass:self.traitCollection.horizontalSizeClass
                                                            size:self.view.bounds.size];
-    
+
     _currentPlacement = _preferredPlacement;
 }
 
 - (void)didPresentTabBar {
-    
+
     _didPresentTabBarOnce = true;
-    
+
     self.selectedIndex = self.startingIndex;
 }
 
 - (void)currentlyVisibleTabBar:(TBTabBar **)visibleTabBar hiddenTabBar:(TBTabBar **)hiddenTabBar {
-    
+
     switch (_currentPlacement) {
         case TBTabBarControllerTabBarPlacementHidden:
             if (_preferredPlacement > TBTabBarControllerTabBarPlacementHidden) {
@@ -189,47 +189,47 @@ static _TBTabBarControllerMethodOverrides tbtbbrcntrlr_methodOverridesFlag;
 }
 
 - (void)beginTabBarTransition {
-    
+
     tbtbbrcntrlr_selectedViewControllerNeedsLayout = true;
-    
+
     [self tbtbbrcntrlr_beginTabBarTransition];
 }
 
 - (void)endTabBarTransition {
-    
+
     tbtbbrcntrlr_selectedViewControllerNeedsLayout = false;
-    
+
     [self tbtbbrcntrlr_endTabBarTransition];
 }
 
 - (void)addItem:(__kindof TBTabBarItem *)item {
-    
+
     [self tbtbbrcntrlr_observeItem:item];
-    
+
     [_items addObject:item];
-    
+
     [self.horizontalTabBar _setItems:_items];
     [self.verticalTabBar _setItems:_items];
 }
 
 - (void)insertItem:(__kindof TBTabBarItem *)item atIndex:(NSUInteger)index {
-    
+
     [self tbtbbrcntrlr_observeItem:item];
-    
+
     [_items insertObject:item atIndex:index];
-    
+
     [self.horizontalTabBar _setItems:_items];
     [self.verticalTabBar _setItems:_items];
 }
 
 - (void)removeItemAtIndex:(NSUInteger)index {
-    
+
     TBTabBarItem *item = _items[index];
-    
+
     [self tbtbbrcntrlr_removeObserverForItem:item];
-    
+
     [_items removeObjectAtIndex:index];
-    
+
     [self.horizontalTabBar _setItems:_items];
     [self.verticalTabBar _setItems:_items];
 
@@ -287,19 +287,19 @@ static _TBTabBarControllerMethodOverrides tbtbbrcntrlr_methodOverridesFlag;
 #pragma mark Overrides
 
 - (UIStatusBarAnimation)preferredStatusBarUpdateAnimation {
-    
+
     return [self _visibleViewController].preferredStatusBarUpdateAnimation;
 }
 
 - (void)viewDidLoad {
-    
+
     [super viewDidLoad];
-    
+
     [self tbtbbrcntrlr_setup];
 }
 
 - (void)viewDidLayoutSubviews {
-    
+
     [super viewDidLayoutSubviews];
 
     if (@available(iOS 13.0, *)) {
@@ -307,33 +307,33 @@ static _TBTabBarControllerMethodOverrides tbtbbrcntrlr_methodOverridesFlag;
             [self tbtbbrcntrlr_presentTabBar];
         }
     }
-    
+
     [self tbtbbrcntrlr_layoutBars];
 }
 
 #pragma mark UIContainerViewControllerProtectedMethods
 
 - (UIViewController *)childViewControllerForStatusBarStyle {
-    
+
     return [self _visibleViewController];
 }
 
 - (UIViewController *)childViewControllerForStatusBarHidden {
-    
+
     return [self _visibleViewController];
 }
 
 #pragma mark UIViewControllerRotation
 
 - (UIInterfaceOrientationMask)supportedInterfaceOrientations {
-    
+
     return [self _visibleViewController].supportedInterfaceOrientations;
 }
 
 #pragma mark UIHomeIndicatorAutoHidden
 
 - (UIViewController *)childViewControllerForHomeIndicatorAutoHidden {
-    
+
     return [self _visibleViewController];
 }
 
@@ -341,11 +341,11 @@ static _TBTabBarControllerMethodOverrides tbtbbrcntrlr_methodOverridesFlag;
 
 - (void)willTransitionToTraitCollection:(UITraitCollection *)newCollection
               withTransitionCoordinator:(id <UIViewControllerTransitionCoordinator>)coordinator {
-    
+
     [super willTransitionToTraitCollection:newCollection withTransitionCoordinator:coordinator];
-    
+
     UIUserInterfaceSizeClass const newHorizontalSizeClass = newCollection.horizontalSizeClass;
-    
+
     if (self.traitCollection.horizontalSizeClass != newHorizontalSizeClass) {
         
         _preferredPlacement = [self tbtbbrcntrlr_preferredTabBarPlacementForSizeClass:newHorizontalSizeClass];
@@ -354,7 +354,7 @@ static _TBTabBarControllerMethodOverrides tbtbbrcntrlr_methodOverridesFlag;
 
 - (void)viewWillTransitionToSize:(CGSize)size
        withTransitionCoordinator:(id <UIViewControllerTransitionCoordinator>)coordinator {
-    
+
     if (CGSizeEqualToSize(self.view.bounds.size, size) == false) {
         
         __weak typeof(self) weakSelf = self;
@@ -374,12 +374,13 @@ static _TBTabBarControllerMethodOverrides tbtbbrcntrlr_methodOverridesFlag;
             [weakSelf endTabBarTransition];
         }];
     }
-    
+
     [super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
 }
 
 #pragma mark UITraitEnvironment
 
+#if FAlse
 - (void)traitCollectionDidChange:(UITraitCollection *)previousTraitCollection {
 
     if (@available(iOS 13.0, *)) { } else {
@@ -387,9 +388,10 @@ static _TBTabBarControllerMethodOverrides tbtbbrcntrlr_methodOverridesFlag;
             [self tbtbbrcntrlr_presentTabBar];
         }
     }
-    
+
     [super traitCollectionDidChange:previousTraitCollection];
 }
+#endif
 
 #pragma mark NSKeyValueObserving
 
@@ -397,17 +399,17 @@ static _TBTabBarControllerMethodOverrides tbtbbrcntrlr_methodOverridesFlag;
                       ofObject:(id)object
                         change:(NSDictionary <NSKeyValueChangeKey, id> *)change
                        context:(void *)context {
-    
+
     TBTabBar *horizontalTabBar = self.horizontalTabBar;
     TBTabBar *verticalTabBar = self.verticalTabBar; 
-    
+
     [self currentlyVisibleTabBar:&horizontalTabBar hiddenTabBar:&verticalTabBar];
-    
+
     NSUInteger const verticalTabBarButtonIndex = [horizontalTabBar.items indexOfObject:object];
     NSUInteger const hiddenTabBarButtonIndex = [verticalTabBar.items indexOfObject:object];
-    
+
     id newValue = change[NSKeyValueChangeNewKey];
-    
+
     if (tbtbbrcntrlr_tabBarItemImageContext == context && [keyPath isEqualToString:NSStringFromSelector(@selector(image))]) {
         [horizontalTabBar _setNormalImage:newValue forButtonAtIndex:verticalTabBarButtonIndex];
         [verticalTabBar _setNormalImage:newValue forButtonAtIndex:hiddenTabBarButtonIndex];
@@ -431,20 +433,20 @@ static _TBTabBarControllerMethodOverrides tbtbbrcntrlr_methodOverridesFlag;
         [verticalTabBar _setButtonEnabled:isButtonEnabled atIndex:hiddenTabBarButtonIndex];
         return;
     }
-    
+
     [super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
 }
 
 #pragma mark TBTabBarDelegate
 
 - (BOOL)tabBar:(TBTabBar *)tabBar shouldSelectItem:(TBTabBarItem *)item atIndex:(NSUInteger)index {
-    
+
     BOOL shouldSelect = true;
-    
+
     if (_delegateFlags.shouldSelectItemAtIndex) {
         shouldSelect = [self.delegate tabBarController:self shouldSelectItem:item atIndex:index];
     }
-    
+
     if (shouldSelect && _delegateFlags.shouldSelectViewController) {
         NSUInteger const viewControllerIndex = [self.viewControllers indexOfObjectPassingTest:^BOOL(__kindof UIViewController *_Nonnull viewController, NSUInteger index, BOOL * _Nonnull stop) {
             if ([viewController.tb_tabBarItem isEqual:item]) {
@@ -456,24 +458,24 @@ static _TBTabBarControllerMethodOverrides tbtbbrcntrlr_methodOverridesFlag;
         UIViewController *viewController = viewControllerIndex != NSNotFound ? self.viewControllers[viewControllerIndex] : nil;
         _shouldSelectViewController = [self.delegate tabBarController:self shouldSelectViewController:viewController];
     }
-    
+
     return shouldSelect;
 }
 
 - (void)tabBar:(TBTabBar *)tabBar didSelectItem:(TBTabBarItem *)item atIndex:(NSUInteger)index {
-    
+
     if (_delegateFlags.didSelectItemAtIndex) {
         [self.delegate tabBarController:self didSelectItem:item atIndex:index];
     }
-    
+
     BOOL const shouldSelectViewController = _shouldSelectViewController;
-    
+
     _shouldSelectViewController = true;
-    
+
     if (!shouldSelectViewController) {
         return;
     }
-    
+
     TBTabBar *otherTabBar = tabBar.isVertical ? self.horizontalTabBar : self.verticalTabBar;
 
     if (_delegateFlags.shouldSelectViewController && ![self.delegate tabBarController:self shouldSelectViewController:self.viewControllers[index]]) {
@@ -505,7 +507,7 @@ static _TBTabBarControllerMethodOverrides tbtbbrcntrlr_methodOverridesFlag;
 #pragma mark Setup
 
 - (void)tbtbbrcntrlr_commonInit {
-    
+
     _shouldSelectViewController = true;
     _startingIndex = 0;
     _horizontalTabBarHeight = 49.0;
@@ -536,15 +538,15 @@ static _TBTabBarControllerMethodOverrides tbtbbrcntrlr_methodOverridesFlag;
 - (void)tbtbbrcntrlr_beginTabBarTransition {
 
     tbtbbrcntrlr_isTransitioning = true;
-    
+
     if (_preferredPlacement == _currentPlacement ||
         _preferredPlacement == TBTabBarControllerTabBarPlacementUndefined) {
         [self _specifyPreferredTabBarPlacementForHorizontalSizeClass:self.traitCollection.horizontalSizeClass
                                                                 size:self.view.bounds.size];
     }
-    
+
     tbtbbrcntrlr_needsUpdateTabBarPlacement = true;
-    
+
     TBTabBar *visibleTabBar, *hiddenTabBar;
     [self currentlyVisibleTabBar:&visibleTabBar hiddenTabBar:&hiddenTabBar];
 
@@ -552,7 +554,7 @@ static _TBTabBarControllerMethodOverrides tbtbbrcntrlr_methodOverridesFlag;
     [hiddenTabBar _prepareForTransitionToPlacement:_preferredPlacement];
 
     self.dummyBar.separatorPosition = self.verticalTabBar.separatorPosition;
-    
+
     if (_preferredPlacement != TBTabBarControllerTabBarPlacementHidden) {
         if (tbtbbrcntrlr_nestedNavigationController != nil) {
             // When there is no transition between the view controllers we can user the currently
@@ -568,7 +570,7 @@ static _TBTabBarControllerMethodOverrides tbtbbrcntrlr_methodOverridesFlag;
             }
         }
     }
-    
+
     if (_preferredPlacement != _currentPlacement) {
         id<TBTabBarControllerDelegate> delegate = self.delegate;
         switch (_preferredPlacement) {
@@ -594,27 +596,27 @@ static _TBTabBarControllerMethodOverrides tbtbbrcntrlr_methodOverridesFlag;
                 break;
         }
     }
-    
+
     [self tbtbbrcntrlr_showTabBarIfNeeded:hiddenTabBar tabBarToHide:visibleTabBar];
     [self tbtbbrcntrlr_updateAdditionalSafeAreaInsets:tbtbbrcntrlr_selectedViewControllerNeedsLayout];
 
     tbtbbrcntrlr_needsLayout = true;
-    
+
     [self.view setNeedsLayout];
     [self.view layoutIfNeeded];
 }
 
 - (void)tbtbbrcntrlr_endTabBarTransition {
-    
+
     if (!tbtbbrcntrlr_needsUpdateTabBarPlacement) {
         _preferredPlacement = TBTabBarControllerTabBarPlacementUndefined;
         tbtbbrcntrlr_isTransitioning = false;
         return;
     }
-    
+
     TBTabBar *visibleTabBar, *hiddenTabBar;
     [self currentlyVisibleTabBar:&visibleTabBar hiddenTabBar:&hiddenTabBar];
-    
+
     if (_preferredPlacement != _currentPlacement) {
         id<TBTabBarControllerDelegate> delegate = self.delegate;
         switch (_preferredPlacement) {
@@ -639,13 +641,13 @@ static _TBTabBarControllerMethodOverrides tbtbbrcntrlr_methodOverridesFlag;
                 break;
         }
     }
-    
+
     [self tbtbbrcntrlr_hideTabBarIfNeeded:visibleTabBar tabBarToShow:hiddenTabBar];
 
     tbtbbrcntrlr_needsLayout = true;
     tbtbbrcntrlr_needsUpdateTabBarPlacement = false;
     tbtbbrcntrlr_isTransitioning = false;
-    
+
     [self.view setNeedsLayout];
     [self.view layoutIfNeeded];
 
@@ -654,7 +656,7 @@ static _TBTabBarControllerMethodOverrides tbtbbrcntrlr_methodOverridesFlag;
 
 
 - (void)tbtbbrcntrlr_updateAdditionalSafeAreaInsets:(BOOL)shouldLayoutManually {
-    
+
     UIViewController *selectedViewController = self.selectedViewController;
     UIEdgeInsets additionalSafeAreaInsets = UIEdgeInsetsZero;
 
@@ -674,7 +676,7 @@ static _TBTabBarControllerMethodOverrides tbtbbrcntrlr_methodOverridesFlag;
         default:
             break;
     }
-    
+
     selectedViewController.additionalSafeAreaInsets = additionalSafeAreaInsets;
 
     if (shouldLayoutManually) {
@@ -685,11 +687,11 @@ static _TBTabBarControllerMethodOverrides tbtbbrcntrlr_methodOverridesFlag;
 
 - (void)tbtbbrcntrlr_showTabBarIfNeeded:(nullable TBTabBar *)tabBarToShow
                            tabBarToHide:(nullable TBTabBar *)tabBarToHide {
-    
+
     if (_preferredPlacement == _currentPlacement) {
         return;
     }
-    
+
     if (tbtbbrcntrlr_isTransitioning) {
         // Adjust content insets only if the device is transitioning to the ...
         if (tabBarToShow != nil) {
@@ -710,7 +712,7 @@ static _TBTabBarControllerMethodOverrides tbtbbrcntrlr_methodOverridesFlag;
                                                                        0.0)];
         }
     }
-    
+
     if (_preferredPlacement != TBTabBarControllerTabBarPlacementHidden && tabBarToShow != nil) {
         [self tbtbbrcntrlr_showTabBar:tabBarToShow];
     }
@@ -718,32 +720,32 @@ static _TBTabBarControllerMethodOverrides tbtbbrcntrlr_methodOverridesFlag;
 
 - (void)tbtbbrcntrlr_hideTabBarIfNeeded:(nullable TBTabBar *)tabBarToHide
                            tabBarToShow:(nullable TBTabBar *)tabBarToShow {
-    
+
     if (_preferredPlacement == _currentPlacement) {
         return;
     }
-    
+
     if (tbtbbrcntrlr_isTransitioning) {
         if (tabBarToShow != nil && tabBarToShow.isVertical) {
             [tabBarToShow _setAdditionalContentInsets:UIEdgeInsetsZero];
         }
     }
-    
+
     if (_currentPlacement != TBTabBarControllerTabBarPlacementHidden) {
         [self tbtbbrcntrlr_hideTabBar:tabBarToHide];
     }
-    
+
     _currentPlacement = _preferredPlacement;
 }
 
 - (void)tbtbbrcntrlr_presentTabBar {
 
     tbtbbrcntrlr_needsLayout = true;
-    
+
     [self willPresentTabBar];
 
     [self tbtbbrcntrlr_ensureVerticalTabBarPlacedAtRightLocationBeforeTransition];
-    
+
     if (_currentPlacement != TBTabBarControllerTabBarPlacementHidden) {
         TBTabBar *visibleTabBar, *hiddenTabBar;
         [self currentlyVisibleTabBar:&visibleTabBar hiddenTabBar:&hiddenTabBar];
@@ -753,12 +755,12 @@ static _TBTabBarControllerMethodOverrides tbtbbrcntrlr_methodOverridesFlag;
         [self.horizontalTabBar _setVisible:false];
         [self.verticalTabBar _setVisible:false];
     }
-    
+
     [self didPresentTabBar];
 }
 
 - (void)tbtbbrcntrlr_showTabBar:(TBTabBar *)tabBar {
-    
+
     if (tabBar.isVertical) {
         TBTabBar *horizontalTabBar = self.horizontalTabBar;
         if (horizontalTabBar.superview != nil) {
@@ -776,22 +778,22 @@ static _TBTabBarControllerMethodOverrides tbtbbrcntrlr_methodOverridesFlag;
             [self.view addSubview:tabBar];
         }
     }
-    
+
     [tabBar _setVisible:true];
-    
+
     self.visibleTabBar = tabBar;
 }
 
 - (void)tbtbbrcntrlr_hideTabBar:(TBTabBar *)tabBar {
-    
+
     if (tabBar.isVertical) {
         [self.dummyBar removeFromSuperview];
     }
-    
+
     [tabBar removeFromSuperview];
-    
+
     [tabBar _setVisible:false];
-    
+
     if ([self.visibleTabBar isEqual:tabBar]) {
         self.visibleTabBar = nil;
     }
@@ -804,7 +806,7 @@ static _TBTabBarControllerMethodOverrides tbtbbrcntrlr_methodOverridesFlag;
     if (!tbtbbrcntrlr_needsLayout) {
         return;
     }
-    
+
     tbtbbrcntrlr_needsLayout = false;
 
     if (_preferredPlacement != TBTabBarControllerTabBarPlacementUndefined) {
@@ -885,11 +887,11 @@ static _TBTabBarControllerMethodOverrides tbtbbrcntrlr_methodOverridesFlag;
 }
 
 - (CGRect)tbtbbrcntrlr_horizontalTabBarFrame:(CGRect)bounds hidden:(BOOL)hidden {
-    
+
     CGFloat const width = CGRectGetWidth(bounds);
     CGFloat const height = CGRectGetHeight(bounds);
     CGFloat const hTabBarHeight = self.horizontalTabBarHeight + self.view.safeAreaInsets.bottom;
-    
+
     if (hidden) {
         return (CGRect){{0.0, height}, {width, hTabBarHeight}};
     } else {
@@ -930,7 +932,7 @@ static _TBTabBarControllerMethodOverrides tbtbbrcntrlr_methodOverridesFlag;
             }
             break;
     }
-    
+
     return (CGRect){
         {xPosition, tbtbbrcntrlr_dummyBarInternalHeight},
         {vTabBarWidth, height - tbtbbrcntrlr_dummyBarInternalHeight}
@@ -942,7 +944,7 @@ static _TBTabBarControllerMethodOverrides tbtbbrcntrlr_methodOverridesFlag;
     CGRect frame = [self tbtbbrcntrlr_verticalTabBarFrame:bounds hidden:hidden];
     frame.origin.y = 0.0;
     frame.size.height = tbtbbrcntrlr_dummyBarInternalHeight;
-    
+
     return frame;
 }
 
@@ -962,7 +964,7 @@ static _TBTabBarControllerMethodOverrides tbtbbrcntrlr_methodOverridesFlag;
 }
 
 - (void)tbtbbrcntrlr_adjustVerticalTabBarHeightIfNeeded {
-    
+
     if (_preferredPlacement == TBTabBarControllerTabBarPlacementBottom &&
         (_currentPlacement == TBTabBarControllerTabBarPlacementLeading ||
          _currentPlacement == TBTabBarControllerTabBarPlacementTrailing)) {
@@ -976,9 +978,9 @@ static _TBTabBarControllerMethodOverrides tbtbbrcntrlr_methodOverridesFlag;
 #pragma mark Transitions
 
 - (void)tbtbbrcntrlr_moveToViewControllerAtIndex:(NSUInteger)index {
-    
+
     NSArray<UIViewController *> *viewControllers = self.viewControllers;
-    
+
     if (index == NSNotFound || viewControllers.count <= index || !self.isViewLoaded) {
         return;
     }
@@ -1071,14 +1073,14 @@ animationControllerForTransitionFromViewController:sourceViewController
 #pragma mark KVO
 
 - (void)tbtbbrcntrlr_observeItems {
-    
+
     for (TBTabBarItem *item in _items) {
         [self tbtbbrcntrlr_observeItem:item];
     }
 }
 
 - (void)tbtbbrcntrlr_observeItem:(TBTabBarItem *)item {
-    
+
     [item addObserver:self
            forKeyPath:NSStringFromSelector(@selector(title))
               options:NSKeyValueObservingOptionNew
@@ -1111,14 +1113,14 @@ animationControllerForTransitionFromViewController:sourceViewController
 }
 
 - (void)tbtbbrcntrlr_removeItemObservers {
-    
+
     for (TBTabBarItem *item in _items) {
         [self tbtbbrcntrlr_removeObserverForItem:item];
     }
 }
 
 - (void)tbtbbrcntrlr_removeObserverForItem:(TBTabBarItem *)item {
-    
+
     [item removeObserver:self
               forKeyPath:NSStringFromSelector(@selector(title))
                  context:tbtbbrcntrlr_tabBarItemTitleContext];
@@ -1147,26 +1149,26 @@ animationControllerForTransitionFromViewController:sourceViewController
 #pragma mark Helpers
 
 - (void)tbtbbrcntrlr_specifyPreferredPlacementForSizeClass:(UIUserInterfaceSizeClass)horizontalSizeClass {
-    
+
     if (_preferredPlacement == TBTabBarControllerTabBarPlacementUndefined) {
         _preferredPlacement = [self tbtbbrcntrlr_preferredTabBarPlacementForSizeClass:horizontalSizeClass];
     }
 }
 
 - (TBTabBarControllerTabBarPlacement)tbtbbrcntrlr_preferredTabBarPlacementForSizeClass:(UIUserInterfaceSizeClass)sizeClass  {
-    
+
     return sizeClass == UIUserInterfaceSizeClassRegular ?
         TBTabBarControllerTabBarPlacementTrailing :
         TBTabBarControllerTabBarPlacementBottom;
 }
 
 - (void)tbtbbrcntrlr_captureNestedNavigationControllerIfExists {
-    
+
     // This solution was borrowed from TOTabBarController
     // https://github.com/TimOliver/TOTabBarController
-    
+
     UIViewController *viewController = _selectedViewController;
-    
+
     do {
         if ([viewController isKindOfClass:[UINavigationController class]]) {
             tbtbbrcntrlr_nestedNavigationController = (UINavigationController *)viewController;
@@ -1193,7 +1195,7 @@ animationControllerForTransitionFromViewController:sourceViewController
 }
 
 - (void)tbtbbrcntrlr_processViewControllersWithValue:(id)value {
-    
+
     for (UIViewController *viewController in self.viewControllers) {
         [self tbtbbrcntrlr_processViewControllerChildren:viewController withValue:value];
     }
@@ -1201,24 +1203,24 @@ animationControllerForTransitionFromViewController:sourceViewController
 
 - (void)tbtbbrcntrlr_processViewControllerChildren:(__kindof UIViewController *)viewController
                                          withValue:(id)value {
-    
+
     for (UIViewController *childViewController in viewController.childViewControllers) {
         [self tbtbbrcntrlr_processViewControllerChildren:childViewController withValue:value];
     }
-    
+
     [viewController setValue:value forKey:NSStringFromSelector(@selector(tb_tabBarController))];
 }
 
 - (void)tbtbbrcntrlr_captureItems {
-    
+
     _items = [self.viewControllers valueForKeyPath:[NSString stringWithFormat:@"@unionOfObjects.%@", NSStringFromSelector(@selector(tb_tabBarItem))]];
 }
 
 - (void)tbtbbrcntrlr_handleItemSelectionAtIndex:(NSUInteger)index {
-    
+
     TBTabBar *visibleTabBar;
     [self currentlyVisibleTabBar:&visibleTabBar hiddenTabBar:nil];
-    
+
     if (visibleTabBar != nil) {
         visibleTabBar.selectedIndex = index;
     } else {
@@ -1242,7 +1244,7 @@ animationControllerForTransitionFromViewController:sourceViewController
 #pragma mark Gestures
 
 - (void)tbtbbrcntrlr_handlePopGestureRecognizer:(UISwipeGestureRecognizer *)gestureRecognizer {
-    
+
     if (tbtbbrcntrlr_nestedNavigationController != nil && tbtbbrcntrlr_nestedNavigationController.viewControllers.count > 1) {
         [tbtbbrcntrlr_nestedNavigationController popViewControllerAnimated:true];
     }
@@ -1251,12 +1253,12 @@ animationControllerForTransitionFromViewController:sourceViewController
 #pragma mark Getters
 
 - (NSArray<__kindof TBTabBarItem *> *)items {
-    
+
     return _items != nil ? [_items copy] : nil;
 }
 
 - (TBTabBar *)horizontalTabBar {
-    
+
     if (_horizontalTabBar == nil) {
 
         Class const class = [[self class] horizontalTabBarClass];
@@ -1268,12 +1270,12 @@ animationControllerForTransitionFromViewController:sourceViewController
         _horizontalTabBar = [[class alloc] initWithLayoutOrientation:TBTabBarLayoutOrientationHorizontal];
         _horizontalTabBar.delegate = self;
     }
-    
+
     return _horizontalTabBar;
 }
 
 - (TBTabBar *)verticalTabBar {
-    
+
     if (_verticalTabBar == nil) {
 
         Class const class = [[self class] verticalTabBarClass];
@@ -1285,26 +1287,26 @@ animationControllerForTransitionFromViewController:sourceViewController
         _verticalTabBar = [[class alloc] initWithLayoutOrientation:TBTabBarLayoutOrientationVertical];
         _verticalTabBar.delegate = self;
     }
-    
+
     return _verticalTabBar;
 }
 
 - (TBDummyBar *)dummyBar {
-    
+
     if (_dummyBar == nil) {
         _dummyBar = [[TBDummyBar alloc] init];
     }
-    
+
     return _dummyBar;
 }
 
 - (UISwipeGestureRecognizer *)popGestureRecognizer {
-    
+
     if (_popGestureRecognizer == nil) {
         _popGestureRecognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(tbtbbrcntrlr_handlePopGestureRecognizer:)];
         _popGestureRecognizer.direction = self.view.tb_isLeftToRight ? UISwipeGestureRecognizerDirectionRight : UISwipeGestureRecognizerDirectionLeft;
     }
-    
+
     return _popGestureRecognizer;
 }
 
@@ -1322,13 +1324,13 @@ animationControllerForTransitionFromViewController:sourceViewController
 #pragma mark Setters
 
 - (void)setViewControllers:(NSArray <__kindof UIViewController *> *)viewControllers {
-    
+
     if (_viewControllers != nil && _viewControllers.count > 0) {
         [self tbtbbrcntrlr_removeItemObservers];
         [self tbtbbrcntrlr_processViewControllersWithValue:nil];
         [_items removeAllObjects];
     }
-    
+
     if (viewControllers != nil && viewControllers.count > 0) {
         _viewControllers = [viewControllers copy];
         [self tbtbbrcntrlr_captureItems];
@@ -1338,36 +1340,36 @@ animationControllerForTransitionFromViewController:sourceViewController
         _viewControllers = nil;
         [self tbtbbrcntrlr_clearHierarchy];
     }
-    
+
     [self.horizontalTabBar _setItems:_items];
     [self.verticalTabBar _setItems:_items];
 }
 
 - (void)setSelectedIndex:(NSUInteger)selectedIndex {
-    
+
     _selectedIndex = selectedIndex;
-    
+
     [self tbtbbrcntrlr_handleItemSelectionAtIndex:selectedIndex];
 }
 
 - (void)setVerticalTabBarWidth:(CGFloat)verticalTabBarWidth {
-    
+
     _verticalTabBarWidth = verticalTabBarWidth;
-    
+
     [self.view setNeedsLayout];
 }
 
 - (void)setHorizontalTabBarHeight:(CGFloat)horizontalTabBarHeight {
-    
+
     _horizontalTabBarHeight = horizontalTabBarHeight;
-    
+
     [self.view setNeedsLayout];
 }
 
 - (void)setDelegate:(id<TBTabBarControllerDelegate>)delegate {
-    
+
     _delegate = delegate;
-    
+
     _delegateFlags.shouldSelectItemAtIndex = [_delegate respondsToSelector:@selector(tabBarController:shouldSelectItem:atIndex:)];
     _delegateFlags.didSelectItemAtIndex = [_delegate respondsToSelector:@selector(tabBarController:didSelectItem:atIndex:)];
     _delegateFlags.shouldSelectViewController = [_delegate respondsToSelector:@selector(tabBarController:shouldSelectViewController:)];
@@ -1388,22 +1390,22 @@ animationControllerForTransitionFromViewController:sourceViewController
 #pragma mark Public Methods
 
 - (TBTabBarControllerTabBarPlacement)preferredTabBarPlacementForHorizontalSizeClass:(UIUserInterfaceSizeClass)sizeClass {
-    
+
     return [self tbtbbrcntrlr_preferredTabBarPlacementForSizeClass:sizeClass];
 }
 
 - (TBTabBarControllerTabBarPlacement)preferredTabBarPlacementForViewSize:(CGSize)size {
-    
+
     return _preferredPlacement;
 }
 
 + (Class)horizontalTabBarClass {
-    
+
     return [TBTabBar class];
 }
 
 + (Class)verticalTabBarClass {
-    
+
     return [TBTabBar class];
 }
 
@@ -1420,7 +1422,7 @@ static char *_tabBarControllerCategoryHidesTabBarWhenPushedKey;
 #pragma mark Overrides
 
 + (void)load {
-    
+
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         _TBSwizzleMethod([self class], @selector(setTitle:), @selector(_setTitle:));
@@ -1432,47 +1434,47 @@ static char *_tabBarControllerCategoryHidesTabBarWhenPushedKey;
 #pragma mark Getters
 
 - (TBTabBarItem *)tb_tabBarItem {
-    
+
     TBTabBarItem *item = objc_getAssociatedObject(self, &_tabBarItemPropertyKey);
-    
+
     if (item == nil) {
         item = [[TBTabBarItem alloc] initWithImage:[[UIImage alloc] init] buttonClass:[TBTabBarButton class]];
         objc_setAssociatedObject(self, &_tabBarItemPropertyKey, item, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     }
-    
+
     return item;
 }
 
 - (TBTabBarController *)tb_tabBarController {
-    
+
     return objc_getAssociatedObject(self, &_tabBarControllerPropertyKey);
 }
 
 - (BOOL)tb_hidesTabBarWhenPushed {
-    
+
     return [(NSNumber *)objc_getAssociatedObject(self, &_tabBarControllerCategoryHidesTabBarWhenPushedKey) boolValue];
 }
 
 #pragma mark Setters
 
 - (void)_setTitle:(NSString *)title {
-    
+
     [self _setTitle:title];
-    
+
     if (self.tb_tabBarController != nil) {
         self.tb_tabBarItem.title = [title copy];
     }
 }
 
 - (void)tb_setTabBarItem:(TBTabBarItem *)tabBarItem {
-    
+
     TBTabBarItem *prevItem = objc_getAssociatedObject(self, &_tabBarItemPropertyKey);
     TBTabBarItem *newItem = tabBarItem;
-    
+
     if (newItem == nil) {
         newItem = [[TBTabBarItem alloc] initWithImage:[[UIImage alloc] init] buttonClass:[TBTabBarButton class]];
     }
-    
+
     if (prevItem != nil) {
         if (self.tb_tabBarController != nil) {
             self.tb_tabBarItem.title = self.title;
@@ -1483,7 +1485,7 @@ static char *_tabBarControllerCategoryHidesTabBarWhenPushedKey;
             self.tb_tabBarItem.title = self.title;
         }
     }
-    
+
     objc_setAssociatedObject(self,
                              &_tabBarItemPropertyKey,
                              tabBarItem,
@@ -1491,7 +1493,7 @@ static char *_tabBarControllerCategoryHidesTabBarWhenPushedKey;
 }
 
 - (void)setTb_tabBarController:(TBTabBarController * _Nullable)tb_tabBarController {
-    
+
     objc_setAssociatedObject(self,
                              &_tabBarControllerPropertyKey,
                              tb_tabBarController,
@@ -1499,7 +1501,7 @@ static char *_tabBarControllerCategoryHidesTabBarWhenPushedKey;
 }
 
 - (void)tb_setHidesTabBarWhenPushed:(BOOL)_hidesTabBarWhenPushed {
-    
+
     objc_setAssociatedObject(self,
                              &_tabBarControllerCategoryHidesTabBarWhenPushedKey,
                              @(_hidesTabBarWhenPushed),
@@ -1514,9 +1516,9 @@ static char *_tabBarControllerCategoryHidesTabBarWhenPushedKey;
 
 - (void)_specifyPreferredTabBarPlacementForHorizontalSizeClass:(UIUserInterfaceSizeClass)horizontalSizeClass
                                                          size:(CGSize)size {
-    
+
     [self tbtbbrcntrlr_specifyPreferredPlacementForSizeClass:horizontalSizeClass];
-    
+
     if (tbtbbrcntrlr_methodOverridesFlag & _TBTabBarControllerMethodOverridePreferredTabBarPlacementForViewSize) {
         TBTabBarControllerTabBarPlacement const preferredPlacement = [self preferredTabBarPlacementForViewSize:size];
         if (preferredPlacement != _preferredPlacement && preferredPlacement != TBTabBarControllerTabBarPlacementUndefined) {
@@ -1531,20 +1533,20 @@ static char *_tabBarControllerCategoryHidesTabBarWhenPushedKey;
 }
 
 - (void)_changeItem:(TBTabBarItem *)item toItem:(TBTabBarItem *)newItem {
-    
+
     NSUInteger const index = [_items indexOfObject:item];
-    
+
     if (index == NSNotFound) {
         return;
     }
-    
+
     [self tbtbbrcntrlr_removeObserverForItem:item];
     [_items removeObjectAtIndex:index];
     [self insertItem:item atIndex:index];
 }
 
 - (__kindof UIViewController *_Nullable)_visibleViewController {
-    
+
     return tbtbbrcntrlr_nestedNavigationController != nil ?
         tbtbbrcntrlr_nestedNavigationController.visibleViewController :
         self.selectedViewController;
@@ -1560,13 +1562,13 @@ static char *_tabBarControllerCategoryHidesTabBarWhenPushedKey;
 
 - (void)tb_navigationController:(UINavigationController *)navigationController
    navigationBarDidChangeHeight:(CGFloat)height {
-    
+
     if (tbtbbrcntrlr_dummyBarInternalHeight == height) {
         return;
     }
-    
+
     tbtbbrcntrlr_dummyBarInternalHeight = height;
-    
+
     [self.view setNeedsLayout];
 }
 
@@ -1574,16 +1576,16 @@ static char *_tabBarControllerCategoryHidesTabBarWhenPushedKey;
          didBeginTransitionFrom:(UIViewController *)prevViewController
                              to:(UIViewController *)destinationViewController
                       backwards:(BOOL)backwards {
-    
+
     if (tbtbbrcntrlr_transitionState != nil) {
         return;
     }
-    
+
     TBTabBar *tabBar;
     [self currentlyVisibleTabBar:&tabBar hiddenTabBar:nil];
-    
+
     UIViewController *viewController;
-    
+
     if (backwards) {
         if (navigationController.viewControllers.count < 2) {
             if (tabBar == nil) {
@@ -1598,7 +1600,7 @@ static char *_tabBarControllerCategoryHidesTabBarWhenPushedKey;
     } else {
         viewController = destinationViewController;
     }
-    
+
     if (viewController != nil) {
         BOOL const shouldHideTabBar = viewController.tb_hidesTabBarWhenPushed;
         if (tabBar == nil) {
@@ -1617,7 +1619,7 @@ static char *_tabBarControllerCategoryHidesTabBarWhenPushedKey;
             }
         }
     }
-    
+
     if (tabBar != nil) {
         
         if (_visibleViewControllerWantsHideTabBar) {
@@ -1635,7 +1637,7 @@ static char *_tabBarControllerCategoryHidesTabBarWhenPushedKey;
                                                                                      targetPlacement:_currentPlacement
                                                                                            backwards:backwards];
     }
-    
+
     _preferredPlacement = TBTabBarControllerTabBarPlacementUndefined;
 }
 
@@ -1643,17 +1645,17 @@ static char *_tabBarControllerCategoryHidesTabBarWhenPushedKey;
        didUpdateInteractiveFrom:(UIViewController *)prevViewController
                              to:(UIViewController *)destinationViewController
                 percentComplete:(CGFloat)percentComplete {
-    
+
     if (tbtbbrcntrlr_transitionState == nil) {
         return;
     }
-    
+
     TBTabBar *tabBar = tbtbbrcntrlr_transitionState.manipulatedTabBar;
-    
+
     if (tabBar == nil) {
         return;
     }
-    
+
     if (tabBar.isVertical) {
         CGFloat const tabBarWidth = self.verticalTabBarWidth + self.view.safeAreaInsets.left;
         CGRect frame = tabBar.frame;
@@ -1685,21 +1687,21 @@ static char *_tabBarControllerCategoryHidesTabBarWhenPushedKey;
           willEndTransitionFrom:(UIViewController *)prevViewController
                              to:(UIViewController *)destinationViewController
                       cancelled:(BOOL)cancelled {
-    
+
     if (tbtbbrcntrlr_transitionState == nil) {
         return;
     }
-    
+
     if (cancelled) {
         _preferredPlacement = tbtbbrcntrlr_transitionState.initialPlacement;
     } else {
         _preferredPlacement = tbtbbrcntrlr_transitionState.targetPlacement;
     }
-    
+
     UIViewController *visibleViewController = tbtbbrcntrlr_transitionState.backwards ? cancelled ? prevViewController : destinationViewController : destinationViewController;
-    
+
     _visibleViewControllerWantsHideTabBar = visibleViewController.tb_hidesTabBarWhenPushed;
-    
+
     [self tbtbbrcntrlr_beginTabBarTransition];
 }
 
@@ -1707,9 +1709,9 @@ static char *_tabBarControllerCategoryHidesTabBarWhenPushedKey;
            didEndTransitionFrom:(UIViewController *)prevViewController
                              to:(UIViewController *)destinationViewController
                       cancelled:(BOOL)cancelled {
-    
+
     [self tbtbbrcntrlr_endTabBarTransition];
-    
+
     tbtbbrcntrlr_transitionState = nil;
 }
 

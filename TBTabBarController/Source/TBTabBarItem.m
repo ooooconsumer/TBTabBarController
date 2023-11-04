@@ -39,19 +39,19 @@ static NSString *const _TBTabBarItemNotificationIndicatorImageName = @"circle";
 #pragma mark Lifecycle
 
 - (instancetype)initWithImage:(UIImage *)image buttonClass:(Class)buttonClass {
-    
+
     return [self initWithImage:image selectedImage:nil title:nil buttonClass:buttonClass];
 }
 
 - (instancetype)initWithImage:(UIImage *)image selectedImage:(UIImage *)selectedImage buttonClass:(Class)buttonClass {
-    
+
     return [self initWithImage:image selectedImage:selectedImage title:nil buttonClass:buttonClass];
 }
 
 - (instancetype)initWithImage:(UIImage *)image selectedImage:(UIImage *)selectedImage title:(NSString *)title buttonClass:(Class)buttonClass {
-    
+
     self = [super init];
-    
+
     if (self) {
         _buttonClass = buttonClass != nil ? buttonClass : [TBTabBarButton class];
         _title = title;
@@ -59,14 +59,14 @@ static NSString *const _TBTabBarItemNotificationIndicatorImageName = @"circle";
         _selectedImage = selectedImage;
         _enabled = true;
     }
-    
+
     return self;
 }
 
 #pragma mark Overrides
 
 - (NSUInteger)hash {
-    
+
     return TB_UINT_ROTATE(self.image.hash, TB_UINT_BIT / 2) ^ self.buttonClass.hash;
 }
 
@@ -77,20 +77,20 @@ static NSString *const _TBTabBarItemNotificationIndicatorImageName = @"circle";
     if (self == object) {
         return true;
     }
-    
+
     if ([object isKindOfClass:[self class]] == false) {
         return false;
     }
-    
+
     return [self isEqualToItem:object];
 }
 
 #pragma mark - NSCopying
 
 - (id)copyWithZone:(NSZone *)zone {
-    
+
     TBTabBarItem *copy = [[[self class] allocWithZone:zone] init];
-    
+
     if (copy != nil) {
         copy.title = [self.title copy];
         copy.image = [self.image copy];
@@ -100,7 +100,7 @@ static NSString *const _TBTabBarItemNotificationIndicatorImageName = @"circle";
         copy->_enabled = _enabled;
         copy->_buttonClass = [self.buttonClass copy];
     }
-    
+
     return copy;
 }
 
@@ -115,39 +115,39 @@ static NSString *const _TBTabBarItemNotificationIndicatorImageName = @"circle";
 #pragma mark Getters
 
 - (UIImage *)notificationIndicator {
-    
+
     if (_notificationIndicator == nil) {
         _notificationIndicator = [self makeNotificationIndicatorImage];
     }
-    
+
     return _notificationIndicator;
 }
 
 #pragma mark Setters
 
 - (void)setEnabled:(BOOL)enabled {
-    
+
     NSString *key = NSStringFromSelector(@selector(isEnabled));
-    
+
     [self willChangeValueForKey:key];
-    
+
     _enabled = enabled;
-    
+
     [self didChangeValueForKey:key];
 }
 
 - (void)setNotificationIndicator:(UIImage *)notificationIndicator {
-    
+
     NSString *key = NSStringFromSelector(@selector(notificationIndicator));
-    
+
     [self willChangeValueForKey:key];
-    
+
     if (notificationIndicator != nil) {
         _notificationIndicator = notificationIndicator;
     } else {
         _notificationIndicator = [self makeNotificationIndicatorImage];
     }
-    
+
     [self didChangeValueForKey:key];
 }
 
@@ -160,7 +160,7 @@ static NSString *const _TBTabBarItemNotificationIndicatorImageName = @"circle";
 #pragma mark - Public
 
 - (BOOL)isEqualToItem:(TBTabBarItem *)item {
-    
+
     return self.title == item.title &&
         self.image == item.image &&
         self.selectedImage == item.selectedImage &&

@@ -12,7 +12,7 @@ import TBTabBarController
 final class TabViewController: UITableViewController {
 
     // MARK: Lifecycle
-    
+
     init() {
         if #available(iOS 13.0, *) {
             super.init(style: .insetGrouped)
@@ -23,21 +23,21 @@ final class TabViewController: UITableViewController {
 
     @available(*, unavailable)
     required init?(coder: NSCoder) { nil }
-    
+
     // MARK: Overrides
 
     override func viewDidLoad() {
         super.viewDidLoad()
         setup()
     }
-    
+
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         navigationController?.tb_tabBarItem.showsNotificationIndicator = false;
     }
-    
+
     // MARK: UITableViewDataSource
-    
+
     override func tableView(
         _ tableView: UITableView,
         numberOfRowsInSection section: Int
@@ -45,7 +45,7 @@ final class TabViewController: UITableViewController {
         
         return 50
     }
-    
+
     override func tableView(
         _ tableView: UITableView,
         cellForRowAt indexPath: IndexPath
@@ -71,9 +71,9 @@ final class TabViewController: UITableViewController {
         
         return cell
     }
-    
+
     // MARK: UITableViewDelegate
-    
+
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
         tableView.deselectRow(at: indexPath, animated: true)
@@ -83,7 +83,7 @@ final class TabViewController: UITableViewController {
         
         navigationController?.pushViewController(settingsViewController, animated: true)
     }
-    
+
     override func tableView(
         _ tableView: UITableView,
         heightForRowAt indexPath: IndexPath

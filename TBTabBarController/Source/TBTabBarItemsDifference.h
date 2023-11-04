@@ -37,7 +37,7 @@ NS_ASSUME_NONNULL_BEGIN
  * For iOS 13.0 and up it uses NSOrderedCollectionDifference to calculate the difference.
  */
 @interface TBTabBarItemsDifference : NSObject <NSFastEnumeration> {
-    
+
 @protected
     NSArray<TBTabBarItemChange *> *_changes;
 }

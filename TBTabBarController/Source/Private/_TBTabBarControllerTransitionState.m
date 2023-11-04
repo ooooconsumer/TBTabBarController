@@ -34,9 +34,9 @@
                           initialPlacement:(TBTabBarControllerTabBarPlacement)initialPlacement
                            targetPlacement:(TBTabBarControllerTabBarPlacement)targetPlacement
                                 backwards:(BOOL)backwards {
-    
+
     self = [super init];
-    
+
     if (self) {
         _manipulatedTabBar = tabBar;
         _initialPlacement = initialPlacement;
@@ -45,14 +45,14 @@
         _isHiding = initialPlacement > TBTabBarControllerTabBarPlacementHidden && targetPlacement == TBTabBarControllerTabBarPlacementHidden;
         _backwards = backwards;
     }
-    
+
     return self;
 }
 
 + (_TBTabBarControllerTransitionState *)stateWithInitialPlacement:(TBTabBarControllerTabBarPlacement)initialPlacement
                                                       targetPlacement:(TBTabBarControllerTabBarPlacement)targetPlacement
                                                            backwards:(BOOL)backwards {
-    
+
     return [[_TBTabBarControllerTransitionState alloc] initWithManipulatedTabBar:nil
                                                                    initialPlacement:initialPlacement
                                                                     targetPlacement:targetPlacement
@@ -63,7 +63,7 @@
                                                        initialPlacement:(TBTabBarControllerTabBarPlacement)initialPlacement
                                                         targetPlacement:(TBTabBarControllerTabBarPlacement)targetPlacement
                                                              backwards:(BOOL)backwards {
-    
+
     return [[_TBTabBarControllerTransitionState alloc] initWithManipulatedTabBar:tabBar
                                                                    initialPlacement:initialPlacement
                                                                     targetPlacement:targetPlacement

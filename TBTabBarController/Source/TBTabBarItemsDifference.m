@@ -32,31 +32,31 @@
 #pragma mark Lifecycle
 
 - (instancetype)initWithChanges:(NSArray<TBTabBarItemChange *> *)changes {
-    
+
     self = [super init];
-    
+
     if (self) {
         _changes = changes;
         _insertions = [_changes filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"%K == %ld", NSStringFromSelector(@selector(type)), TBTabBarItemChangeInsert]];
         _removals = _insertions.count != _changes.count ? [_changes filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"%K == %ld", NSStringFromSelector(@selector(type)), TBTabBarItemChangeRemove]] : @[];
         _hasChanges = _changes.count > 0;
     }
-    
+
     return self;
 }
 
 - (instancetype)initWithCollectionDifference:(NSOrderedCollectionDifference *)collectionDifference {
-    
+
     NSMutableArray *changes = [NSMutableArray arrayWithCapacity:collectionDifference.insertions.count + collectionDifference.removals.count];
     for (NSOrderedCollectionChange *change in collectionDifference) {
         [changes addObject:[[TBTabBarItemChange alloc] initWithCollectionChange:change]];
     }
-    
+
     return [self initWithChanges:[changes copy]];
 }
 
 + (instancetype)differenceWithItems:(NSArray<TBTabBarItem *> *)array from:(NSArray<TBTabBarItem *> *)other {
-    
+
     if (array.count == 0) {
         return [[TBTabBarItemsDifference alloc] initWithChanges:[self _changesFrom:array insertion:false]];
     } else if (other.count == 0) {
@@ -76,45 +76,45 @@
 #pragma mark Overrides
 
 - (NSString *)description {
-    
+
     if (!self.hasChanges) {
         return [NSString stringWithFormat:@"%@ without changes.", [super description]];
     }
-    
+
     NSMutableString *description = [NSMutableString stringWithFormat:@"%@ contains %ld %@:", [super description], _changes.count, _changes.count == 1 ? @"change" : @"changes"];
-    
+
     for (TBTabBarItemChange *change in self) {
         [description appendFormat:@"\n%@", change];
     }
-    
+
     return [description copy];
 }
 
 #pragma mark NSFastEnumeration
 
 - (NSUInteger)countByEnumeratingWithState:(NSFastEnumerationState *)state objects:(__unsafe_unretained id _Nullable [])buffer count:(NSUInteger)len {
-    
+
     return [_changes countByEnumeratingWithState:state objects:buffer count:len];
 }
 
 #pragma mark Private Methods
 
 + (NSArray<TBTabBarItemChange *> *)_changesFrom:(NSArray<TBTabBarItem *> *)items insertion:(BOOL)insertion {
-    
+
     NSUInteger const length = items.count;
-    
+
     if (length == 0) {
         return @[];
     }
-    
+
     NSMutableArray *changes = [NSMutableArray arrayWithCapacity:length];
-    
+
     TBTabBarItemChangeType const type = insertion ? TBTabBarItemChangeInsert : TBTabBarItemChangeRemove;
-    
+
     for (NSUInteger index = 0; index < length; index += 1) {
         [changes insertObject:[[TBTabBarItemChange alloc] initWithItem:items[index] type:type index:index] atIndex:index];
     }
-    
+
     return changes;
 }
 

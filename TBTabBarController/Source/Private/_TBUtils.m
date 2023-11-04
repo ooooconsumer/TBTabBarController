@@ -34,17 +34,17 @@ CGFloat const _TBPixelAccurateScaleAutomatic = 0.0;
 #pragma mark - Runtime
 
 BOOL _TBSubclassOverridesMethod(Class superclass, Class subclass, SEL selector) {
-    
+
     return class_getInstanceMethod(superclass, selector) != class_getInstanceMethod(subclass, selector);
 }
 
 void _TBSwizzleMethod(Class class, SEL originalSelector, SEL swizzledSelector) {
-    
+
     Method originalMethod = class_getInstanceMethod(class, originalSelector);
     Method swizzledMethod = class_getInstanceMethod(class, swizzledSelector);
-    
+
     BOOL const success = class_addMethod(class, originalSelector, method_getImplementation(swizzledMethod), method_getTypeEncoding(swizzledMethod));
-    
+
     if (success) {
         class_replaceMethod(class, swizzledSelector, method_getImplementation(originalMethod), method_getTypeEncoding(originalMethod));
     } else {
@@ -55,32 +55,32 @@ void _TBSwizzleMethod(Class class, SEL originalSelector, SEL swizzledSelector) {
 #pragma mark - Calculations
 
 NSUInteger _TBAmountOfEvenNumbersInRange(NSRange range) {
-    
+
     return (range.length - range.location + 2 - (range.length % 2)) / 2;
 }
 
 #pragma mark - Drawing
 
 UIImage *_TBDrawFilledRectangleWithSize(CGSize size) {
-    
+
     UIGraphicsImageRenderer *renderer = [[UIGraphicsImageRenderer alloc] initWithSize:size];
     UIImage *image = [renderer imageWithActions:^(UIGraphicsImageRendererContext * _Nonnull rendererContext) {
         CGContextRef context = rendererContext.CGContext;
         CGContextAddRect(context, (CGRect){CGPointZero, size});
         CGContextFillPath(context);
     }];
-    
+
     return [image imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
 }
 
 UIImage *_TBDrawFilledCircleWithSize(CGSize size, CGFloat scale) {
-    
+
     UIGraphicsImageRenderer *renderer = [[UIGraphicsImageRenderer alloc] initWithSize:size];
     UIImage *image = [renderer imageWithActions:^(UIGraphicsImageRendererContext * _Nonnull rendererContext) {
         CGContextRef context = rendererContext.CGContext;
         CGContextAddEllipseInRect(context, (CGRect){CGPointZero, size});
         CGContextFillPath(context);
     }];
-    
+
     return [image imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
 }

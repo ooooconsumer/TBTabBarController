@@ -32,7 +32,7 @@
 #pragma mark Getters
 
 - (CGFloat)tb_displayScale {
-    
+
     if (self.window != nil) {
         return self.window.screen.nativeScale;
     } else {
@@ -41,7 +41,7 @@
 }
 
 - (BOOL)tb_isLeftToRight {
-    
+
     return [UIView userInterfaceLayoutDirectionForSemanticContentAttribute:self.semanticContentAttribute] == UIUserInterfaceLayoutDirectionLeftToRight;
 }
 

@@ -31,33 +31,32 @@
 - (instancetype)initWithItem:(TBTabBarItem *)item
                         type:(TBTabBarItemChangeType)type
                        index:(NSUInteger)index {
-    
+
     self = [super init];
-    
+
     if (self) {
         _item = item;
         _type = type;
         _index = index;
     }
-    
+
     return self;
 }
 
 - (instancetype)initWithCollectionChange:(NSOrderedCollectionChange *)collectionChange {
-    
+
     self = [self initWithItem:collectionChange.object
                          type:collectionChange.changeType == NSCollectionChangeInsert ? TBTabBarItemChangeInsert : TBTabBarItemChangeRemove
                         index:collectionChange.index];
-    
+
     return self;
 }
 
 #pragma mark Overrides
 
 - (NSString *)description {
-    
+
     return [NSString stringWithFormat:@"%@ (%@ of object %@ at index %ld)", [super description], (self.type == TBTabBarItemChangeInsert ? @"insertion" : @"removal"), self.item, self.index];
 }
 
 @end
-

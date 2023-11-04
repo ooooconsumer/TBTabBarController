@@ -22,7 +22,7 @@ final class TabBarController: TBTabBarController {
         horizontalTabBar.backgroundColor = .clear
         horizontalTabBar.contentView = UIVisualEffectView(effect: UIBlurEffect(style: .prominent))
     }
-    
+
     override func preferredTabBarPlacement(
         forViewSize size: CGSize
     ) -> TBTabBarControllerTabBarPlacement {

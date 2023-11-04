@@ -14,9 +14,9 @@ final class EntryPoint {
 
     @available(*, unavailable)
     init() { }
-    
+
     // MARK: Public Methods
-    
+
     static func start(with window: UIWindow) {
         
         let viewControllers = (0 ..< 5).map { makeTab(forItemAt: $0) }
@@ -48,7 +48,7 @@ private extension EntryPoint {
 
         return navigationController
     }
-    
+
     static func makeTabBarItemIconImage() -> UIImage {
         
         let size = CGSize(width: 25.0, height: 25.0)

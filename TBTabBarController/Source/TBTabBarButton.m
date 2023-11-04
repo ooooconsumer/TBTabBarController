@@ -46,12 +46,12 @@ typedef NS_ENUM(NSUInteger, _TBTabBarButtonNotificationIndicatorViewAnimationSta
 @end
 
 @implementation TBTabBarButton {
-    
+
     BOOL _laysOutHorizontally;
     BOOL _needsLayout;
 
     _TBTabBarButtonNotificationIndicatorViewAnimationState _notificationIndicatorViewAnimationState; // This ivar is used for logic that ensures that indicator view wasn't removed from the button when it's not necessary
-    
+
     UIImage *_normalImage;
     UIImage *_highlightedImage;
     UIImage *_disabledImage;
@@ -65,20 +65,20 @@ typedef NS_ENUM(NSUInteger, _TBTabBarButtonNotificationIndicatorViewAnimationSta
 #pragma mark Lifecycle
 
 - (instancetype)initWithTabBarItem:(TBTabBarItem *)tabBarItem layoutOrientation:(TBTabBarButtonLayoutOrientation)layoutOrientation {
-    
+
     if (self = [super initWithFrame:CGRectZero]) {
         _laysOutHorizontally = layoutOrientation == TBTabBarButtonLayoutOrientationHorizontal;
         [self _commonInitWithTabBarItem:tabBarItem];
         [self _setup];
     }
-    
+
     return self;
 }
 
 #pragma mark Public Methods
 
 - (void)setImage:(UIImage *)image forState:(UIControlState)state {
-    
+
     switch (state) {
         case UIControlStateNormal:
             _normalImage = image;
@@ -98,16 +98,16 @@ typedef NS_ENUM(NSUInteger, _TBTabBarButtonNotificationIndicatorViewAnimationSta
         default:
             break;
     }
-    
+
     [self _updateImage];
 }
 
 - (void)setNotificationIndicatorHidden:(BOOL)hidden animated:(BOOL)animated {
-    
+
     BOOL const isNotificationIndicatorVisible = !hidden;
-    
+
     UIView *notificationIndicatorView = self.notificationIndicatorView;
-    
+
     if (isNotificationIndicatorVisible) {
         if (notificationIndicatorView.superview == nil) {
             [self addSubview:notificationIndicatorView];
@@ -117,9 +117,9 @@ typedef NS_ENUM(NSUInteger, _TBTabBarButtonNotificationIndicatorViewAnimationSta
         [self _setNeedsLayout];
         [self layoutIfNeeded];
     }
-    
+
     _notificationIndicatorVisible = isNotificationIndicatorVisible;
-    
+
     if (isNotificationIndicatorVisible) {
         void (^animations)(void) = ^(void) {
             [self layoutIfNeeded];
@@ -170,37 +170,37 @@ typedef NS_ENUM(NSUInteger, _TBTabBarButtonNotificationIndicatorViewAnimationSta
 #pragma mark Overrides
 
 - (void)setNeedsLayout {
-    
+
     [super setNeedsLayout];
-    
+
     [self _setNeedsLayout];
 }
 
 - (void)layoutSubviews {
-    
+
     [super layoutSubviews];
-    
+
     if (_needsLayout == false) {
         return;
     }
 
     _needsLayout = false;
-    
+
     CGRect const bounds = self.bounds;
-    
+
     // Tab icon
-    
+
     UIImageView *imageView = self.imageView;
-    
+
     if (imageView.superview != nil && imageView.image != nil) {
         
         imageView.frame = [self imageViewFrameForBounds:bounds];
     }
-    
+
     // Notification indicator
-    
+
     UIImageView *notificationIndicatorView = self.notificationIndicatorView;
-    
+
     if (notificationIndicatorView.superview != nil) {
         
         notificationIndicatorView.frame = [self notificationIndicatorViewFrameForBounds:bounds];
@@ -208,11 +208,11 @@ typedef NS_ENUM(NSUInteger, _TBTabBarButtonNotificationIndicatorViewAnimationSta
 }
 
 - (void)tintColorDidChange {
-    
+
     [super tintColorDidChange];
-    
+
     UIColor *const tintColor = self.tintColor;
-    
+
     if (self.isSelected) {
         self.imageView.tintColor = tintColor;
     }
@@ -252,9 +252,9 @@ typedef NS_ENUM(NSUInteger, _TBTabBarButtonNotificationIndicatorViewAnimationSta
 #pragma mark Helpers
 
 - (void)_updateImage {
-    
+
     UIImage *image = nil;
-    
+
     if (self.isHighlighted) {
         if (self.isSelected) {
             image = _highlightedAndSelectedImage;
@@ -266,17 +266,17 @@ typedef NS_ENUM(NSUInteger, _TBTabBarButtonNotificationIndicatorViewAnimationSta
     } else if (self.isSelected) {
         image = _selectedImage;
     }
-    
+
     if (image == nil && _normalImage != nil) {
         image = _normalImage;
     }
-    
+
     UIImageView *imageView = self.imageView;
-    
+
     UIImage *prevImage = imageView.image;
-    
+
     imageView.image = image;
-    
+
     if (imageView.superview == nil && imageView.image != nil) {
         [self addSubview:imageView];
         [self setNeedsLayout];
@@ -293,7 +293,7 @@ typedef NS_ENUM(NSUInteger, _TBTabBarButtonNotificationIndicatorViewAnimationSta
 #pragma mark Layout
 
 - (void)_setNeedsLayout {
-    
+
     if (!_needsLayout) {
         _needsLayout = true;
     }
@@ -302,112 +302,112 @@ typedef NS_ENUM(NSUInteger, _TBTabBarButtonNotificationIndicatorViewAnimationSta
 #pragma mark Getters
 
 - (UIImageView *)imageView {
-    
+
     if (_imageView == nil) {
         _imageView = [[UIImageView alloc] initWithImage:_normalImage];
         _imageView.contentMode = UIViewContentModeCenter;
         _imageView.autoresizingMask = UIViewAutoresizingNone;
     }
-    
+
     return _imageView;
 }
 
 - (UIImageView *)notificationIndicatorView {
-    
+
     if (_notificationIndicatorView == nil) {
         _notificationIndicatorView = [[UIImageView alloc] initWithImage:self.tabBarItem.notificationIndicator];
         _notificationIndicatorView.autoresizingMask = UIViewAutoresizingNone;
     }
-    
+
     return _notificationIndicatorView;
 }
 
 #pragma mark Setters
 
 - (void)setFrame:(CGRect)frame {
-    
+
     if (CGRectEqualToRect(self.frame, frame) == false) {
         [self _setNeedsLayout];
     }
-    
+
     [super setFrame:frame];
 }
 
 - (void)setBounds:(CGRect)bounds {
-    
+
     if (CGRectEqualToRect(self.bounds, bounds) == false) {
         [self _setNeedsLayout];
     }
-    
+
     [super setBounds:bounds];
 }
 
 - (void)setSelected:(BOOL)selected {
-    
+
     if (self.selected == selected) {
         return;
     }
-    
+
     [super setSelected:selected];
-    
+
     [self _updateImage];
 }
 
 - (void)setHighlighted:(BOOL)highlighted {
-    
+
     if (self.highlighted == highlighted) {
         return;
     }
-    
+
     [super setHighlighted:highlighted];
-    
+
     [self _updateImage];
 }
 
 - (void)setEnabled:(BOOL)enabled {
-    
+
     if (self.enabled == enabled) {
         return;
     }
-    
+
     [super setEnabled:enabled];
-    
+
     self.alpha = self.isEnabled ? 1.0 : 0.5;
-    
+
     [self _updateImage];
 }
 
 - (void)setNotificationIndicatorHidden:(BOOL)notificationIndicatorHidden {
-    
+
     [self setNotificationIndicatorHidden:notificationIndicatorHidden animated:false];
 }
 
 - (void)setNotificationIndicatorSize:(CGSize)notificationIndicatorSize {
-    
+
     _notificationIndicatorSize = notificationIndicatorSize;
-    
+
     if (self.notificationIndicatorView.superview != nil && self.notificationIndicatorVisible == false) {
         [self setNeedsLayout];
     }
 }
 
 - (void)setNotificationIndicatorInsets:(UIEdgeInsets)notificationIndicatorInsets {
-    
+
     if (UIEdgeInsetsEqualToEdgeInsets(_notificationIndicatorInsets, notificationIndicatorInsets)) {
         return;
     }
-    
+
     _notificationIndicatorInsets = notificationIndicatorInsets;
-    
+
     [self setNeedsLayout];
 }
 
 - (void)setNotificationIndicatorView:(__kindof UIView *)notificationIndicatorView {
-    
+
     if (_notificationIndicatorView != nil && _notificationIndicatorView.superview != nil) {
         [_notificationIndicatorView removeFromSuperview];
     }
-    
+
     if (notificationIndicatorView == nil) {
         _notificationIndicatorView = [[UIImageView alloc] initWithImage:self.tabBarItem.notificationIndicator];
     } else {
@@ -416,13 +416,13 @@ typedef NS_ENUM(NSUInteger, _TBTabBarButtonNotificationIndicatorViewAnimationSta
         }
         _notificationIndicatorView = notificationIndicatorView;
     }
-    
+
     BOOL const isNotificationIndicatorVisible = self.isNotificationIndicatorVisible;
-    
+
     if (isNotificationIndicatorVisible) {
         [self setNotificationIndicatorHidden:isNotificationIndicatorVisible animated:false];
     }
-    
+
     [self addSubview:_notificationIndicatorView];
 }
 
@@ -435,38 +435,38 @@ typedef NS_ENUM(NSUInteger, _TBTabBarButtonNotificationIndicatorViewAnimationSta
 #pragma mark Public Methods
 
 - (CGRect)imageViewFrameForBounds:(CGRect)bounds {
-    
+
     CGFloat const width = CGRectGetWidth(bounds);
     CGFloat const height = CGRectGetHeight(bounds);
     CGFloat const displayScale = self.tb_displayScale;
-    
+
     UIImageView *imageView = self.imageView;
-    
+
     [imageView sizeToFit];
-    
+
     CGRect imageViewFrame = imageView.frame;
     imageViewFrame = _TBPixelAccurateRect((CGRect){
         (CGPoint){(width - CGRectGetWidth(imageViewFrame)) / 2.0, (height - CGRectGetHeight(imageViewFrame)) / 2.0},
         imageViewFrame.size
     }, displayScale, true);
-    
+
     return imageViewFrame;
 }
 
 - (CGRect)notificationIndicatorViewFrameForBounds:(CGRect)bounds {
-    
+
     CGFloat const width = CGRectGetWidth(bounds);
     CGFloat const height = CGRectGetHeight(bounds);
     CGFloat const displayScale = self.tb_displayScale;
-    
+
     BOOL const isNotificationIndicatorVisible = self.isNotificationIndicatorVisible;
 
     CGPoint indicatorOrigin;
-    
+
     UIEdgeInsets const insets = self.notificationIndicatorInsets;
     CGSize const indicatorSize = self.notificationIndicatorSize;
     CGFloat const multiplier = isNotificationIndicatorVisible ? 1.0 : 0.0;
-    
+
     if (_laysOutHorizontally) {
         indicatorOrigin = (CGPoint){
             (width - indicatorSize.width) - ((insets.left + insets.right) * multiplier),
@@ -478,12 +478,12 @@ typedef NS_ENUM(NSUInteger, _TBTabBarButtonNotificationIndicatorViewAnimationSta
             (height - indicatorSize.height) - ((insets.top + insets.bottom) * multiplier)
         };
     }
-    
+
     return _TBPixelAccurateRect((CGRect){indicatorOrigin, indicatorSize}, displayScale, true);
 }
 
 - (NSTimeInterval)notificationIndicatorAnimationDuration:(BOOL)presenting {
-    
+
     return presenting ?
         _TBTabBarButtonNotificationIndicatorPresentationAnimationDuration :
         _TBTabBarButtonNotificationIndicatorDismissalAnimationDuration;
