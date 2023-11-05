@@ -68,9 +68,12 @@
     UIEdgeInsets const contentInsets = self.contentInsets;
 
     UIView *subview = self.subview;
-
     CGRect frame = subview.frame;
-    frame.size = [subview sizeThatFits:(CGSize){width - safeAreaInsets.left - safeAreaInsets.right - contentInsets.left, height - contentInsets.top - contentInsets.bottom - safeAreaInsets.top}];
+
+    frame.size = [subview sizeThatFits:(CGSize){
+        width - safeAreaInsets.left - safeAreaInsets.right - contentInsets.left,
+        height - contentInsets.top - contentInsets.bottom - safeAreaInsets.top}
+    ];
     frame.origin = (CGPoint){
         safeAreaInsets.left + (((width - safeAreaInsets.left) - frame.size.width) / 2.0),
         height + contentInsets.top - contentInsets.bottom - frame.size.height

@@ -30,10 +30,28 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface TBTabBarController (Private)
 
+/**
+ * @abstract Specifies the preferred tab bar placement for a given horizontal size class and view size.
+ * @discussion Use this method to set the preferred tab bar placement based on specific conditions. 
+ * It allows you to customize the tab bar placement behavior.
+ * @param horizontalSizeClass The horizontal size class.
+ * @param size The view size.
+ */
 - (void)_specifyPreferredTabBarPlacementForHorizontalSizeClass:(UIUserInterfaceSizeClass)horizontalSizeClass size:(CGSize)size NS_SWIFT_NAME(specifyPreferredTabBarPlacement(for:size:));
 
+/**
+ * @abstract Changes the specified tab bar item to a new tab bar item.
+ * @discussion This method is used to replace one tab bar item with another. It allows you to modify the tab bar items dynamically.
+ * @param item The tab bar item to be replaced.
+ * @param newItem The new tab bar item to be used.
+ */
 - (void)_changeItem:(TBTabBarItem *)item toItem:(TBTabBarItem *)newItem NS_SWIFT_NAME(changeItem(_:to:));
 
+/**
+ * @abstract Returns the currently visible view controller.
+ * @discussion This method is used to retrieve the currently visible view controller in the tab bar controller.
+ * @return The currently visible view controller, if available.
+ */
 - (__kindof UIViewController *_Nullable)_visibleViewController NS_SWIFT_NAME(visibleViewController());
 
 @end

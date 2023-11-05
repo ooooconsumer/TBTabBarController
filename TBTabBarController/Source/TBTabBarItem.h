@@ -29,62 +29,87 @@ NS_ASSUME_NONNULL_BEGIN
 #pragma mark - Item
 
 /**
- * @abstract An item in a tab bar. Similar to UITabBarItem.
+ * @abstract An item in a tab bar, similar to UITabBarItem.
+ * @discussion The `TBTabBarItem` class represents an item within a tab bar. It provides information and customization 
+ * options for a specific tab, including its title, icon, and notification indicator.
  */
 @interface TBTabBarItem : NSObject <NSCopying>
 
 /**
- * @abstract Describes whether item should be enabled or disabled. Default value is YES.
+ * @abstract Indicates whether the item should be enabled or disabled. The default value is YES.
  */
 @property (assign, nonatomic, getter = isEnabled) BOOL enabled NS_SWIFT_NAME(isEnabled);
 
 /**
- * @abstract Describes whether should show a notification indicator next to the tab icon.
- * Default value is NO.
+ * @abstract Indicates whether a notification indicator should be displayed next to the tab icon. The default value is NO.
  */
 @property (assign, nonatomic) BOOL showsNotificationIndicator;
 
 /**
- * @abstract A tab title. By default it does not appear anywhere.
+ * @abstract The title of the tab, which does not appear by default.
  */
 @property (copy, nonatomic, nullable) NSString *title;
 
 /**
- * @abstract A tab icon image.
+ * @abstract The tab's icon image.
  */
 @property (strong, nonatomic) UIImage *image;
 
 /**
- * @abstract A tab icon image when selected.
+ * @abstract The tab's icon image when it is selected.
  */
 @property (strong, nonatomic, nullable) UIImage *selectedImage;
 
 /**
- * @abstract A notification indicator image that appears next to the tab icon.
- * By default it's a small dot.
+ * @abstract The image for the notification indicator that appears next to the tab icon. The default is a small dot.
  */
 @property (strong, nonatomic, null_resettable) UIImage *notificationIndicator;
 
 /**
- * @abstract A button class, instance of which will be displayed in the tab bar.
- * By default it's @b `TBTabBarButton` class.
- * @note It is supposed to be a kind of @b `TBTabBarButton` class.
+ * @abstract The class of the button that will be displayed in the tab bar. The default class is `TBTabBarButton`.
  */
 @property (strong, nonatomic, readonly) Class buttonClass;
 
+/**
+ * @abstract Initializes a tab item with an image and a button class.
+ * @param image The image for the tab icon.
+ * @param buttonClass The class of the button to be displayed in the tab bar.
+ * @return An initialized TBTabBarItem instance.
+ */
 - (instancetype)initWithImage:(UIImage *)image buttonClass:(nullable Class)buttonClass;
 
+/**
+ * @abstract Initializes a tab item with an image, a selected image, and a button class.
+ * @param image The image for the tab icon.
+ * @param selectedImage The image for the tab icon when it is selected.
+ * @param buttonClass The class of the button to be displayed in the tab bar.
+ * @return An initialized TBTabBarItem instance.
+ */
 - (instancetype)initWithImage:(UIImage *)image
                 selectedImage:(nullable UIImage *)selectedImage
                   buttonClass:(nullable Class)buttonClass;
 
+/**
+ * @abstract Initializes a tab item with an image, a selected image, a title, and a button class.
+ * @param image The image for the tab icon.
+ * @param selectedImage The image for the tab icon when it is selected.
+ * @param title The title of the tab item.
+ * @param buttonClass The class of the button to be displayed in the tab bar.
+ * @return An initialized TBTabBarItem instance.
+ */
 - (instancetype)initWithImage:(UIImage *)image
                 selectedImage:(nullable UIImage *)selectedImage
                         title:(nullable NSString *)title
                   buttonClass:(nullable Class)buttonClass NS_DESIGNATED_INITIALIZER;
 
+/**
+ * @abstract This method is unavailable. Use designated initializers to create TBTabBarItem instances.
+ */
 - (instancetype)init NS_UNAVAILABLE;
 
+/**
+ * @abstract This method is unavailable. Use designated initializers to create TBTabBarItem instances.
+ */
 + (instancetype)new NS_UNAVAILABLE;
 
 @end

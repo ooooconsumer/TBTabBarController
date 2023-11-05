@@ -29,18 +29,19 @@ NS_ASSUME_NONNULL_BEGIN
 @interface UIView (Extensions)
 
 /**
- * @abstract A display scale.
- * @discussion Some iPhone models (or rather 5,5" Plus models and 12 Mini) have non-integer display scale value (≈@2.608x). 
- * This applies only for real devices and not to simulators. So, because of this, some lines, separators,
- * icons and other graphics that requires pixel-perfect design may be displaying wrong.
- * This computed property solves this problem by getting current screen's native scale instead of trait collection's display scale
- * which may be only integer value like @1x, @2x and so on.
- * @note If the current view does not have a window then it uses main screen's window native scale value.
+ * @abstract Calculates and returns the accurate display scale for the current view.
+ * @discussion Some iPhone models (especially 5.5" Plus models and the iPhone 12 Mini) have non-integer display scale values 
+ * (e.g., ≈2.608x), which can cause issues with pixel-perfect design elements such as lines, separators, and icons. This property
+ * resolves this problem by dynamically retrieving the native scale factor of the current screen. It is particularly useful for real devices
+ * and ensures that graphics are displayed correctly. In cases where the view does not belong to a window,
+ * it uses the native scale of the main screen's window.
  */
 @property (assign, nonatomic, readonly) CGFloat tb_displayScale;
 
 /**
- * @abstract Describes wheter is LTR or RTL layour direction.
+ * @abstract Indicates whether the layout direction of the view is left-to-right (LTR).
+ * @discussion This property determines the text and layout direction for the view. It returns `YES` when the layout is left-to-right, 
+ * which is the standard direction for most languages. For right-to-left (RTL) layouts, it returns `NO`.
  */
 @property (assign, nonatomic, readonly) BOOL tb_isLeftToRight;
 

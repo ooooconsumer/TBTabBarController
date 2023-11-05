@@ -29,51 +29,75 @@
 NS_ASSUME_NONNULL_BEGIN
 
 typedef NS_ENUM(NSInteger, TBTabBarButtonLayoutOrientation) {
-    /// Vertical orientation means, that the notification indicator will be placed below the tab icon.
+    /// Vertical orientation indicates that the notification indicator will be positioned below the tab icon.
     TBTabBarButtonLayoutOrientationVertical,
-    /// Horizontal orientation means, that the notification indicator will be placed to the right (or left) of the tab icon.
+
+    /// Horizontal orientation indicates that the notification indicator will be positioned to the right (or left) of the tab icon.
     TBTabBarButtonLayoutOrientationHorizontal
 };
 
 #pragma mark - Button
 
 /**
- * @abstract A button that displays in a tab bar.
+ * @abstract A button displayed within a tab bar.
+ * @discussion The `TBTabBarButton` class is a fundamental component of the framework.
+ * It represents a customizable button that appears as a tab in the tab bar. This class offers extensive control over the appearance
+ * and behavior of individual tab buttons within the tab bar.
+ *
+ * Key Features:
+ * - Icon Display: It provides an `imageView` property for displaying tab icons. You can set and customize tab icons for different control states.
+ * - Notification Indicator: It includes a `notificationIndicatorView` for displaying notifications. You can control its size, visibility, and position.
+ * - Customization: The class supports extensive customization of the appearance and behavior of tab buttons.
+ *
+ * @note You should not create instances of this class directly. Instead, it is used internally by `TBTabBarController`
+ * to represent individual tab buttons.
  */
 @interface TBTabBarButton : UIControl
 
 /**
- * @abstract An image view that displays a tab icon.
- * @discussion You can use this property to change view's aspect fill value. But do not set an image directly to the view. Instead, use @em `setImage:forState:` method below.
- * If you need to update it's size and/or position, you can override @em `imageViewFrameForBounds:` method below.
+ * @abstract An image view displaying a tab icon.
+ * @discussion Use this property to adjust the view's aspect fill value. Do not set an image directly to the view; 
+ * instead, use the `setImage:forState:` method below. You can override the `imageViewFrameForBounds:`
+ * method to update its size and/or position.
  */
 @property (strong, nonatomic, readonly) UIImageView *imageView;
 
 /**
- * @abstract A view that displays the notification indicator. Resettable.
- * @discussion You can always change it's size using @em `notificationIndicatorSize` property or by overriding @em `notificationIndicatorViewFrameForBounds:` method below.
+ * @abstract A view displaying the notification indicator. Resettable.
+ * @discussion You can always change its size using the `notificationIndicatorSize` property or by overriding 
+ * the `notificationIndicatorViewFrameForBounds:` method below.
  */
 @property (strong, nonatomic, null_resettable) __kindof UIView *notificationIndicatorView;
 
 /**
- * @abstract A notification indicator view size. Default value is 5pt.
+ * @abstract The size of the notification indicator view. The default value is 5pt.
  */
 @property (assign, nonatomic) CGSize notificationIndicatorSize UI_APPEARANCE_SELECTOR;
 
 /**
- * @abstract A notification indicator view insets.
- * Default value is {0, 0, 0, 5} and {0, 0, 3, 0} for horizontal and vertical positions, respectively.
+ * @abstract The insets for the notification indicator view. The default value is {0, 0, 0, 5} for horizontal orientation 
+ * and {0, 0, 3, 0} for vertical orientation.
  */
 @property (assign, nonatomic) UIEdgeInsets notificationIndicatorInsets UI_APPEARANCE_SELECTOR;
 
 /**
- * @abstract Describes whether a notification indicator is visible or not. Default value is NO.
+ * @abstract Indicates whether the notification indicator is visible. The default value is NO.
  */
 @property (assign, nonatomic, getter = isNotificationIndicatorVisible) BOOL notificationIndicatorVisible NS_SWIFT_NAME(isNotificationIndicatorVisible);
 
+/**
+ * @abstract The tab bar item associated with the button.
+ */
 @property (strong, nonatomic, readonly) __kindof TBTabBarItem *tabBarItem;
 
-- (instancetype)initWithTabBarItem:(__kindof TBTabBarItem *)tabBarItem layoutOrientation:(TBTabBarButtonLayoutOrientation)layoutOrientation NS_DESIGNATED_INITIALIZER;
+/**
+ * @abstract Initializes a TBTabBarButton with a tab bar item and layout orientation.
+ * @param tabBarItem The tab bar item to associate with the button.
+ * @param layoutOrientation The layout orientation (vertical or horizontal).
+ * @return An initialized TBTabBarButton instance.
+ */
+- (instancetype)initWithTabBarItem:(__kindof TBTabBarItem *)tabBarItem
+                 layoutOrientation:(TBTabBarButtonLayoutOrientation)layoutOrientation NS_DESIGNATED_INITIALIZER;
 
 - (instancetype)initWithFrame:(CGRect)frame primaryAction:(nullable UIAction *)primaryAction NS_UNAVAILABLE;
 
@@ -87,11 +111,15 @@ typedef NS_ENUM(NSInteger, TBTabBarButtonLayoutOrientation) {
 
 /**
  * @abstract Sets a new image as a tab icon for the given state.
+ * @param image The image to be set as the tab icon.
+ * @param state The control state for which to set the image.
  */
 - (void)setImage:(nullable UIImage *)image forState:(UIControlState)state;
 
 /**
- * @abstract Sets the notificator indicator hidden or visible if needed.
+ * @abstract Sets the notification indicator to be hidden or visible if needed.
+ * @param hidden Indicates whether the notification indicator should be hidden.
+ * @param animated Indicates whether the change should be animated.
  */
 - (void)setNotificationIndicatorHidden:(BOOL)hidden animated:(BOOL)animated;
 
@@ -99,15 +127,34 @@ typedef NS_ENUM(NSInteger, TBTabBarButtonLayoutOrientation) {
 
 #pragma mark - Subclassing
 
+/**
+ * @abstract Subclassing methods for customizing the appearance and behavior of TBTabBarButton.
+ * @discussion This extension provides customization points for subclasses of TBTabBarButton to adjust the positioning
+ * and animation behavior of its components.
+ */
 @interface TBTabBarButton (Subclassing)
 
+/**
+ * @abstract Provides the frame for the image view within the button.
+ * @discussion Subclasses can override this method to customize the position and size of the tab icon within the button.
+ * @param bounds The bounds of the button.
+ * @return The frame for the image view.
+ */
 - (CGRect)imageViewFrameForBounds:(CGRect)bounds;
 
+/**
+ * @abstract Provides the frame for the notification indicator view within the button.
+ * @discussion Subclasses can override this method to customize the position and size of the notification indicator within the button.
+ * @param bounds The bounds of the button.
+ * @return The frame for the notification indicator view.
+ */
 - (CGRect)notificationIndicatorViewFrameForBounds:(CGRect)bounds;
 
 /**
- * @abstract The duration of the animation for showing or hiding the notification indicator. Default value is 0.25.
- * @param presenting Whether the notification indicator is showing or hiding.
+ * @abstract Returns the duration of the animation for showing or hiding the notification indicator.
+ * @discussion Subclasses can override this method to define the duration of the animation used to show or hide the notification indicator.
+ * @param presenting Indicates whether the notification indicator is being shown or hidden.
+ * @return The animation duration.
  */
 - (NSTimeInterval)notificationIndicatorAnimationDuration:(BOOL)presenting;
 

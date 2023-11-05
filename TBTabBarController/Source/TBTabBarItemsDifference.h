@@ -31,10 +31,10 @@
 NS_ASSUME_NONNULL_BEGIN
 
 /**
- * @abstract A difference between two given arrays calculated using the Myers algorithm.
- * @discussion This is a backward compatibility for NSOrderedCollectionDifference that supports older iOS versions (< 13.0).
- * Under the hood it uses the same algorithm that uses Swift to calculate the difference except it is written in C language.
- * For iOS 13.0 and up it uses NSOrderedCollectionDifference to calculate the difference.
+ * @abstract Represents the difference between two arrays of TBTabBarItem instances.
+ * @discussion The `TBTabBarItemsDifference` class encapsulates the changes between two arrays of tab items.
+ * Starting from iOS 13 and newer, it uses `NSOrderedCollectionDifference` to calculate the difference,
+ * while older versions calculate the difference manually
  */
 @interface TBTabBarItemsDifference : NSObject <NSFastEnumeration> {
 
@@ -42,20 +42,52 @@ NS_ASSUME_NONNULL_BEGIN
     NSArray<TBTabBarItemChange *> *_changes;
 }
 
+/**
+ * @abstract An array of changes representing insertions in the difference.
+ */
 @property (strong, nonatomic, readonly) NSArray<TBTabBarItemChange *> *insertions;
 
+/**
+ * @abstract An array of changes representing removals in the difference.
+ */
 @property (strong, nonatomic, readonly) NSArray<TBTabBarItemChange *> *removals;
 
+/**
+ * @abstract Indicates whether there are changes in the difference.
+ */
 @property (assign, nonatomic, readonly) BOOL hasChanges;
 
+/**
+ * @abstract Initializes a TBTabBarItemsDifference instance with an array of TBTabBarItemChange objects.
+ * @param changes An array of TBTabBarItemChange objects representing the changes.
+ * @return An initialized TBTabBarItemsDifference instance.
+ */
 - (instancetype)initWithChanges:(NSArray<TBTabBarItemChange *> *)changes;
 
+/**
+ * @abstract Initializes a TBTabBarItemsDifference instance with a collection difference.
+ * @discussion This initializer is available starting from iOS 13.0.
+ * @param collectionDifference The collection difference from which to create the TBTabBarItemsDifference.
+ * @return An initialized TBTabBarItemsDifference instance.
+ */
 - (instancetype)initWithCollectionDifference:(NSOrderedCollectionDifference *)collectionDifference API_AVAILABLE(ios(13.0));
 
+/**
+ * @abstract Creates a TBTabBarItemsDifference instance with differences between two arrays of TBTabBarItem objects.
+ * @param array An array of TBTabBarItem objects.
+ * @param other Another array of TBTabBarItem objects to compare with.
+ * @return A TBTabBarItemsDifference instance representing the differences between the two arrays.
+ */
 + (instancetype)differenceWithItems:(NSArray<TBTabBarItem *> *)array from:(NSArray<TBTabBarItem *> *)other;
 
+/**
+ * @abstract This method is unavailable. Use designated initializers to create TBTabBarItemsDifference instances.
+ */
 - (instancetype)init NS_UNAVAILABLE;
 
+/**
+ * @abstract This method is unavailable. Use designated initializers to create TBTabBarItemsDifference instances.
+ */
 + (instancetype)new NS_UNAVAILABLE;
 
 @end

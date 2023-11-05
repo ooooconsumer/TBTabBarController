@@ -31,13 +31,42 @@ typedef NS_ENUM(NSInteger, TBStackedTabsViewAxis) {
     TBStackedTabsViewAxisVertical
 };
 
+/**
+ * @abstract A private class that represents a custom stack view used for tab bar layout within the `TBTabBarController` framework.
+ * @discussion This class is used internally to provide fine-grained control over the positioning and distribution of tab bar items.
+ * The use of this custom stack view allows for pixel-accurate positioning and customized distribution rules, which are essential
+ * for `TBTabBarController's` specific layout requirements. 
+ * Advantages:
+ * **Pixel-Accurate Positioning:** The `_TBStackView` is designed to handle pixel-accurate layout, 
+ * ensuring that items are positioned precisely, especially for devices with varying screen scales.
+ * This level of control is essential for tab bars where pixel-perfect alignment is crucial.
+ * **Custom Distribution Rules:** The custom stack view allows the definition of specific distribution rules for pixel distribution. 
+ * It provides flexibility in how undistributed pixels are allocated between items, which can be useful for creating custom layouts
+ * based on the number of tabs and available space.
+ */
 @interface _TBStackView : UIView
 
+/**
+ * @abstract Initializes a new instance of `TBStackView` with the specified axis.
+ * @param axis The axis for the stack view, which can be either horizontal or vertical.
+ * @return A new `TBStackView` instance.
+ */
 - (instancetype)initWithAxis:(TBStackedTabsViewAxis)axis;
 
+/**
+ * @abstract The spacing between items in the stack view.
+ */
 @property (assign, nonatomic) CGFloat spacing;
 
+/**
+ * @abstract A flag indicating whether the stack view is in vertical orientation.
+ */
 @property (assign, nonatomic, readonly, getter = isVertical) BOOL vertical NS_SWIFT_NAME(isVertical);
+
+/**
+ * @abstract Marks the stack view as needing layout, triggering a layout update.
+ */
+- (void)setNeedsLayout;
 
 @end
 

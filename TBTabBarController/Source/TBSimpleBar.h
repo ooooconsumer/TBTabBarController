@@ -27,14 +27,27 @@
 NS_ASSUME_NONNULL_BEGIN
 
 typedef NS_ENUM(NSUInteger, TBSimpleBarSeparatorPosition) {
+    /// The separator is hidden.
     TBSimpleBarSeparatorPositionHidden,
+
+    /// The separator is positioned to the left.
     TBSimpleBarSeparatorPositionLeft,
+
+    /// The separator is positioned to the right.
     TBSimpleBarSeparatorPositionRight,
-    TBSimpleBarSeparatorPositionTop,
+
+    /// The separator is positioned at the top.
+    TBSimpleBarSeparatorPositionTop
 };
 
 #pragma mark - Bar
 
+/**
+ * @abstract A simple custom bar for displaying content with a separator.
+ * @discussion The `TBSimpleBar` class is a view designed for displaying content with a separator. 
+ * It provides customization options for the separator size, additional content insets, and allows the integration
+ * of a custom content view below the separator.
+ */
 @interface TBSimpleBar : UIView {
 
 @protected
@@ -45,33 +58,32 @@ typedef NS_ENUM(NSUInteger, TBSimpleBarSeparatorPosition) {
 }
 
 /**
- * @abstract A separator size. Default value is 1px.
+ * @abstract The size of the separator. Default value is 1 pixel.
  */
 @property (assign, nonatomic) CGFloat separatorSize;
 
 /**
- * @abstract An additional area around the content. Default value is {0, 0, 0, 0}.
+ * @abstract Additional padding around the content within the bar. Default value is {0, 0, 0, 0}.
  */
 @property (assign, nonatomic) UIEdgeInsets contentInsets UI_APPEARANCE_SELECTOR;
 
 /**
- * @abstract A custom view that is shown below the tabs. Default value is nil.
- * @discussion For example, it can be a @b `UIVisualEffectView` with a blur style effect.
+ * @abstract A custom view that appears below the separator, such as a `UIVisualEffectView` with a blur effect. Default value is nil.
  */
 @property (strong, nonatomic, nullable) UIView *contentView;
 
 /**
- * @abstract A separator image. Resettable.
+ * @abstract The separator image. Resettable.
  */
 @property (strong, nonatomic, null_resettable) UIImage *separatorImage UI_APPEARANCE_SELECTOR;
 
 /**
- * @abstract A separator image tint color. Default value is black with an opacity of 30%. Resettable.
+ * @abstract The tint color of the separator image. Default value is black with 30% opacity. Resettable.
  */
 @property (strong, nonatomic, null_resettable) UIColor *separatorColor UI_APPEARANCE_SELECTOR;
 
 /**
- * @abstract Describes the separator position. Default value is TBSimpleBarSeparatorPositionHidden.
+ * @abstract The position of the separator. Default value is TBSimpleBarSeparatorPositionHidden.
  */
 @property (assign, nonatomic) TBSimpleBarSeparatorPosition separatorPosition;
 

@@ -34,19 +34,38 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark - Delegate
 
+/**
+ * @abstract The `TBTabBarDelegate` protocol defines a set of optional methods that can be adopted by an object 
+ * to receive notifications related to tab selection in a `TBTabBar`. This delegate allows you to customize the behavior of the tab bar,
+ * respond to tab selection events, and implement tab-specific functionality.
+ * @discussion Conforming objects should implement only the methods that are relevant to their requirements. 
+ * The delegate methods provide the ability to perform actions before and after tab selection, allowing you to enforce custom
+ * selection rules or respond to tab changes in your user interface.
+ */
 @protocol TBTabBarDelegate <NSObject>
 
 @optional
 
 /**
  * @abstract Notifies the delegate before selecting a new tab item.
+ * @discussion This method is called when a user attempts to select a new tab item in the `TBTabBar`.
+ * You can implement this method to perform custom validations or to enforce rules regarding whether a particular tab should be selected.
+ * @param tabBar The tab bar that triggered the event.
+ * @param item The tab item that is being selected.
+ * @param index The index of the tab item in the tab bar.
+ * @return `YES` to allow the selection, `NO` to prevent it.
  */
 - (BOOL)tabBar:(TBTabBar *)tabBar
 shouldSelectItem:(__kindof TBTabBarItem *)item
        atIndex:(NSUInteger)index;
 
 /**
- * @abstract Notifies the delegate that the tab bar controller did select new tab.
+ * @abstract Notifies the delegate that the tab bar did select a new tab item.
+ * @discussion This method is called after the tab bar has successfully selected a new tab item.
+ * You can use this callback to perform any post-selection actions or updates associated with the selected tab item.
+ * @param tabBar The tab bar that triggered the event.
+ * @param item The tab item that was selected.
+ * @param index The index of the tab item in the tab bar.
  */
 - (void)tabBar:(TBTabBar *)tabBar
  didSelectItem:(__kindof TBTabBarItem *)item
@@ -61,6 +80,11 @@ typedef NS_ENUM(NSInteger, TBTabBarLayoutOrientation) {
     TBTabBarLayoutOrientationVertical
 };
 
+/**
+ * @abstract A tab bar used for displaying and managing tab items.
+ * @discussion `TBTabBar` is a subclass of `TBSimpleBar` and provides functionality for managing tab items 
+ * within a user interface. It allows you to customize the appearance and behavior of the tab bar.
+ */
 @interface TBTabBar : TBSimpleBar <UIGestureRecognizerDelegate> {
 
 @protected
@@ -78,78 +102,92 @@ typedef NS_ENUM(NSInteger, TBTabBarLayoutOrientation) {
     BOOL _shouldSelectItem;
 }
 
+/**
+ * @abstract The delegate for the TBTabBar.
+ * @discussion The delegate is responsible for handling events and actions associated with the tab bar.
+ */
 @property (weak, nonatomic, nullable) id <TBTabBarDelegate> delegate;
 
 /**
- * @abstract The items to be displayed. Shown in order.
+ * @abstract The items to be displayed in the tab bar. These items are shown in the order they appear in the array.
  */
 @property (weak, nonatomic, nullable, readonly) NSArray <__kindof TBTabBarItem *> *items;
 
 /**
- * @abstract The currently visible items.
+ * @abstract The currently visible tab items in the tab bar.
  */
 @property (strong, nonatomic, readonly) NSArray <__kindof TBTabBarItem *> *visibleItems;
 
 /**
- * @abstract The currently hidden items.
+ * @abstract The currently hidden tab items in the tab bar.
  */
 @property (strong, nonatomic, readonly) NSArray <__kindof TBTabBarItem *> *hiddenItems;
 
 /**
- * @abstract Returns YES whenever layout orientation is vertical.
+ * @abstract Indicates whether the tab bar's layout orientation is vertical.
  */
 @property (assign, nonatomic, readonly, getter = isVertical) BOOL vertical NS_SWIFT_NAME(isVertical);
 
 /**
- * @abstract Describes whether the tab bar is visible or not.
+ * @abstract Indicates whether the tab bar is visible.
  */
 @property (assign, nonatomic, readonly, getter = isVisible) BOOL visible NS_SWIFT_NAME(isVisible);
 
 /**
- * @abstract When a tab is not selected, its tint color.
+ * @abstract The tint color of unselected tab items.
  */
 @property (strong, nonatomic, null_resettable) UIColor *defaultTintColor UI_APPEARANCE_SELECTOR;
 
 /**
- * @abstract When a tab is selected, its tint color.
+ * @abstract The tint color of the selected tab item.
  */
 @property (strong, nonatomic, null_resettable) UIColor *selectedTintColor UI_APPEARANCE_SELECTOR;
 
 /**
- * @abstract Notification indicator tint color. By default it equals to the tab bar's tint color.
+ * @abstract The tint color of the notification indicator. By default, it matches the tab bar's tint color.
  */
 @property (strong, nonatomic, null_resettable) UIColor *notificationIndicatorTintColor UI_APPEARANCE_SELECTOR;
 
 /**
- * @abstract The currently selected tab index.
- * @discussion You can use this property to programmatically select a visible tab.
+ * @abstract The index of the currently selected tab.
+ * @discussion You can use this property to programmatically select a tab in the tab bar.
  */
 @property (assign, nonatomic) NSUInteger selectedIndex;
 
 /**
- * @abstract The maximum number of visible tabs. Default value is 5. A value of 0 means no limit.
+ * @abstract The maximum number of visible tabs. A value of 0 means there is no limit. The default value is 5.
  */
 @property (assign, nonatomic) NSUInteger maxNumberOfVisibleTabs UI_APPEARANCE_SELECTOR;
 
 /**
- * @abstract The space between tabs. Default value is 4pt.
+ * @abstract The space between tab items. The default value is 4pt.
  */
 @property (assign, nonatomic) CGFloat spaceBetweenTabs UI_APPEARANCE_SELECTOR;
 
-- (instancetype)initWithLayoutOrientation:(TBTabBarLayoutOrientation)layoutOrientation;
-
+/**
+ * @abstract Initializes and returns a horizontal TBTabBar instance.
+ * @return A TBTabBar instance with a horizontal layout orientation.
+ */
 + (instancetype)horizontal;
 
+/**
+ * @abstract Initializes and returns a vertical TBTabBar instance.
+ * @return A TBTabBar instance with a vertical layout orientation.
+ */
 + (instancetype)vertical;
 
 /**
- * @abstract Selects an item if it is presented either in the visible items list or in the hidden items list.
+ * @abstract Selects a tab item if it is present in either the visible items list or the hidden items list.
+ * @param item The tab item to be selected.
  */
 - (void)selectItem:(__kindof TBTabBarItem *)item NS_SWIFT_NAME(select(_:));
 
 /**
- * @abstract Return a button at the tab index, if any.
- * @discussion You can use this method to get buttons, since there is no public way to get all of them.
+ * @abstract Returns the TBTabBarButton associated with a tab at a given index.
+ * @param tabIndex The index of the tab.
+ * @return The TBTabBarButton at the specified index, or nil if it does not exist.
+ * @discussion Use this method to retrieve the buttons associated with tab items. Since there is no public way to access 
+ * all buttons directly, this method provides a way to retrieve them based on their index.
  */
 - (nullable TBTabBarButton *)buttonAtTabIndex:(NSUInteger)tabIndex NS_SWIFT_NAME(button(at:));
 
@@ -157,29 +195,36 @@ typedef NS_ENUM(NSInteger, TBTabBarLayoutOrientation) {
 
 #pragma mark - Subclassing
 
+/**
+ * @abstract A category that provides methods for subclassing `TBTabBar` and handling item updates.
+ * @discussion Use these methods when customizing the behavior of `TBTabBar` or when you want to implement
+ * your own mechanism for handling item updates.
+ */
 @interface TBTabBar (Subclassing)
 
 /**
- * @abstract A method that handles item updates by calculating the difference between the new items and the old ones.
- * @discussion You can override this method to provide your own mechanism to handle item updates.
- * @warning Do not call this method directly. Meant to be overridden.
+ * @abstract Handles item updates by calculating the difference between the new items and the old ones.
+ * @discussion Override this method to implement your own mechanism for handling item updates. 
+ * This method is called automatically when items are updated.
+ * @warning Do not call this method directly; it is meant to be overridden in your subclass.
  */
 - (void)updateItems;
 
 /**
- * @abstract A method that applies the difference for the visible items.
+ * @abstract Applies the difference to the visible tab items.
+ * @param difference The difference between the new and old tab items.
  */
 - (void)applyVisibleItemsDifference:(TBTabBarItemsDifference *)difference;
 
 /**
- * @abstract A method that applies the difference for the hidden items.
+ * @abstract Applies the difference to the hidden tab items.
+ * @param difference The difference between the new and old tab items.
  */
 - (void)applyHiddenItemsDifference:(TBTabBarItemsDifference *)difference;
 
 /**
- * @abstract A visible item indexes. Default value is a range between 0 and @em `maxNumberOfVisibleTabs` property value.
- * @discussion By overriding this method, you can change order of the visible tabs.
- * For example, you can return a reversed indexes order.
+ * @abstract Returns the indexes of visible tab items. The default value is a range from 0 to the value of the `maxNumberOfVisibleTabs` property.
+ * @discussion Override this method to change the order of visible tabs. For example, you can return a reversed order of indexes if needed.
  */
 - (NSIndexSet *)visibleItemIndexes;
 

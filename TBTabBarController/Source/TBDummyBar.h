@@ -28,8 +28,16 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+/**
+ * @abstract A custom bar used to fill the void between the navigation bar and vertical tab bar.
+ * @discussion TBDummyBar is a subclass of TBSimpleBar and provides a placeholder for a custom subview.
+ * The default content insets for the TBDummyBar is {0.0, 0.0, 6.0, 0.0}.
+ */
 @interface TBDummyBar : TBSimpleBar
 
+/**
+ * @abstract The custom subview that will be displayed within the TBDummyBar.
+ */
 @property (strong, nonatomic, nullable) __kindof UIView *subview;
 
 @end
