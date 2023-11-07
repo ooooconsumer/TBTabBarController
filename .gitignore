@@ -8,7 +8,7 @@
 *.mode2v3
 
 *.xcodeproj/xcuserdata/*.xcuserdatad
-
+*.swiftpm
 *.xccheckout
 *.xcuserdatad
 

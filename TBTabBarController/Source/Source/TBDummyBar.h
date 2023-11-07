@@ -1,5 +1,5 @@
 //
-//  TBTabBarController.modulemap
+//  TBDummyBar.h
 //  TBTabBarController
 //
 //  Copyright © 2019-2023 Timur Ganiev. All rights reserved.
@@ -22,9 +22,28 @@
 //  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 //  SOFTWARE.
 
-framework module TBTabBarController {
-   umbrella header "TBTabBarControllerFramework.h"
+#import <UIKit/UIKit.h>
 
-   export *
-   module * { export * }
-}
+#if SWIFT_PACKAGE
+#import "TBSimpleBar.h"
+#else
+#import <TBTabBarController/TBSimpleBar.h>
+#endif
+
+NS_ASSUME_NONNULL_BEGIN
+
+/**
+ * @abstract A custom bar used to fill the void between the navigation bar and vertical tab bar.
+ * @discussion TBDummyBar is a subclass of TBSimpleBar and provides a placeholder for a custom subview.
+ * The default content insets for the TBDummyBar is {0.0, 0.0, 6.0, 0.0}.
+ */
+@interface TBDummyBar : TBSimpleBar
+
+/**
+ * @abstract The custom subview that will be displayed within the TBDummyBar.
+ */
+@property (strong, nonatomic, nullable) __kindof UIView *subview;
+
+@end
+
+NS_ASSUME_NONNULL_END

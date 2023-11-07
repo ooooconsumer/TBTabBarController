@@ -24,9 +24,16 @@
 
 
 #import <UIKit/UIKit.h>
+
+#if SWIFT_PACKAGE
+#import "TBSimpleBar.h"
+#import "TBTabBarItemsDifference.h"
+#import "TBTabBarButton.h"
+#else
 #import <TBTabBarController/TBSimpleBar.h>
 #import <TBTabBarController/TBTabBarItemsDifference.h>
 #import <TBTabBarController/TBTabBarButton.h>
+#endif
 
 @class TBTabBar, TBTabBarItem;
 
@@ -163,6 +170,14 @@ typedef NS_ENUM(NSInteger, TBTabBarLayoutOrientation) {
  * @abstract The space between tab items. The default value is 4pt.
  */
 @property (assign, nonatomic) CGFloat spaceBetweenTabs UI_APPEARANCE_SELECTOR;
+
+/**
+ * @abstract Initializes a TBTabBar instance with the specified layout orientation.
+ * @param layoutOrientation The desired layout orientation for the tab bar. Use `TBTabBarLayoutOrientationHorizontal` 
+ * for a horizontal tab bar or `TBTabBarLayoutOrientationVertical` for a vertical tab bar.
+ * @return An initialized TBTabBar instance with the specified layout orientation.
+ */
+- (instancetype)initWithLayoutOrientation:(TBTabBarLayoutOrientation)layoutOrientation;
 
 /**
  * @abstract Initializes and returns a horizontal TBTabBar instance.

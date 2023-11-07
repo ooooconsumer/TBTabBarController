@@ -24,7 +24,11 @@
 
 #import <Foundation/Foundation.h>
 
+#if SWIFT_PACKAGE
+#import "TBTabBarItemChange.h"
+#else
 #import <TBTabBarController/TBTabBarItemChange.h>
+#endif
 
 @class TBTabBarItem;
 

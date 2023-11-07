@@ -24,9 +24,15 @@
 
 #import <UIKit/UIKit.h>
 
+#if SWIFT_PACKAGE
+#import "TBDummyBar.h"
+#import "TBTabBar.h"
+#import "TBTabBarItem.h"
+#else
 #import <TBTabBarController/TBDummyBar.h>
 #import <TBTabBarController/TBTabBar.h>
 #import <TBTabBarController/TBTabBarItem.h>
+#endif
 
 @class TBTabBarController;
 

@@ -23,7 +23,7 @@
 //  SOFTWARE.
 
 #import <UIKit/UIKit.h>
-#import <TBTabBarController/TBTabBarController.h>
+#import "TBTabBarController.h"
 
 NS_ASSUME_NONNULL_BEGIN
 

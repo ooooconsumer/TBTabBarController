@@ -23,7 +23,6 @@
 //  SOFTWARE.
 
 #import "TBTabBarController.h"
-
 #import "TBTabBar.h"
 #import "TBTabBarItem.h"
 #import "TBDummyBar.h"

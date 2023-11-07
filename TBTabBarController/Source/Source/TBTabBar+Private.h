@@ -23,7 +23,12 @@
 //  SOFTWARE.
 
 #import <Foundation/Foundation.h>
+
+#if SWIFT_PACKAGE
+#import "TBTabBarController.h"
+#else
 #import <TBTabBarController/TBTabBarController.h>
+#endif
 
 @class TBTabBarItem, TBTabBarItemsDifference;
 

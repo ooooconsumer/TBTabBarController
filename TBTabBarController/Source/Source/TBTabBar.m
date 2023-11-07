@@ -27,12 +27,11 @@
 #import "TBTabBar+Private.h"
 #import "TBTabBarItem.h"
 #import "TBTabBarButton.h"
-#import "_TBUtils.h"
 #import "UIView+Extensions.h"
 #import "TBTabBarItemsDifference.h"
 #import "TBTabBarItemChange.h"
+#import "_TBUtils.h"
 #import "_TBStackView.h"
-
 #import <objc/runtime.h>
 
 @interface TBTabBar()
