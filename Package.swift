@@ -11,23 +11,20 @@ let package = Package(
         .library(
             name: "TBTabBarController",
             targets: [
-                "TBTabBarController",
+                "TBTabBarControllerFramework",
             ]
         )
     ],
     targets: [
         .target(
-            name: "TBTabBarController",
-            path: "TBTabBarController/Source",
-            publicHeadersPath: "Include",
+            name: "TBTabBarControllerFramework",
+            path: "TBTabBarControllerFramework/Source",
+            publicHeadersPath: "include",
             cSettings: [
-                .headerSearchPath("."),
-                .headerSearchPath("Source"),
-                .headerSearchPath("Source/Private"),
-                .headerSearchPath("Source/Categories/Foundation"),
-                .headerSearchPath("Source/Categories/UIKit"),
+                .headerSearchPath("Private"),
+                .headerSearchPath("Private/Categories/Foundation"),
+                .headerSearchPath("Private/Categories/UIKit"),
             ]
         )
     ]
 )
-

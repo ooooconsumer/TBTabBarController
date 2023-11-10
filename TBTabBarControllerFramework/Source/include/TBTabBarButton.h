@@ -24,11 +24,7 @@
 
 #import <UIKit/UIKit.h>
 
-#if SWIFT_PACKAGE
-#import "TBTabBarItem.h"
-#else
-#import <TBTabBarController/TBTabBarItem.h>
-#endif
+@class TBTabBarItem;
 
 NS_ASSUME_NONNULL_BEGIN
 

@@ -25,6 +25,7 @@
 
 #import "TBTabBar.h"
 #import "TBTabBar+Private.h"
+#import "TBTabBarController.h"
 #import "TBTabBarItem.h"
 #import "TBTabBarButton.h"
 #import "UIView+Extensions.h"
@@ -353,6 +354,10 @@
 }
 
 - (void)setSelectedIndex:(NSUInteger)selectedIndex {
+
+    if (self.visibleItems.count == 0) {
+        return [self _deselect];
+    }
 
     NSUInteger const index = MIN(MAX(0, _itemsCount - 1), selectedIndex);
 

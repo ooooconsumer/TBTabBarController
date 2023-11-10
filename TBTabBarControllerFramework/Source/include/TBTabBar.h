@@ -22,20 +22,10 @@
 //  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 //  SOFTWARE.
 
-
 #import <UIKit/UIKit.h>
-
-#if SWIFT_PACKAGE
 #import "TBSimpleBar.h"
-#import "TBTabBarItemsDifference.h"
-#import "TBTabBarButton.h"
-#else
-#import <TBTabBarController/TBSimpleBar.h>
-#import <TBTabBarController/TBTabBarItemsDifference.h>
-#import <TBTabBarController/TBTabBarButton.h>
-#endif
 
-@class TBTabBar, TBTabBarItem;
+@class TBTabBar, TBTabBarItem, TBTabBarButton, TBTabBarItemsDifference;
 
 NS_ASSUME_NONNULL_BEGIN
 

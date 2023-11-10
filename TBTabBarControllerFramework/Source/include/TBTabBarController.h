@@ -23,18 +23,10 @@
 //  SOFTWARE.
 
 #import <UIKit/UIKit.h>
-
-#if SWIFT_PACKAGE
-#import "TBDummyBar.h"
 #import "TBTabBar.h"
-#import "TBTabBarItem.h"
-#else
-#import <TBTabBarController/TBDummyBar.h>
-#import <TBTabBarController/TBTabBar.h>
-#import <TBTabBarController/TBTabBarItem.h>
-#endif
 
-@class TBTabBarController;
+@class TBTabBarController, TBTabBarItem, TBDummyBar;
+@protocol TBTabBarDelegate;
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -182,7 +174,10 @@ shouldSelectViewController:(__kindof UIViewController * _Nullable)viewController
  * However, you have the option to customize this behavior and manually specify whether the horizontal or vertical tab bar
  * should be displayed, giving you full control over your app's user interface.
  */
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Weverything"
 @interface TBTabBarController : UIViewController <TBTabBarDelegate> {
+#pragma clang diagnostic pop
 
 @protected
 

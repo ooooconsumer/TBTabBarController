@@ -24,16 +24,16 @@
 
 #import <UIKit/UIKit.h>
 
-#import <TBTabBarController/TBDummyBar.h>
-#import <TBTabBarController/TBSimpleBar.h>
-#import <TBTabBarController/TBTabBar.h>
-#import <TBTabBarController/TBTabBar+Private.h>
-#import <TBTabBarController/TBTabBarButton.h>
-#import <TBTabBarController/TBTabBarController.h>
-#import <TBTabBarController/TBTabBarController+Private.h>
-#import <TBTabBarController/TBTabBarItem.h>
-#import <TBTabBarController/TBTabBarItemChange.h>
-#import <TBTabBarController/TBTabBarItemsDifference.h>
+#import "TBDummyBar.h"
+#import "TBSimpleBar.h"
+#import "TBTabBar.h"
+#import "TBTabBar+Private.h"
+#import "TBTabBarButton.h"
+#import "TBTabBarController.h"
+#import "TBTabBarController+Private.h"
+#import "TBTabBarItem.h"
+#import "TBTabBarItemChange.h"
+#import "TBTabBarItemsDifference.h"
 
 //! Project version number for TBTabBarController.
 FOUNDATION_EXPORT double TBTabBarControllerVersionNumber;

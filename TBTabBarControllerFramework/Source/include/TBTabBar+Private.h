@@ -24,15 +24,12 @@
 
 #import <Foundation/Foundation.h>
 
-#if SWIFT_PACKAGE
-#import "TBTabBarController.h"
-#else
-#import <TBTabBarController/TBTabBarController.h>
-#endif
-
-@class TBTabBarItem, TBTabBarItemsDifference;
+@class TBTabBarController, TBTabBarItem, TBTabBarItemsDifference;
 
 NS_ASSUME_NONNULL_BEGIN
+
+/// Forward declaration for `TBTabBarControllerTabBarPlacement`
+typedef NS_ENUM(NSUInteger, TBTabBarControllerTabBarPlacement);
 
 /**
  * @abstract A private category that provides additional methods and properties for `TBTabBar`.

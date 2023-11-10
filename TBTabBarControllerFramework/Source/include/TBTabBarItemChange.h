@@ -24,11 +24,7 @@
 
 #import <Foundation/Foundation.h>
 
-#if SWIFT_PACKAGE
-#import "TBTabBarItem.h"
-#else
-#import <TBTabBarController/TBTabBarItem.h>
-#endif
+@class TBTabBarItem;
 
 /**
  * @abstract Describes the type of change in a TBTabBarItem.

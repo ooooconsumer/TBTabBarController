@@ -29,12 +29,6 @@
 // These functions are used internally by the TBTabBarController library and are not meant
 // to be used directly by external code. They are provided for internal implementation purposes.
 
-#ifndef __IPHONE_13_0
-#define __IPHONE_13_0 130000
-#endif
-
-#define TB_AT_LEAST_IOS13  (__IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_13_0)
-
 // This technique was borrowed from Mike Ash
 // https://www.mikeash.com/pyblog/friday-qa-2010-06-18-implementing-equality-and-hashing.html
 #define TB_UINT_BIT (CHAR_BIT * sizeof(NSUInteger))

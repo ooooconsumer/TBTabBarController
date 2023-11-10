@@ -1157,7 +1157,7 @@ animationControllerForTransitionFromViewController:sourceViewController
 - (TBTabBarControllerTabBarPlacement)tbtbbrcntrlr_preferredTabBarPlacementForSizeClass:(UIUserInterfaceSizeClass)sizeClass  {
 
     return sizeClass == UIUserInterfaceSizeClassRegular ?
-        TBTabBarControllerTabBarPlacementTrailing :
+        TBTabBarControllerTabBarPlacementLeading :
         TBTabBarControllerTabBarPlacementBottom;
 }
 
