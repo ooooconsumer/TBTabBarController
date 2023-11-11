@@ -7,10 +7,8 @@
 //
 
 #import "TabViewController.h"
-
-#import <TBTabBarController/TBTabBarControllerFramework.h>
-
 #import "SettingsViewController.h"
+#import <TBTabBarControllerFramework/TBTabBarControllerFramework.h>
 
 @implementation TabViewController
 

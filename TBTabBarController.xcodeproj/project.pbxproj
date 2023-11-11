@@ -45,10 +45,8 @@
 		810B2B0F2AFCFDFF00D51CDA /* TBSimpleBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 810B2AF52AFCFDFF00D51CDA /* TBSimpleBar.m */; };
 		810B2B102AFCFDFF00D51CDA /* TBTabBarButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 810B2AF62AFCFDFF00D51CDA /* TBTabBarButton.m */; };
 		810B2B112AFCFDFF00D51CDA /* TBTabBarItemsDifference.m in Sources */ = {isa = PBXBuildFile; fileRef = 810B2AF72AFCFDFF00D51CDA /* TBTabBarItemsDifference.m */; };
-		810B2B132AFD029600D51CDA /* TBTabBarController.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8139C1E52AFBB0CE00F16BB5 /* TBTabBarController.framework */; };
-		810B2B142AFD029600D51CDA /* TBTabBarController.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 8139C1E52AFBB0CE00F16BB5 /* TBTabBarController.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		810B2B182AFD029A00D51CDA /* TBTabBarController.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8139C1E52AFBB0CE00F16BB5 /* TBTabBarController.framework */; };
-		810B2B192AFD029B00D51CDA /* TBTabBarController.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 8139C1E52AFBB0CE00F16BB5 /* TBTabBarController.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		810B2B132AFD029600D51CDA /* TBTabBarControllerFramework.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8139C1E52AFBB0CE00F16BB5 /* TBTabBarControllerFramework.framework */; };
+		810B2B182AFD029A00D51CDA /* TBTabBarControllerFramework.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8139C1E52AFBB0CE00F16BB5 /* TBTabBarControllerFramework.framework */; };
 		814C6EB7257FD65700D7C6DC /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 814C6EB6257FD65700D7C6DC /* AppDelegate.m */; };
 		814C6EBA257FD65700D7C6DC /* SceneDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 814C6EB9257FD65700D7C6DC /* SceneDelegate.m */; };
 		814C6EBD257FD65700D7C6DC /* TabViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 814C6EBC257FD65700D7C6DC /* TabViewController.m */; };
@@ -86,31 +84,6 @@
 			remoteInfo = TBTabBarController;
 		};
 /* End PBXContainerItemProxy section */
-
-/* Begin PBXCopyFilesBuildPhase section */
-		810B2B172AFD029600D51CDA /* Embed Frameworks */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 10;
-			files = (
-				810B2B142AFD029600D51CDA /* TBTabBarController.framework in Embed Frameworks */,
-			);
-			name = "Embed Frameworks";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		810B2B1C2AFD029B00D51CDA /* Embed Frameworks */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 10;
-			files = (
-				810B2B192AFD029B00D51CDA /* TBTabBarController.framework in Embed Frameworks */,
-			);
-			name = "Embed Frameworks";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		8102CDCC2982FFFB0073CBAB /* ToggleItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToggleItem.swift; sourceTree = "<group>"; };
@@ -151,8 +124,7 @@
 		810B2AF52AFCFDFF00D51CDA /* TBSimpleBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TBSimpleBar.m; sourceTree = "<group>"; };
 		810B2AF62AFCFDFF00D51CDA /* TBTabBarButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TBTabBarButton.m; sourceTree = "<group>"; };
 		810B2AF72AFCFDFF00D51CDA /* TBTabBarItemsDifference.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TBTabBarItemsDifference.m; sourceTree = "<group>"; };
-		810B2B122AFCFF9C00D51CDA /* module.modulemap */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.module-map"; path = module.modulemap; sourceTree = "<group>"; };
-		8139C1E52AFBB0CE00F16BB5 /* TBTabBarController.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = TBTabBarController.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		8139C1E52AFBB0CE00F16BB5 /* TBTabBarControllerFramework.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = TBTabBarControllerFramework.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		8139C1EC2AFBB0E800F16BB5 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		814C6EB3257FD65700D7C6DC /* ObjcExample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ObjcExample.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		814C6EB5257FD65700D7C6DC /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -198,7 +170,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				810B2B182AFD029A00D51CDA /* TBTabBarController.framework in Frameworks */,
+				810B2B182AFD029A00D51CDA /* TBTabBarControllerFramework.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -206,7 +178,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				810B2B132AFD029600D51CDA /* TBTabBarController.framework in Frameworks */,
+				810B2B132AFD029600D51CDA /* TBTabBarControllerFramework.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -262,11 +234,10 @@
 			path = Foundation;
 			sourceTree = "<group>";
 		};
-		8139C1E62AFBB0CE00F16BB5 /* TBTabBarController */ = {
+		8139C1E62AFBB0CE00F16BB5 /* TBTabBarControllerFramework */ = {
 			isa = PBXGroup;
 			children = (
 				8139C1EC2AFBB0E800F16BB5 /* Info.plist */,
-				810B2B122AFCFF9C00D51CDA /* module.modulemap */,
 				810B2AC82AFCFDF500D51CDA /* TBDummyBar.h */,
 				810B2AC92AFCFDF500D51CDA /* TBSimpleBar.h */,
 				810B2ACB2AFCFDF500D51CDA /* TBTabBar.h */,
@@ -280,14 +251,13 @@
 				810B2ACE2AFCFDF500D51CDA /* TBTabBarItemsDifference.h */,
 				819FBEDA2AFD0B090029574B /* Impl */,
 			);
-			name = TBTabBarController;
 			path = TBTabBarControllerFramework;
 			sourceTree = "<group>";
 		};
 		814B127A24BAD64E0063A09D = {
 			isa = PBXGroup;
 			children = (
-				8139C1E62AFBB0CE00F16BB5 /* TBTabBarController */,
+				8139C1E62AFBB0CE00F16BB5 /* TBTabBarControllerFramework */,
 				814C6EB4257FD65700D7C6DC /* ObjcExample */,
 				814C6EF32580B80900D7C6DC /* SwiftExample */,
 				814B128524BAD64E0063A09D /* Products */,
@@ -300,7 +270,7 @@
 			children = (
 				814C6EB3257FD65700D7C6DC /* ObjcExample.app */,
 				814C6EF22580B80900D7C6DC /* SwiftExample.app */,
-				8139C1E52AFBB0CE00F16BB5 /* TBTabBarController.framework */,
+				8139C1E52AFBB0CE00F16BB5 /* TBTabBarControllerFramework.framework */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -406,9 +376,9 @@
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
-		8139C1E42AFBB0CE00F16BB5 /* TBTabBarController */ = {
+		8139C1E42AFBB0CE00F16BB5 /* TBTabBarControllerFramework */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 8139C1E92AFBB0CE00F16BB5 /* Build configuration list for PBXNativeTarget "TBTabBarController" */;
+			buildConfigurationList = 8139C1E92AFBB0CE00F16BB5 /* Build configuration list for PBXNativeTarget "TBTabBarControllerFramework" */;
 			buildPhases = (
 				8139C1E02AFBB0CE00F16BB5 /* Headers */,
 				8139C1E12AFBB0CE00F16BB5 /* Sources */,
@@ -419,9 +389,9 @@
 			);
 			dependencies = (
 			);
-			name = TBTabBarController;
+			name = TBTabBarControllerFramework;
 			productName = TBTabBarController;
-			productReference = 8139C1E52AFBB0CE00F16BB5 /* TBTabBarController.framework */;
+			productReference = 8139C1E52AFBB0CE00F16BB5 /* TBTabBarControllerFramework.framework */;
 			productType = "com.apple.product-type.framework";
 		};
 		814C6EB2257FD65700D7C6DC /* ObjcExample */ = {
@@ -431,7 +401,6 @@
 				814C6EAF257FD65700D7C6DC /* Sources */,
 				814C6EB0257FD65700D7C6DC /* Frameworks */,
 				814C6EB1257FD65700D7C6DC /* Resources */,
-				810B2B1C2AFD029B00D51CDA /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -450,7 +419,6 @@
 				814C6EEE2580B80900D7C6DC /* Sources */,
 				814C6EEF2580B80900D7C6DC /* Frameworks */,
 				814C6EF02580B80900D7C6DC /* Resources */,
-				810B2B172AFD029600D51CDA /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -499,7 +467,7 @@
 			targets = (
 				814C6EB2257FD65700D7C6DC /* ObjcExample */,
 				814C6EF12580B80900D7C6DC /* SwiftExample */,
-				8139C1E42AFBB0CE00F16BB5 /* TBTabBarController */,
+				8139C1E42AFBB0CE00F16BB5 /* TBTabBarControllerFramework */,
 			);
 		};
 /* End PBXProject section */
@@ -592,12 +560,12 @@
 /* Begin PBXTargetDependency section */
 		810B2B162AFD029600D51CDA /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 8139C1E42AFBB0CE00F16BB5 /* TBTabBarController */;
+			target = 8139C1E42AFBB0CE00F16BB5 /* TBTabBarControllerFramework */;
 			targetProxy = 810B2B152AFD029600D51CDA /* PBXContainerItemProxy */;
 		};
 		810B2B1B2AFD029B00D51CDA /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 8139C1E42AFBB0CE00F16BB5 /* TBTabBarController */;
+			target = 8139C1E42AFBB0CE00F16BB5 /* TBTabBarControllerFramework */;
 			targetProxy = 810B2B1A2AFD029B00D51CDA /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
@@ -652,7 +620,6 @@
 				);
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MARKETING_VERSION = 1.0;
-				MODULEMAP_FILE = "$(SRCROOT)/$(PROJECT_NAME)Framework/module.modulemap";
 				MODULE_VERIFIER_SUPPORTED_LANGUAGES = "objective-c objective-c++";
 				MODULE_VERIFIER_SUPPORTED_LANGUAGE_STANDARDS = "gnu17 gnu++20";
 				PRODUCT_BUNDLE_IDENTIFIER = com.timurganiev.TBTabBarController;
@@ -698,7 +665,6 @@
 				);
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MARKETING_VERSION = 1.0;
-				MODULEMAP_FILE = "$(SRCROOT)/$(PROJECT_NAME)Framework/module.modulemap";
 				MODULE_VERIFIER_SUPPORTED_LANGUAGES = "objective-c objective-c++";
 				MODULE_VERIFIER_SUPPORTED_LANGUAGE_STANDARDS = "gnu17 gnu++20";
 				PRODUCT_BUNDLE_IDENTIFIER = com.timurganiev.TBTabBarController;
@@ -926,7 +892,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		8139C1E92AFBB0CE00F16BB5 /* Build configuration list for PBXNativeTarget "TBTabBarController" */ = {
+		8139C1E92AFBB0CE00F16BB5 /* Build configuration list for PBXNativeTarget "TBTabBarControllerFramework" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				8139C1EA2AFBB0CE00F16BB5 /* Debug */,

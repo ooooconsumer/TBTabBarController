@@ -24,7 +24,7 @@
 
 #import <Foundation/Foundation.h>
 
-@class TBTabBarController, TBTabBarItem, TBTabBarItemsDifference;
+@class TBTabBar, TBTabBarController, TBTabBarItem, TBTabBarItemsDifference;
 
 NS_ASSUME_NONNULL_BEGIN
 
