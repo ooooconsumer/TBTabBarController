@@ -4,6 +4,13 @@ TBTabBarController is a versatile iOS framework that provides a customizable tab
 
 While TBTabBarController has class names and methods that resemble their UIKit counterparts, most of these classes, including `TBTabBarController`, `TBTabBar`, and `TBTabBarButton`, are custom implementations. Their similarity in names and method signatures is for development convenience. These components are not related to their UIKit counterparts and offer fully custom implementations.
 
+<details>
+<summary>Demo: Click to Expand</summary>
+
+![TBTabBarController Demo](demo.gif)
+
+</details>
+
 ## Inspired by Tweetbot
 
 TBTabBarController is inspired by the implementation used in the popular Tweetbot iOS application. It draws inspiration from the innovative and user-friendly tab bar navigation of Tweetbot, aiming to provide a similar level of flexibility and customization for your iOS apps.
@@ -22,12 +29,48 @@ TBTabBarController empowers you to create a seamless and tailored user navigatio
 
 For more detailed information, you can refer to the code comments and class descriptions included in the TBTabBarController framework.
 
+## Installation
+
+### Manual
+
+1. Download or clone this repository.
+2. Drag the `TBTabBarControllerFramework` folder into your Xcode project.
+3. Make sure to add the library to your target's "Linked Frameworks and Libraries."
+
+### Swift Package Manager
+
+Add the following dependency to your `Package.swift` file:
+
+```swift
+dependencies: [
+    .package(url: "https://github.com/ooooconsumer/TBTabBarController.git", from: "1.0.0"),
+],
+targets: [
+    .target(name: "YourTarget", dependencies: ["TBTabBarControllerFramework"]),
+]
+```
+
+#### Via Xcode
+
+1. In Xcode, go to "File" > "Swift Packages" > "Add Package Dependency..."
+2. Enter the URL of this repository: `https://github.com/ooooconsumer/TBTabBarController.git`
+3. Choose the version or branch you'd like to use.
+
+### CocoaPods
+Add the following line to your Podfile:
+
+```ruby
+pod 'TBTabBarControllerFramework', '~> 1.0.0'
+```
+
+Run `pod install` to integrate the library into your Xcode project.
+
 ## Usage
 
 To get started with TBTabBarController, you can create an instance of `TBTabBarController` and customize it to meet your app's navigation requirements. You can manage the child view controllers and tab bar items using the provided methods.
 
 ```swift
-import TBTabBarController
+import TBTabBarControllerFramework
 
 // Initialize TBTabBarController
 let tabBarController = TBTabBarController()
