@@ -7,7 +7,7 @@
 //
 
 import UIKit
-import TBTabBarController
+import TBTabBarControllerFramework
 
 final class TabBarController: TBTabBarController {
 

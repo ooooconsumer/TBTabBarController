@@ -24,7 +24,7 @@
 
 #import <UIKit/UIKit.h>
 
-@class TBTabBarItem;
+@class TBTabBarController, TBTabBarItem;
 
 NS_ASSUME_NONNULL_BEGIN
 

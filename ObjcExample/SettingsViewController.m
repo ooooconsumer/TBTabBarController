@@ -7,10 +7,8 @@
 //
 
 #import "SettingsViewController.h"
-
-#import <TBTabBarController/TBTabBarControllerFramework.h>
-
 #import "ToggleTableViewCell.h"
+#import <TBTabBarControllerFramework/TBTabBarControllerFramework.h>
 
 @implementation SettingsViewController {
 

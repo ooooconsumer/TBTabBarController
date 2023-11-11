@@ -6,7 +6,7 @@
 //  Copyright © 2020 Timur Ganiev. All rights reserved.
 //
 
-#import <TBTabBarController/TBTabBarControllerFramework.h>
+#import <TBTabBarControllerFramework/TBTabBarControllerFramework.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
